@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "env": {
+    "SEEDREAM_API_KEY": "21b86aa4-df40-4205-a039-e186d74e9b54",
+    "SEEDREAM_API_URL": "https://ark.cn-beijing.volces.com/api/v3/images/generations",
+    "SEEDREAM_MODEL": "doubao-seedream-4-0-250828",
+    "NEXT_PUBLIC_MAX_FILE_SIZE": "@next_public_max_file_size",
+    "NEXT_PUBLIC_ALLOWED_FILE_TYPES": "@next_public_allowed_file_types"
+  }
+}
