@@ -57,19 +57,19 @@ export default function Navbar() {
 
       <div className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-navy-light">
         <Link
-          href="#"
+          href="/"
           className="hover:text-terra transition-colors border-b-2 border-transparent hover:border-terra pb-0.5"
         >
           精选集
         </Link>
         <Link
-          href="#"
+          href="/methodology"
           className="hover:text-terra transition-colors border-b-2 border-transparent hover:border-terra pb-0.5"
         >
           创作方法论
         </Link>
         <Link
-          href="#"
+          href="/about"
           className="hover:text-terra transition-colors border-b-2 border-transparent hover:border-terra pb-0.5"
         >
           关于我们
