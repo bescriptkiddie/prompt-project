@@ -2,7 +2,7 @@ version: '3'
 
 services:
   web:
-    container_name: pet-emoji-web
+    container_name: prompt-project-web
     build:
       context: .
       dockerfile: Dockerfile
