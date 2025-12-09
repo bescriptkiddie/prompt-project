@@ -6,10 +6,11 @@ import { clsx } from 'clsx';
 interface PromptCardProps {
   item: PromptItem;
   onSelect: (prompt: string) => void;
+  onPreview?: (url: string) => void;
   index: number;
 }
 
-export default function PromptCard({ item, onSelect, index }: PromptCardProps) {
+export default function PromptCard({ item, onSelect, onPreview, index }: PromptCardProps) {
   const [lang, setLang] = useState<'zh' | 'en'>('zh');
   const animationDelay = `${(index + 1) * 0.1}s`;
 
@@ -91,8 +92,12 @@ export default function PromptCard({ item, onSelect, index }: PromptCardProps) {
         {item.imageUrl && (
           <img
             src={item.imageUrl}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 cursor-zoom-in"
             alt={item.title}
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview?.(item.imageUrl!);
+            }}
           />
         )}
         {item.category && (
