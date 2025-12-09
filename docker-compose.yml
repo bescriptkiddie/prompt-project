@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  web:
+    container_name: pet-emoji-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # 如果您需要配置 API Key，可以在这里添加，或者创建一个 .env.production 文件
+    # env_file:
+    #   - .env.production
