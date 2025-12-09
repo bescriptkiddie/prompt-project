@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-export default function Navbar() {
+export default function Navbar({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
   return (
-    <nav className="sticky top-0 z-40 bg-cream/95 backdrop-blur-sm border-b border-stone-line px-8 h-20 flex items-center justify-between shrink-0">
+    <nav className="sticky top-0 z-40 bg-cream/95 backdrop-blur-sm border-b border-stone-line px-4 md:px-8 h-20 flex items-center justify-between shrink-0">
       <div className="flex items-center gap-4">
         <div className="w-8 h-8 bg-terra rounded-sm flex items-center justify-center text-cream relative overflow-hidden shrink-0">
           <svg
@@ -75,6 +75,13 @@ export default function Navbar() {
           关于我们
         </Link>
       </div>
+
+      <button
+        className="md:hidden p-2 text-navy hover:bg-stone-line/20 rounded-full transition-colors"
+        onClick={onToggleSidebar}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
     </nav>
   );
 }

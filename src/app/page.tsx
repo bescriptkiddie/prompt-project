@@ -9,20 +9,28 @@ import { MOCK_PROMPTS } from '@/data/prompts';
 
 export default function Home() {
   const [selectedPrompt, setSelectedPrompt] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-full w-full overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden relative">
       <div className="flex-1 h-full overflow-y-auto no-scrollbar relative flex flex-col bg-cream">
-        <Navbar />
+        <Navbar onToggleSidebar={() => setIsSidebarOpen(true)} />
         <Header />
-        <main className="flex-1 px-8 pb-20 max-w-[1400px] mx-auto w-full">
+        <main className="flex-1 px-4 md:px-8 pb-20 max-w-[1400px] mx-auto w-full">
           <PromptGrid
             prompts={MOCK_PROMPTS}
-            onSelect={setSelectedPrompt}
+            onSelect={(prompt) => {
+              setSelectedPrompt(prompt);
+              setIsSidebarOpen(true);
+            }}
           />
         </main>
       </div>
-      <Sidebar selectedPrompt={selectedPrompt} />
+      <Sidebar
+        selectedPrompt={selectedPrompt}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
     </div>
   );
 }

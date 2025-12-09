@@ -8,6 +8,8 @@ import { twMerge } from 'tailwind-merge';
 
 interface SidebarProps {
   selectedPrompt: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 interface Option {
@@ -132,7 +134,7 @@ function CustomSelect({
   );
 }
 
-export default function Sidebar({ selectedPrompt }: SidebarProps) {
+export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: SidebarProps) {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [resultImage, setResultImage] = useState<string | null>(null);
@@ -289,21 +291,45 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
         </div>
       )}
 
-      <aside className="w-[600px] h-full bg-paper border-l border-stone-line flex flex-col z-50 shadow-xl relative transition-all duration-300 shrink-0">
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-stone-line/0 via-stone-line/50 to-stone-line/0"></div>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-navy/20 backdrop-blur-sm z-40 md:hidden animate-in fade-in"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={clsx(
+        "h-full bg-paper border-l border-stone-line flex flex-col z-50 shadow-xl transition-transform duration-300 shrink-0",
+        // Mobile styles
+        "fixed inset-y-0 right-0 w-full sm:w-[600px]",
+        isOpen ? "translate-x-0" : "translate-x-full",
+        // Desktop styles (override mobile)
+        "md:relative md:translate-x-0 md:w-[600px]"
+      )}>
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-stone-line/0 via-stone-line/50 to-stone-line/0 hidden md:block"></div>
 
         <div className="p-8 pb-4 shrink-0 flex justify-between items-start">
           <div>
             <h2 className="font-serif text-2xl text-navy italic font-bold">创作工坊</h2>
             <p className="text-xs text-navy-light mt-1 font-sans">实验与调优</p>
           </div>
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className="p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all"
-            title="设置 API Key"
-          >
-            <Settings className="w-5 h-5" />
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all"
+              title="设置 API Key"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+            <button
+              onClick={onClose}
+              className="md:hidden p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all"
+              title="关闭"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 flex flex-col min-h-0">
