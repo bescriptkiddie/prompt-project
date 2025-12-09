@@ -1,12 +1,135 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Play, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { ChevronDown, Play, Image as ImageIcon, Loader2, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 interface SidebarProps {
   selectedPrompt: string;
+}
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+function CustomSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Option[];
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(target) &&
+        (!dropdownRef.current || !dropdownRef.current.contains(target))
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    // Update position on scroll/resize to keep attached or close
+    const handleScrollOrResize = () => {
+      if (isOpen) setIsOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScrollOrResize, true);
+    window.addEventListener("resize", handleScrollOrResize);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScrollOrResize, true);
+      window.removeEventListener("resize", handleScrollOrResize);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  }, [isOpen]);
+
+  const selectedOption = options.find((opt) => opt.value === value) || options[0];
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
+        {label}
+      </label>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={clsx(
+          "w-full bg-cream border p-3 text-sm font-medium flex justify-between items-center transition-all duration-200 outline-none",
+          isOpen
+            ? "border-terra ring-1 ring-terra text-navy"
+            : "border-stone-line hover:border-terra text-navy"
+        )}
+      >
+        <span>{selectedOption?.label}</span>
+        <ChevronDown
+          className={clsx(
+            "w-4 h-4 text-navy-light transition-transform duration-200",
+            isOpen && "rotate-180 text-terra"
+          )}
+        />
+      </button>
+
+      {isOpen && createPortal(
+        <div
+          ref={dropdownRef}
+          className="fixed bg-paper border border-stone-line shadow-xl z-[9999] animate-in fade-in zoom-in-95 duration-100 max-h-60 overflow-auto rounded-sm"
+          style={{
+            top: coords.top,
+            left: coords.left,
+            width: coords.width,
+          }}
+        >
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className={clsx(
+                "w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between group",
+                value === option.value
+                  ? "bg-mustard/10 text-navy font-bold"
+                  : "text-navy hover:bg-cream hover:text-terra"
+              )}
+            >
+              <span>{option.label}</span>
+              {value === option.value && (
+                <span className="w-1.5 h-1.5 rounded-full bg-terra" />
+              )}
+            </button>
+          ))}
+        </div>,
+        document.body
+      )}
+    </div>
+  );
 }
 
 export default function Sidebar({ selectedPrompt }: SidebarProps) {
@@ -20,7 +143,7 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Sync prop to local state
   useEffect(() => {
@@ -34,7 +157,7 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
   // Handle ESC key to close fullscreen
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsFullscreen(false);
+      if (e.key === 'Escape') setPreviewImage(null);
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
@@ -69,6 +192,24 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
       // Reset input so same file can be selected again if needed
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
+  };
+
+  const handleAspectRatioChange = (newRatio: string) => {
+    setAspectRatio(newRatio);
+
+    setPrompt((prev) => {
+      // Match --ar followed by any spacing and a ratio (digits:digits)
+      const arRegex = /--ar\s+\d+:\d+/;
+      const newArTag = `--ar ${newRatio}`;
+
+      if (arRegex.test(prev)) {
+        // Replace existing tag
+        return prev.replace(arRegex, newArTag);
+      } else {
+        // Append new tag
+        return prev.trim() ? `${prev.trim()} ${newArTag}` : newArTag;
+      }
+    });
   };
 
   const handleGenerate = async () => {
@@ -109,20 +250,20 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
   return (
     <>
       {/* Fullscreen Modal */}
-      {isFullscreen && resultImage && (
+      {previewImage && (
         <div
           className="fixed inset-0 z-[100] bg-navy/95 backdrop-blur-sm flex items-center justify-center p-8 animate-in fade-in duration-200"
-          onClick={() => setIsFullscreen(false)}
+          onClick={() => setPreviewImage(null)}
         >
           <img
-            src={resultImage}
+            src={previewImage}
             alt="Full Preview"
             className="max-w-full max-h-full object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
           <button
             className="absolute top-8 right-8 text-white/70 hover:text-white transition-colors"
-            onClick={() => setIsFullscreen(false)}
+            onClick={() => setPreviewImage(null)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           </button>
@@ -145,12 +286,23 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
                   <span className="w-2 h-2 bg-terra rounded-full"></span>
                   提示词输入 (Prompt)
                 </label>
-                <textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full h-32 bg-cream border border-stone-line p-4 text-navy font-mono text-sm leading-7 resize-none focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all shadow-inner placeholder:text-navy-light/50"
-                  placeholder="从左侧选择一个案例开始创作..."
-                ></textarea>
+                <div className="relative">
+                  <textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    className="w-full h-32 bg-cream border border-stone-line p-4 pr-10 text-navy font-mono text-sm leading-7 resize-none focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all shadow-inner placeholder:text-navy-light/50"
+                    placeholder="从左侧选择一个案例开始创作..."
+                  ></textarea>
+                  {prompt && (
+                    <button
+                      onClick={() => setPrompt('')}
+                      className="absolute top-2 right-2 p-1 text-navy-light hover:text-terra transition-colors rounded-full hover:bg-stone-line/20"
+                      title="清空提示词"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Image Upload Section */}
@@ -189,7 +341,8 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
                     <img
                       src={uploadedImage}
                       alt="Reference"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain cursor-zoom-in"
+                      onClick={() => setPreviewImage(uploadedImage)}
                     />
                     <button
                       onClick={() => setUploadedImage(null)}
@@ -202,49 +355,27 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
-                    模型选择
-                  </label>
-                  <div className="relative">
-                    <select
-                      value={model}
-                      onChange={(e) => setModel(e.target.value)}
-                      className="w-full appearance-none bg-cream border-b border-stone-line py-2 text-sm text-navy focus:outline-none focus:border-terra rounded-none font-medium pr-8"
-                    >
-                      <option value="Doubao">Doubao</option>
-                      <option value="Gemini">Gemini</option>
-                    </select>
-                    <div className="absolute right-0 top-3 pointer-events-none">
-                      <ChevronDown className="w-3 h-3 text-navy-light" />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
-                    画面比例
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setAspectRatio('16:9')}
-                      className={clsx(
-                        "flex-1 py-1.5 border border-stone-line text-xs transition-colors font-medium",
-                        aspectRatio === '16:9' ? "bg-terra text-white border-terra" : "hover:bg-terra hover:text-white hover:border-terra"
-                      )}
-                    >
-                      16:9 (横屏)
-                    </button>
-                    <button
-                      onClick={() => setAspectRatio('1:1')}
-                      className={clsx(
-                        "flex-1 py-1.5 border border-stone-line text-xs transition-colors font-medium",
-                        aspectRatio === '1:1' ? "bg-terra text-white border-terra" : "hover:bg-terra hover:text-white hover:border-terra"
-                      )}
-                    >
-                      1:1 (方图)
-                    </button>
-                  </div>
-                </div>
+                <CustomSelect
+                  label="模型选择"
+                  value={model}
+                  onChange={setModel}
+                  options={[
+                    { label: 'Doubao', value: 'Doubao' },
+                    { label: 'Gemini', value: 'Gemini' }
+                  ]}
+                />
+                <CustomSelect
+                  label="画面比例"
+                  value={aspectRatio}
+                  onChange={handleAspectRatioChange}
+                  options={[
+                    { label: '16:9 (横屏)', value: '16:9' },
+                    { label: '4:3 (标准)', value: '4:3' },
+                    { label: '1:1 (方图)', value: '1:1' },
+                    { label: '3:4 (竖屏)', value: '3:4' },
+                    { label: '9:16 (全屏)', value: '9:16' }
+                  ]}
+                />
               </div>
 
               <button
@@ -286,7 +417,7 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
                     src={resultImage}
                     alt="Generated Result"
                     className="max-w-full max-h-full object-contain shadow-lg border-4 border-white bg-white animate-in fade-in duration-500 cursor-zoom-in"
-                    onClick={() => setIsFullscreen(true)}
+                    onClick={() => setPreviewImage(resultImage)}
                   />
                   <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                      <span className="bg-navy/80 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">点击全屏预览</span>

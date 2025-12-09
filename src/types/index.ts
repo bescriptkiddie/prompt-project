@@ -2,10 +2,13 @@ export interface PromptItem {
   id: string;
   title: string;
   model: string;
-  prompt: string;
+  promptZh: string;
+  promptEn: string;
+  description?: string;
+  category?: string;
+  source?: string;
   imageUrl?: string;
   type: 'image' | 'text';
-  category?: string;
   date?: string;
 }
 
