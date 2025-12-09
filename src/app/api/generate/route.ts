@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { openai } from '@/lib/openai';
+import OpenAI from 'openai';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, image, model } = await request.json();
+    const { prompt, image, model, apiKey } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -41,9 +42,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Use OpenAI client with selected model
+    let client = openai;
+    if (apiKey) {
+      console.log('Using custom API key');
+      client = new OpenAI({
+        apiKey: apiKey,
+        baseURL: 'https://api.qnaigc.com/v1',
+        timeout: 600000
+      });
+    }
 
-     
-    const response = await openai.chat.completions.create({
+    const response = await client.chat.completions.create({
       model: modelId,
       top_p: 0,
       messages: messages

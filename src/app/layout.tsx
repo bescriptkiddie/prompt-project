@@ -21,7 +21,7 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Prompt 灵感工坊 | 人文主义创意库",
-  description: "为计算创意而生的精选提示词库",
+  description: "AI时代",
 };
 
 export default function RootLayout({

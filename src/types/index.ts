@@ -8,7 +8,7 @@ export interface PromptItem {
   category?: string;
   source?: string;
   imageUrl?: string;
-  type: 'image' | 'text';
+  type: 'image' | 'article' | 'code';
   date?: string;
 }
 

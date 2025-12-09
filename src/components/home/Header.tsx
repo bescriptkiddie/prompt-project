@@ -3,16 +3,13 @@ export default function Header() {
     <header className="px-8 pt-16 pb-12 max-w-[1200px] mx-auto w-full grid grid-cols-12 gap-8 items-end">
       <div className="col-span-12 lg:col-span-8">
         <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-4 block">
-          Est. 2025 • 数字时代的匠心
+          Est. 2025 • Prompt 美学
         </span>
-        <h1 className="font-serif text-5xl md:text-6xl text-navy leading-[1.2] mb-6 font-bold">
-          为计算创意而生的<br />
-          <span className="italic text-navy-light font-normal">
-            精选提示词库。
-          </span>
+        <h1 className="font-serif text-5xl w-full text-navy leading-[1.2] mb-6 font-bold">
+          给 AI 注入有趣的灵魂
         </h1>
         <p className="text-navy-light max-w-xl text-lg leading-relaxed font-light">
-          一个精心编纂的生成式指令档案馆。旨在提供清晰度、可复现性，并激发美学探索。
+          精选 Prompt 指令库 —— 让 AI 生成的每一张图、每一段话，都带着你的审美印记。
         </p>
       </div>
       <div className="hidden lg:col-span-4 lg:flex justify-end opacity-80">

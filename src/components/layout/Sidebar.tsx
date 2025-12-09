@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Play, Image as ImageIcon, Loader2, X } from 'lucide-react';
+import { ChevronDown, Play, Image as ImageIcon, Loader2, X, Key, Settings, Save } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -145,6 +145,22 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [doubaoKey, setDoubaoKey] = useState('');
+  const [geminiKey, setGeminiKey] = useState('');
+
+  // Load API Keys from localStorage
+  useEffect(() => {
+    setDoubaoKey(localStorage.getItem('doubao_key') || '');
+    setGeminiKey(localStorage.getItem('gemini_key') || '');
+  }, []);
+
+  const saveSettings = () => {
+    localStorage.setItem('doubao_key', doubaoKey);
+    localStorage.setItem('gemini_key', geminiKey);
+    setIsSettingsOpen(false);
+  };
+
   // Sync prop to local state
   useEffect(() => {
     if (selectedPrompt) {
@@ -219,6 +235,8 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
     setResultImage(null);
 
     try {
+      const apiKey = model === 'Doubao' ? doubaoKey : geminiKey;
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
@@ -229,6 +247,7 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
           model,
           aspectRatio,
           image: uploadedImage, // Include uploaded image URL
+          apiKey,
         }),
       });
 
@@ -273,9 +292,18 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
       <aside className="w-[600px] h-full bg-paper border-l border-stone-line flex flex-col z-50 shadow-xl relative transition-all duration-300 shrink-0">
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-stone-line/0 via-stone-line/50 to-stone-line/0"></div>
 
-        <div className="p-8 pb-4 shrink-0">
-          <h2 className="font-serif text-2xl text-navy italic font-bold">创作工坊</h2>
-          <p className="text-xs text-navy-light mt-1 font-sans">实验与调优</p>
+        <div className="p-8 pb-4 shrink-0 flex justify-between items-start">
+          <div>
+            <h2 className="font-serif text-2xl text-navy italic font-bold">创作工坊</h2>
+            <p className="text-xs text-navy-light mt-1 font-sans">实验与调优</p>
+          </div>
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all"
+            title="设置 API Key"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
         </div>
 
         <div className="flex-1 flex flex-col min-h-0">
@@ -377,6 +405,70 @@ export default function Sidebar({ selectedPrompt }: SidebarProps) {
                   ]}
                 />
               </div>
+
+              {/* Settings Modal */}
+              {isSettingsOpen && createPortal(
+                <div className="fixed inset-0 z-[100] bg-navy/20 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+                  <div className="bg-paper w-full max-w-md p-6 shadow-2xl border border-stone-line relative animate-in zoom-in-95 duration-200">
+                    <button
+                      onClick={() => setIsSettingsOpen(false)}
+                      className="absolute top-4 right-4 text-navy-light hover:text-navy transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+
+                    <h3 className="font-serif text-xl text-navy font-bold mb-6 flex items-center gap-2">
+                      <Settings className="w-5 h-5" />
+                      API 配置
+                    </h3>
+
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
+                          Doubao API Key
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="password"
+                            value={doubaoKey}
+                            onChange={(e) => setDoubaoKey(e.target.value)}
+                            className="w-full bg-cream border border-stone-line p-3 pr-10 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 font-mono"
+                            placeholder="sk-..."
+                          />
+                          <Key className="absolute right-3 top-3 w-4 h-4 text-navy-light" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
+                          Gemini API Key
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="password"
+                            value={geminiKey}
+                            onChange={(e) => setGeminiKey(e.target.value)}
+                            className="w-full bg-cream border border-stone-line p-3 pr-10 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 font-mono"
+                            placeholder="AIza..."
+                          />
+                          <Key className="absolute right-3 top-3 w-4 h-4 text-navy-light" />
+                        </div>
+                      </div>
+
+                      <div className="pt-2">
+                        <button
+                          onClick={saveSettings}
+                          className="w-full bg-navy hover:bg-navy-light text-white font-bold py-3 transition-colors flex items-center justify-center gap-2"
+                        >
+                          <Save className="w-4 h-4" />
+                          保存配置
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>,
+                document.body
+              )}
 
               <button
                 onClick={handleGenerate}

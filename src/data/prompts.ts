@@ -10,7 +10,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "适合制作产品演变史、技术解析图，具有极高的信息密度和专业质感。",
     "category": "设计资源",
     "source": "Midjourney Gallery",
-    "imageUrl": "https://placehold.co/800x450?text=3D+Infographic",
+    "imageUrl": "/images/百科全书信息图表.png",
     "type": "image"
   },
   {
@@ -22,7 +22,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "专为小红书风格打造的OOTD插画，强调时尚感和手绘质感。",
     "category": "社交媒体",
     "source": "社区投稿",
-    "imageUrl": "https://placehold.co/800x450?text=OOTD+Illustration",
+    "imageUrl": "/images/潮流OOTD手绘插画.png",
     "type": "image"
   },
   {
@@ -30,11 +30,11 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "title": "人物转潮流 OOTD 插画 (详细版)",
     "model": "Nano Banana Pro",
     "promptZh": "「将我上传照片中的人物转换成潮流 OOTD 手绘插画风格。保持用户照片中的脸部特征、发型、气质，但用更可爱、年轻的潮流插画比例呈现。\n\n整体风格要求：\n\n竖版构图、潮流穿搭分解图、手绘潮流插画风。背景为柔和浅米黄色纯色，无渐变。线条粗、随意、有手绘马克笔的抖动感。颜色饱和但柔和，蓝色呈中亮、舒服的潮流蓝，不刺眼。\n\n人物转换规则（基于用户照片）：\n\n保留用户本人的脸部特征、发型\n\n脸部五官简化：眼睛为深蓝小圆点；眉毛浅灰蓝细线；鼻子为极淡的肉色阴影点；嘴巴为浅橘线条；两颊有柔和橘粉腮红\n\n将人物比例转换为：短身比例，腿短一点、身体略圆润、潮流插画比例但不Q版\n\n肤色保持用户真实肤色，但以柔和暖调呈现，不出现蓝色阴影\n\n服装生成逻辑：\n\n自动根据用户上传照片中的服装外观，将其转化为：\n\nOversize 潮流版型（更宽大、更松弛）\n更大袖口、更阔的裤子\n鞋子短小肥厚（厚底＋饱满鞋身）\n\n所有物体使用就近色描边规则，比如：\n衣服 → 比衣服深一点的同色描边\n皮肤 → 深肉棕描边\n其他部分也同理\n没有黑色描边\n\n饰品、眼镜类物品都要体现出来\n\n画面附加 OOTD 分解元素：\n手绘衣服布料纹理放大图\n下装结构图\n对应鞋子款式的爆炸图\n\n随身物件：符合人物个性的4个物品（粗描边，不填色的手绘风格）四周摆放，不要排列整齐\n\n手绘灰蓝色箭头（线+面性箭头，箭头不用太粗）、注释、小 doodle，都是粗线条\n整体像潮流插画师画的穿搭原稿\n动作、表情与图片一致。\n\n最终效果：\n真实人物 → 转换成潮流手绘、短身比例、粗线条、穿搭拆解图的 OOTD 插画。」",
-    "promptEn": "\"Transform the person in my uploaded photo into a trendy OOTD hand-drawn illustration style. Maintain the user's facial features, hairstyle, and temperament, but present them in a cuter, younger trendy illustration proportion.\n\nOverall Style Requirements:\n\nVertical composition, trendy outfit breakdown, hand-drawn trendy illustration style. Background is soft light beige solid color, no gradient. Lines are thick, casual, with the jitter of hand-drawn markers. Colors are saturated but soft, blue is medium-bright, comfortable trendy blue, not glaring.\n\nCharacter Transformation Rules (Based on User Photo):\n\nRetain user's facial features and hairstyle.\n\nFacial Features Simplification: Eyes are dark blue small dots; eyebrows are light gray-blue thin lines; nose is a very faint flesh-colored shadow dot; mouth is a light orange line; cheeks have soft orange-pink blush.\n\nConvert body proportions to: Short body proportions, slightly shorter legs, slightly round body, trendy illustration proportions but not Chibi.\n\nSkin tone keeps user's real skin tone, but presented in soft warm tones, no blue shadows.\n\nClothing Generation Logic:\n\nAutomatically convert clothing based on the uploaded photo to:\n\nOversize trendy fit (wider, looser)\nLarger cuffs, wider pants\nShoes are short and chunky (thick soles + full shoe body)\n\nAll objects use nearest color outline rule, e.g.:\nClothes -> Darker shade of same color outline\nSkin -> Dark meat brown outline\nSame for other parts\nNo black outlines\n\nAccessories, glasses must be reflected.\n\nAdditional OOTD Breakdown Elements:\nHand-drawn fabric texture zoom-in\nBottoms structure diagram\nExploded view of corresponding shoe style\n\nPersonal Items: 4 items matching character personality (thick outline, no fill hand-drawn style) scattered around, not arranged neatly.\n\nHand-drawn gray-blue arrows (line + plane arrows, not too thick), notes, small doodles, all thick lines.\nOverall looks like a fashion illustrator's original outfit draft.\nAction, expression consistent with image.\n\nFinal Effect:\nReal Person -> Transformed into trendy hand-drawn, short body proportion, thick lines, outfit breakdown OOTD illustration.\"",
+    "promptEn": "\"Transform the person in my uploaded photo into a trendy OOTD hand-drawn illustration style. Maintain the user's facial features, hairstyle, and temperament, but present them in a cuter, younger trendy illustration proportion.\n\nOverall Style Requirements:\n\nVertical composition, trendy outfit breakdown, hand-drawn trendy illustration style. Background is soft light beige solid color, no gradient. Lines are thick, casual, with the jitter of hand-drawn markers. Colors are saturated but soft, blue is medium-bright, comfortable trendy blue, not glaring.\n\nCharacter Transformation Rules (Based on User Photo):\n\nRetain user's facial features and hairstyle.\n\nFacial Features Simplification: Eyes are dark blue small dots; eyebrows are light gray-blue thin lines; nose is a very faint flesh-colored shadow dot; mouth is a light orange line; cheeks have soft orange-pink blush.\n\nConvert body proportions to: Short body proportions, slightly shorter legs, slightly round body, trendy illustration proportions but not Chibi.\n\nSkin tone keeps user's real skin tone, but presented in soft warm tones, no blue shadows.\n\nClothing Generation Logic:\n\nAutomatically convert clothing based on the uploaded photo to:\n\nOversize trendy fit (wider, looser)\nLarger cuffs, wider pants\nShoes are short and chunky (thick soles + full shoe body)\n\nAll objects use nearest color outline rule, e.g.:\nClothes -> Darker shade of same color outline\nSkin -> Dark meat brown outline\nSame for other parts\nNo black outlines\n\nAccessories, glasses must be reflected.\n\nAdditional OOTD Breakdown Elements:\nHand-drawn fabric texture zoom-in\nBottoms structure diagram\nExploded view of corresponding shoe style\n\nPersonal Items: 4 items matching character personality (thick outline, no fill hand-drawn style) scattered around, not arranged neatly.\n\nHand-drawn gray-blue arrows (line + plane arrows, not too thick), notes, small doodles, all thick lines.\nOverall looks like a fashion illustrator's original outfit draft.\nAction, expression consistent with the picture.\n\nFinal Effect:\nReal person -> Transformed into trendy hand-drawn, short body proportion, thick line, outfit breakdown OOTD illustration.\"",
     "description": "详细版的OOTD插画生成指令，包含对面部、比例、服装和装饰元素的具体要求。",
     "category": "社交媒体",
     "source": "内部优化",
-    "imageUrl": "https://placehold.co/800x450?text=OOTD+Detailed",
+    "imageUrl": "/images/人物转潮流 OOTD 插画 (详细版).png",
     "type": "image"
   },
   {
@@ -46,19 +46,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "将枯燥的信息转化为生动有趣的手绘卡通信息图。",
     "category": "办公效率",
     "source": "Prompt Engineering Guide",
-    "imageUrl": "https://placehold.co/800x450?text=Cartoon+Infographic",
-    "type": "image"
-  },
-  {
-    "id": "5",
-    "title": "日式风铃 Canvas 交互组件",
-    "model": "Claude-3.5-Sonnet",
-    "promptZh": "#角色\n你是一位精通 Canvas 动画、Web Audio API 和 CSS3 高级特性的前端创意开发专家。\n#目标\n编写一个单文件 HTML，实现一个极简、优雅且具有物理交互感的日式玻璃风铃窗景小组件。\n#核心需求\n1. 核心视觉与结构设计\n- 风铃形态设计：\n造型：必须塑造出经典的日式江户风铃外观，即倒扣的半球形，顶部圆润，底部平滑内收。严禁使用简单的圆柱体或完美的圆形，要体现出手工吹制玻璃的自然弧度，一排共五个风铃。\n材质：通过背景模糊滤镜配合半透明的白色背景，模拟出带有微磨砂感和高光反射的清透玻璃质感。\n短册（纸片）连接结构：\n连贯性：纸片必须被视为风铃整体的一部分，严禁出现视觉上的断裂。\n层级关系：构建清晰的层级结构。每个风铃单元应包含挂绳和铃铛主体；铃铛内部悬挂铃舌（或珠子）；最关键的是，纸片容器的锚点必须精确固定在铃舌珠子上，并通过一根细长的连接线自然垂下，确保视觉上纸片是从珠子延伸出来的。\n\n2. 物理与动画逻辑\n双摆物理模拟：\n一级摆（铃铛）：仅允许铃铛在二维平面上进行左右摆动。严禁对铃铛主体施加三维翻转（如 X 轴或 Y 轴旋转），以防止铃铛在摆动时因透视关系变扁，破坏球体体积感。\n二级摆（纸片）：纸片应作为二级摆动系统，其运动角度需滞后于铃铛，形成自然的惯性拖尾效果。\n纸片三维飘动：为了模拟风吹时的轻盈感，仅对下方的纸片部分应用 Y 轴旋转和倾斜变形，使其看起来在风中自由翻转。\n环境风场：利用时间正弦波叠加随机相位来模拟自然微风，确保风铃在没有交互时也能保持轻微的\"呼吸感\"晃动。\n交互反馈：当鼠标划过风铃区域时，根据距离计算力度，赋予风铃水平方向的速度增量。\n\n3. 沉浸式环境系统\n平滑天气过渡：\n双缓冲背景机制：严禁通过直接切换颜色来改变背景。必须创建两个绝对定位的背景层，利用透明度属性进行长时长的交替渐变，实现电影级的无缝淡入淡出效果。\n元素进出：在切换天气时，旧的云朵或天体应缓慢淡出，新元素延迟淡入，避免突兀的跳变。\n自动轮播：设定每 6 秒自动在晴、阴、雨、雪、夜五种天气模式间平滑循环。\n粒子特效：使用 Canvas 在最上层绘制相应的天气粒子，如细腻的雨丝、飘落的雪点或呼吸闪烁的星光。\n\n4. 音频设计\n原生音频合成：\n利用 Web Audio API 的振荡器实时生成声音，不依赖任何外部音频文件。\n音色调制：使用正弦波作为基频，叠加一个频率约为基频两倍的泛音，以模拟水晶或玻璃碰撞时的清脆质感。\n动态包络：设置极短的起音时间和较长的衰减时间，还原风铃声音清脆且余音悠长的物理特性。\n\n5. 代码质量约束\n文件形式：所有代码（HTML, CSS, JS）必须封装在唯一的 HTML 文件中。\n美学比例：风铃整体视觉应小巧精致，挂绳要细长，保持画面有充足的留白。\n布局对齐：使用弹性布局或绝对定位，确保风铃挂绳垂直且精准地对齐窗框顶部。",
-    "promptEn": "#Role\nYou are a frontend creative development expert proficient in Canvas animation, Web Audio API, and CSS3 advanced features.\n#Goal\nWrite a single-file HTML to implement a minimalist, elegant, and physically interactive Japanese glass wind chime window scene widget.\n#Core Requirements\n[...Translated content of the Chinese prompt...]",
-    "description": "生成高质量的前端代码，实现具有物理交互和音频合成的日式风铃组件。",
-    "category": "编程开发",
-    "source": "Claude 最佳实践",
-    "imageUrl": "https://placehold.co/800x450?text=Wind+Chime+Code",
+    "imageUrl": "/images/卡通风格信息图.png",
     "type": "image"
   },
   {
@@ -70,7 +58,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "设计盖洛普优势才干卡片，用于展示个人优势和特质。",
     "category": "设计资源",
     "source": "UI 设计社区",
-    "imageUrl": "https://placehold.co/800x450?text=Gallup+Card",
+    "imageUrl": "/images/盖洛普才干卡片.png",
     "type": "image"
   },
   {
@@ -82,7 +70,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "创作鬼灭之刃风格的浮世绘闪卡，结合传统艺术与现代卡牌设计。",
     "category": "动漫插画",
     "source": "Midjourney 风格探索",
-    "imageUrl": "https://placehold.co/800x450?text=Demon+Slayer+Card",
+    "imageUrl": "/images/鬼灭之刃浮世绘闪卡.png",
     "type": "image"
   },
   {
@@ -94,7 +82,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "生成可爱的3D微缩店铺模型，适合品牌概念设计和盲盒风格。",
     "category": "3D设计",
     "source": "Midjourney 建筑系列",
-    "imageUrl": "https://placehold.co/800x450?text=Chibi+Store",
+    "imageUrl": "/images/Q 版梦幻店铺.png",
     "type": "image"
   },
   {
@@ -106,31 +94,31 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "专业的九宫格时尚摄影生成指令，全方位展示穿搭细节。",
     "category": "摄影",
     "source": "时尚摄影师",
-    "imageUrl": "https://placehold.co/800x450?text=9-Grid+Fashion",
+    "imageUrl": "/images/九宫格超写实时尚摄影.png",
     "type": "image"
   },
   {
     "id": "10",
-    "title": "青春拼贴肖像 (Youthful Collage Portrait)",
+    "title": "青春拼贴肖像",
     "model": "Nano Banana Pro",
     "promptZh": "使用此提示生成一张俏皮、时尚的肖像拼贴画，准确复制上传照片中的人物特征，捕捉清新、青春的美学，并带有剪贴簿风格的装饰和可爱的杂志风格细节。\n\n--- 提示词 ----\n\n重现上传照片中人物的外貌，准确保留发型、面部细节和表情。将其呈现为垂直拼贴格式的明亮、清新和青春的时尚肖像。\n\n她穿着时尚的青春服装，嘴边拿着红色的棒棒糖。她的脸上俏皮地装饰着心形、草莓和星星形状的可爱彩色贴纸，营造出生动、时尚的氛围。她的眼睛富有表情，妆容柔和自然，脸上露出梦幻般的表情。\n\n背景是一个覆盖着彩色便利贴和备忘录纸的软木板，营造出校园和手帐的氛围。手绘的星星、箭头和类似元素的涂鸦增加了可爱的杂志风格美学。围绕主体的是约4个剪贴簿风格的相框，形状各异，展示同一人的不同服装和姿势。\n\n总体而言，图像应利用柔和的摄影棚照明、高清细节、利落的剪贴簿美学、韩国时尚杂志风格和鲜艳的色彩。\n\n宽高比：9:16。",
     "promptEn": "Use this prompt to generate a playful, stylish portrait collage that accurately replicates a person's features from your uploaded photo, capturing a fresh, youthful aesthetic with scrapbook-inspired decorations and cute, magazine-style details.\n\n--- prompt ----\n\nRecreate the character's appearance from the uploaded photo, accurately preserving hairstyle, facial details, and expression. Present it as a bright, fresh, and youthful fashion portrait in a vertical collage format.\n\nShe wears trendy youthful clothing, holding a red lollipop near her lips. Her face is playfully decorated with cute colorful stickers shaped like hearts, strawberries, and stars, creating a lively, stylish atmosphere. Her eyes are expressive, makeup is soft and natural, and her face shows a dreamy expression.\n\nThe background features a corkboard covered with colorful sticky notes and memo papers, creating a campus and journaling vibe. Hand-drawn doodles of stars, arrows, and similar elements add to the cute, magazine-style aesthetic. Surrounding the main subject are ～4 scrapbook-style photo frames in various shapes, showcasing different outfits and poses of the same person.\n\nOverall, the image should utilize soft studio lighting, high-definition details, a clean-cut scrapbook aesthetic, Korean fashion-magazine style, and vibrant colors.\n\nAspect ratio: 9:16.",
     "description": "生成青春活力的拼贴风格肖像，适合社交媒体头像和海报。",
     "category": "人像摄影",
     "source": "Instagram 潮流",
-    "imageUrl": "https://placehold.co/800x450?text=Collage+Portrait",
+    "imageUrl": "/images/青春拼贴肖像.png",
     "type": "image"
   },
   {
     "id": "11",
     "title": "电影取景地打卡",
     "model": "Nano Banana Pro",
-    "promptZh": "穿越时空⌛️这一次Nano Banana Pro带你来到电影取景地🎬📍\n\n上传参考图+输入电影名称，即可来到当地打卡🛫\n\n中文提示词：\n选取《你的名字》电影里经典画面的实景，使用参考图中角色（动作符合电影氛围），生成一张超写实风格的旅行照片，比例为3:4或9:16。请在画面里用原版电影海报的语言、字体、排版风格，在合适的位置标注三个地名：1. 取景地名 2. 城市 3. 国家。请让指定的角色看起来像是在那个地方旅游。像电影海报一样美地布局。",
+    "promptZh": "选取《龙猫》电影里经典画面的实景，使用参考图中角色（动作符合电影氛围），生成一张超写实风格的旅行照片。请在画面里用原版电影海报的语言、字体、排版风格，在合适的位置标注三个地名：1. 取景地名 2. 城市 3. 国家。请让指定的角色看起来像是在那个地方旅游。像电影海报一样美地布局。",
     "promptEn": "Travel through time and space ⌛️ This time Nano Banana Pro takes you to movie filming locations 🎬📍\n\nUpload reference photo + input movie name to check in at the location 🛫\n\nEnglish Prompt:\nSelect a real-life scene from the classic shots of the movie \"Your Name\", use the character from the reference photo (action fits the movie atmosphere), and generate a hyper-realistic travel photo, aspect ratio 3:4 or 9:16. Please mark three place names in the picture using the language, font, and layout style of the original movie poster in appropriate positions: 1. Location Name 2. City 3. Country. Make the specified character look like they are traveling there. Layout as beautiful as a movie poster.",
     "description": "将人物融入经典电影场景，生成具有电影海报质感的旅行打卡照。",
     "category": "创意合成",
     "source": "电影爱好者社区",
-    "imageUrl": "https://placehold.co/800x450?text=Movie+Location",
+    "imageUrl": "/images/电影取景地打卡.png",
     "type": "image"
   },
   {
@@ -142,7 +130,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "利用超广角透视夸张表现人物动态，创造极具视觉冲击力的画面。",
     "category": "创意摄影",
     "source": "先锋摄影",
-    "imageUrl": "https://placehold.co/800x450?text=Ultra+Wide+Angle",
+    "imageUrl": "/images/超广角重构：姿态与透视极限.png",
     "type": "image"
   },
   {
@@ -154,7 +142,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "模拟高端日系写真集排版和质感，营造文艺清新的视觉体验。",
     "category": "排版设计",
     "source": "日本平面设计",
-    "imageUrl": "https://placehold.co/800x450?text=Photo+Book+Scan",
+    "imageUrl": "/images/日本高端写真集扫描风.png",
     "type": "image"
   },
   {
@@ -166,7 +154,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "让现实人物与疯狂动物城角色合影，打破次元壁的趣味自拍。",
     "category": "创意合成",
     "source": "迪士尼粉丝二创",
-    "imageUrl": "https://placehold.co/800x450?text=Zootopia+Selfie",
+    "imageUrl": "/images/疯狂动物城自拍.png",
     "type": "image"
   },
   {
@@ -178,7 +166,7 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "具有法式幽默和速写质感的新闻漫画，适合表达社会热点或讽刺主题。",
     "category": "插画",
     "source": "New Yorker 风格",
-    "imageUrl": "https://placehold.co/800x450?text=French+Cartoon",
+    "imageUrl": "/images/法式速写新闻漫画.png",
     "type": "image"
   },
   {
@@ -190,7 +178,29 @@ export const MOCK_PROMPTS: PromptItem[] = [
     "description": "同款电影场景的写真集风格生成，唯美且具有故事感。",
     "category": "摄影",
     "source": "电影周边",
-    "imageUrl": "https://placehold.co/800x450?text=French+Cartoon",
+    "imageUrl": "/images/电影写真集.png",
     "type": "image"
+  },
+  {
+    id: "17",
+    title: "交互式 Canvas 风铃",
+    model: "GPT-4",
+    promptZh: "请写一个 React 组件，使用 HTML5 Canvas 实现一个日式风铃的效果。要求：\n1. 风铃随鼠标移动产生的微风摆动。\n2. 有清脆的铃声效果（可选）。\n3. 视觉风格清新，带有夏季氛围。",
+    promptEn: "Create a React component that uses HTML5 Canvas to implement a Japanese wind chime effect. Requirements:\n1. The wind chime swings with the breeze generated by mouse movement.\n2. Crisp chime sound effect (optional).\n3. Fresh visual style with a summer atmosphere.",
+    description: "一个基于 HTML5 Canvas 的日式风铃交互组件，适合前端开发展示。",
+    category: "代码开发",
+    source: "原创",
+    type: "code"
+  },
+  {
+    id: "18",
+    title: "深度技术文章生成",
+    model: "Claude 3.5 Sonnet",
+    promptZh: "请写一篇关于 [技术主题] 的深度解析文章。\n结构要求：\n1. 引言：背景介绍与核心问题。\n2. 技术原理：深入剖析底层机制。\n3. 实战案例：代码示例与应用场景。\n4. 优缺点分析：客观评价。\n5. 总结与展望。\n语气风格：专业、客观、深入浅出。",
+    promptEn: "Please write a deep dive article about [Technical Topic].\nStructure requirements:\n1. Introduction: Background and core issues.\n2. Technical Principles: In-depth analysis of underlying mechanisms.\n3. Practical Cases: Code examples and application scenarios.\n4. Pros/Cons Analysis: Objective evaluation.\n5. Conclusion and Outlook.\nTone: Professional, objective, insightful yet accessible.",
+    description: "生成结构严谨、内容详实的技术深度解析文章。",
+    category: "写作辅助",
+    source: "原创",
+    type: "article"
   }
 ];
