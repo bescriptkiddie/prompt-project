@@ -9,6 +9,7 @@ interface GeneratedResult {
   images?: string[];
   videoUrl?: string;
   originalImage: string;
+  originalImages?: string[];
   prompt: string;
   count?: number;
   taskId?: string;
@@ -132,11 +133,24 @@ export default function ResultPage() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-semibold mb-4">原图</h2>
-              <img 
-                src={result.originalImage} 
-                alt="原图" 
-                className="w-full rounded-lg shadow-md"
-              />
+              {result.originalImages && result.originalImages.length > 0 ? (
+                <div className="grid grid-cols-2 gap-2">
+                  {result.originalImages.map((img, idx) => (
+                    <img 
+                      key={idx}
+                      src={img} 
+                      alt={`原图 ${idx + 1}`} 
+                      className="w-full rounded-lg shadow-md object-cover h-32"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <img 
+                  src={result.originalImage} 
+                  alt="原图" 
+                  className="w-full rounded-lg shadow-md"
+                />
+              )}
             </div>
           </div>
 

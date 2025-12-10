@@ -3,7 +3,7 @@ import { handleGeneration } from '@/lib/generation';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, image, model, apiKey } = await request.json();
+    const { prompt, image, images, model, apiKey } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -12,8 +12,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Normalize images to an array
+    const imageList = images || (image ? [image] : undefined);
+
     const modelType = model === 'Doubao' ? 'Doubao' : 'Gemini';
-    const imageUrl = await handleGeneration(prompt, image, modelType, apiKey);
+    const imageUrl = await handleGeneration(prompt, imageList, modelType, apiKey);
 
     return NextResponse.json({
       success: true,

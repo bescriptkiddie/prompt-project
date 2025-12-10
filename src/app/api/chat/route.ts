@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY || 'default-gemini-key',
+  apiKey: 'sk-88fb4fd5dad2619831741f5e6f14670bf9308134dd08ed41a1a79400a3de874e',
   baseURL: 'https://api.qnaigc.com/v1',
   timeout: 60000
 });
@@ -10,7 +10,28 @@ const client = new OpenAI({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
-    const { messages } = body;
+    let { messages } = body;
+    const { prompt, images } = body;
+
+    // 如果提供了 prompt 和 images，构造 messages
+    if (!messages && prompt) {
+      const content: Array<{ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }> = [
+        { type: 'text', text: prompt }
+      ];
+
+      if (images && Array.isArray(images)) {
+        images.forEach((imageUrl: string) => {
+          content.push({
+            type: 'image_url',
+            image_url: {
+              url: imageUrl
+            }
+          });
+        });
+      }
+
+      messages = [{ role: 'user', content }];
+    }
 
     const response = await client.chat.completions.create({
       model: 'gemini-3.0-pro-image-preview',

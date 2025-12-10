@@ -6,60 +6,72 @@ import { useRouter } from 'next/navigation';
 import { GenerationType } from '@/types';
 
 export default function CreatePage() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [prompt, setPrompt] = useState<string>('');
   const [maxImages, setMaxImages] = useState<number>(3);
   const [isUploading, setIsUploading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [generationType, setGenerationType] = useState<GenerationType>('image');
   const [videoTaskId, setVideoTaskId] = useState<string>('');
   const router = useRouter();
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const newFiles = Array.from(files);
+      setSelectedFiles(prev => [...prev, ...newFiles]);
+
+      const newPreviewUrls = newFiles.map(file => URL.createObjectURL(file));
+      setPreviewUrls(prev => [...prev, ...newPreviewUrls]);
 
       // 自动上传文件
-      await handleUpload(file);
+      await handleUpload(newFiles);
     }
   };
 
-  const handleUpload = async (file?: File) => {
-    const fileToUpload = file || selectedFile;
-    if (!fileToUpload) return;
+  const handleUpload = async (files: File[]) => {
+    if (!files || files.length === 0) return;
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('image', fileToUpload);
+      const uploadPromises = files.map(async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          return result.url;
+        } else {
+          throw new Error(result.error || '上传失败');
+        }
       });
 
-      const result = await response.json();
-      if (result.success) {
-        setUploadedImageUrl(result.url);
-        alert('图片上传成功！');
-      } else {
-        alert('上传失败: ' + result.error);
-      }
+      const urls = await Promise.all(uploadPromises);
+      setUploadedImageUrls(prev => [...prev, ...urls]);
+      // alert('图片上传成功！');
     } catch (error) {
       console.error('上传错误:', error);
-      alert('上传失败，请重试');
+      alert('部分图片上传失败，请重试');
     } finally {
       setIsUploading(false);
     }
   };
 
+  const handleRemoveImage = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
+    setUploadedImageUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleGenerate = async () => {
-    if (!uploadedImageUrl || !prompt.trim()) {
+    if (uploadedImageUrls.length === 0 || !prompt.trim()) {
       alert('请先上传图片并输入提示词');
       return;
     }
@@ -75,7 +87,7 @@ export default function CreatePage() {
           },
           body: JSON.stringify({
             prompt: prompt.trim(),
-            image: uploadedImageUrl,
+            images: uploadedImageUrls, // Send array of images
             maxImages: maxImages,
           }),
         });
@@ -86,7 +98,8 @@ export default function CreatePage() {
           sessionStorage.setItem('generatedImages', JSON.stringify({
             type: 'image',
             images: result.images,
-            originalImage: previewUrl,
+            originalImage: previewUrls[0], // Keep for backward compatibility
+            originalImages: previewUrls, // Save all original images
             prompt: prompt,
             count: result.count
           }));
@@ -102,7 +115,7 @@ export default function CreatePage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            imageUrl: uploadedImageUrl,
+            imageUrl: uploadedImageUrls[0], // Use first image for video
             prompt: prompt.trim(),
           }),
         });
@@ -128,13 +141,13 @@ export default function CreatePage() {
     try {
       const response = await fetch(`/api/video-status?taskId=${taskId}`);
       const result = await response.json();
-      
+
       if (result.status === 'succeeded' && result.videoUrl) {
         // 视频生成完成
         sessionStorage.setItem('generatedImages', JSON.stringify({
           type: 'video',
           videoUrl: result.videoUrl,
-          originalImage: previewUrl,
+          originalImage: previewUrls[0],
           prompt: prompt,
           taskId: taskId
         }));
@@ -170,16 +183,27 @@ export default function CreatePage() {
             </h2>
 
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              {previewUrl ? (
-                <div className="space-y-4">
-                  <img
-                    src={previewUrl}
-                    alt="预览"
-                    className="max-w-full max-h-64 mx-auto rounded-lg"
-                  />
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600">文件名: {selectedFile?.name}</p>
-                    <p className="text-sm text-gray-600">大小: {(selectedFile?.size || 0 / 1024 / 1024).toFixed(2)} MB</p>
+              {previewUrls.length > 0 ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {previewUrls.map((url, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={url}
+                        alt={`预览 ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                      <button
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                  <div className="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg h-32 cursor-pointer hover:bg-gray-50" onClick={() => document.getElementById('file-input')?.click()}>
+                    <span className="text-gray-500 text-sm">+ 添加图片</span>
                   </div>
                 </div>
               ) : (
@@ -196,6 +220,7 @@ export default function CreatePage() {
                 onChange={handleFileSelect}
                 className="hidden"
                 id="file-input"
+                multiple
               />
               <label
                 htmlFor="file-input"
@@ -212,9 +237,9 @@ export default function CreatePage() {
               </div>
             )}
 
-            {uploadedImageUrl && (
+            {uploadedImageUrls.length > 0 && uploadedImageUrls.length === previewUrls.length && (
               <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-lg">
-                ✅ 图片上传成功！可以开始生成了
+                ✅ 所有图片上传成功！可以开始生成了
               </div>
             )}
           </div>
@@ -301,7 +326,7 @@ export default function CreatePage() {
 
               <button
                 onClick={handleGenerate}
-                disabled={!uploadedImageUrl || !prompt.trim() || isGenerating}
+                disabled={uploadedImageUrls.length === 0 || !prompt.trim() || isGenerating}
                 className="w-full px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg font-semibold"
               >
                 {isGenerating ? (

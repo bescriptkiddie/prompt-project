@@ -41,7 +41,7 @@ function createClient(modelType: ModelType, customApiKey?: string): OpenAI {
 
 export async function handleGeneration(
   prompt: string,
-  image: string | undefined,
+  images: string[] | undefined,
   modelType: ModelType,
   apiKey?: string
 ): Promise<string> {
@@ -51,12 +51,14 @@ export async function handleGeneration(
 
   // Doubao 使用 images.generate API
   if (modelType === 'Doubao') {
+    // Doubao currently takes a single image for image-to-image
+    const image = images && images.length > 0 ? images[0] : undefined;
     return handleDoubaoGeneration(client, MODEL_CONFIG.Doubao, prompt, image);
   }
 
   // Gemini: chat.completions API
-  if (image) {
-    return handleGeminiImageGeneration(client, MODEL_CONFIG.Gemini, prompt, image);
+  if (images && images.length > 0) {
+    return handleGeminiImageGeneration(client, MODEL_CONFIG.Gemini, prompt, images);
   }
   return handleGeminiChatGeneration(client, MODEL_CONFIG.Gemini, prompt);
 }
@@ -101,14 +103,14 @@ async function handleGeminiImageGeneration(
   client: OpenAI,
   config: typeof MODEL_CONFIG['Gemini'],
   prompt: string,
-  image: string
+  images: string[]
 ): Promise<string> {
-  console.log('Gemini Image-to-Image mode activated');
+  console.log('Gemini Image-to-Image mode activated with', images.length, 'images');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const content: any[] = [
     { type: 'text', text: prompt },
-    { type: 'image_url', image_url: { url: image } }
+    ...images.map(url => ({ type: 'image_url', image_url: { url } }))
   ];
 
   const response = await client.chat.completions.create({

@@ -139,10 +139,10 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
   const [isGenerating, setIsGenerating] = useState(false);
   const [resultImage, setResultImage] = useState<string | null>(null);
 
-  const [model, setModel] = useState('Doubao');
+  const [model, setModel] = useState('Gemini');
   const [aspectRatio, setAspectRatio] = useState('16:9');
 
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -182,26 +182,32 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
   }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
 
     try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
 
-      if (data.success) {
-        setUploadedImage(data.url);
-      } else {
-        console.error('Upload failed:', data.error);
-        alert('上传失败: ' + data.error);
-      }
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          return data.url;
+        } else {
+          throw new Error(data.error || 'Upload failed');
+        }
+      });
+
+      const urls = await Promise.all(uploadPromises);
+      setUploadedImages(prev => [...prev, ...urls]);
+
     } catch (error) {
       console.error('Upload error:', error);
       alert('上传出错，请重试');
@@ -210,6 +216,10 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
       // Reset input so same file can be selected again if needed
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleAspectRatioChange = (newRatio: string) => {
@@ -248,7 +258,8 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
           prompt,
           model,
           aspectRatio,
-          image: uploadedImage, // Include uploaded image URL
+          images: uploadedImages, // Include uploaded image URLs array
+          image: uploadedImages[0], // Keep backward compatibility
           apiKey,
         }),
       });
@@ -366,7 +377,7 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                   参考图 (可选)
                 </label>
 
-                {!uploadedImage ? (
+                {!uploadedImages.length ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
                     className={clsx(
@@ -380,30 +391,57 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                       className="hidden"
                       accept="image/png, image/jpeg"
                       onChange={handleFileUpload}
+                      multiple
                     />
                     {isUploading ? (
                       <Loader2 className="w-6 h-6 text-terra animate-spin" />
                     ) : (
                       <>
                         <ImageIcon className="w-6 h-6 text-navy-light group-hover:text-terra mb-2 transition-colors" />
-                        <span className="text-xs text-navy-light group-hover:text-navy font-medium">点击上传图片</span>
+                        <span className="text-xs text-navy-light group-hover:text-navy font-medium">点击上传图片 (可多选)</span>
                       </>
                     )}
                   </div>
                 ) : (
-                  <div className="relative w-full h-24 bg-cream border border-stone-line p-2 group">
-                    <img
-                      src={uploadedImage}
-                      alt="Reference"
-                      className="w-full h-full object-contain cursor-zoom-in"
-                      onClick={() => setPreviewImage(uploadedImage)}
-                    />
-                    <button
-                      onClick={() => setUploadedImage(null)}
-                      className="absolute top-2 right-2 p-1 bg-white/80 hover:bg-white text-navy hover:text-red-500 rounded-full shadow-sm transition-colors opacity-0 group-hover:opacity-100"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                    </button>
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      {uploadedImages.map((url, index) => (
+                        <div key={index} className="relative w-full h-24 bg-cream border border-stone-line p-2 group">
+                          <img
+                            src={url}
+                            alt={`Reference ${index + 1}`}
+                            className="w-full h-full object-contain cursor-zoom-in"
+                            onClick={() => setPreviewImage(url)}
+                          />
+                          <button
+                            onClick={() => handleRemoveImage(index)}
+                            className="absolute top-1 right-1 p-1 bg-white/80 hover:bg-white text-navy hover:text-red-500 rounded-full shadow-sm transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                          </button>
+                        </div>
+                      ))}
+                      <div
+                        className="relative w-full h-24 bg-cream border border-dashed border-stone-line flex items-center justify-center cursor-pointer hover:bg-white hover:border-terra transition-colors"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                         <input
+                          type="file"
+                          ref={fileInputRef}
+                          className="hidden"
+                          accept="image/png, image/jpeg"
+                          onChange={handleFileUpload}
+                          multiple
+                        />
+                         {isUploading ? (
+                          <Loader2 className="w-5 h-5 text-terra animate-spin" />
+                        ) : (
+                          <div className="text-center">
+                            <span className="text-xl text-navy-light/50">+</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
