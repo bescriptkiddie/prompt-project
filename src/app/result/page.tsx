@@ -153,7 +153,7 @@ export default function ResultPage() {
                   <div className="relative bg-black rounded-lg overflow-hidden">
                     <video 
                       src={result.videoUrl}
-                      className="w-full max-h-96 object-contain"
+                      className="w-full max-h-[50vh] md:max-h-96 object-contain"
                       controls
                       loop
                       muted
@@ -186,7 +186,7 @@ export default function ResultPage() {
                   <img 
                     src={selectedImage} 
                     alt="选中的生成图片" 
-                    className="w-full max-h-96 object-contain rounded-lg shadow-md bg-gray-50"
+                    className="w-full max-h-[60vh] md:max-h-[500px] object-contain rounded-lg shadow-md bg-gray-50"
                   />
                   <div className="flex justify-center space-x-4 mt-4">
                     <button
@@ -209,7 +209,7 @@ export default function ResultPage() {
 
               {/* 缩略图网格 - 只在图片模式下显示 */}
               {result.type === 'image' && result.images && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                   {result.images.map((imageUrl, index) => (
                     <div 
                       key={index}
@@ -223,9 +223,9 @@ export default function ResultPage() {
                       <img 
                         src={imageUrl} 
                         alt={`生成图片 ${index + 1}`} 
-                        className="w-full h-32 object-cover"
+                        className="w-full h-24 md:h-32 object-cover"
                       />
-                      <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                      <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-black bg-opacity-50 text-white text-xs px-1.5 py-0.5 md:px-2 md:py-1 rounded">
                         {index + 1}
                       </div>
                     </div>
