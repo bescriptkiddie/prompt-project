@@ -1,24 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import multer from 'multer';
-import { promisify } from 'util';
-
-// 配置 multer 使用内存存储
-const storage = multer.memoryStorage();
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB
-  },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
-    } else {
-      cb(new Error('只支持 JPEG 和 PNG 格式的图片'));
-    }
-  },
-});
-
-// uploadSingle removed as it's not used in this implementation
 
 export async function POST(request: NextRequest) {
   try {

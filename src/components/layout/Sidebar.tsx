@@ -377,6 +377,15 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                   参考图 (可选)
                 </label>
 
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/png, image/jpeg"
+                  onChange={handleFileUpload}
+                  multiple
+                />
+
                 {!uploadedImages.length ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
@@ -385,14 +394,6 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                       isUploading && "opacity-50 pointer-events-none"
                     )}
                   >
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      className="hidden"
-                      accept="image/png, image/jpeg"
-                      onChange={handleFileUpload}
-                      multiple
-                    />
                     {isUploading ? (
                       <Loader2 className="w-6 h-6 text-terra animate-spin" />
                     ) : (
@@ -414,8 +415,11 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                             onClick={() => setPreviewImage(url)}
                           />
                           <button
-                            onClick={() => handleRemoveImage(index)}
-                            className="absolute top-1 right-1 p-1 bg-white/80 hover:bg-white text-navy hover:text-red-500 rounded-full shadow-sm transition-colors opacity-0 group-hover:opacity-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveImage(index);
+                            }}
+                            className="absolute top-1 right-1 p-1.5 bg-white/90 hover:bg-white text-navy hover:text-red-500 rounded-full shadow-md transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                           </button>
@@ -425,14 +429,6 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                         className="relative w-full h-24 bg-cream border border-dashed border-stone-line flex items-center justify-center cursor-pointer hover:bg-white hover:border-terra transition-colors"
                         onClick={() => fileInputRef.current?.click()}
                       >
-                         <input
-                          type="file"
-                          ref={fileInputRef}
-                          className="hidden"
-                          accept="image/png, image/jpeg"
-                          onChange={handleFileUpload}
-                          multiple
-                        />
                          {isUploading ? (
                           <Loader2 className="w-5 h-5 text-terra animate-spin" />
                         ) : (
