@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Sparkles, Copy, Check, Trash2, Plus, Edit3, Save, X, Square } from 'lucide-react';
+import { Send, Loader2, Sparkles, Copy, Check, Trash2, Plus, Edit3, Save, X, Square, ChevronLeft } from 'lucide-react';
 import { CREATIVE_PROMPTS, CreativePrompt } from '@/data/creativePrompts';
 
 interface Message {
@@ -85,7 +85,7 @@ export default function MethodologyContent() {
   const fetchUrlContent = async (text: string): Promise<{ processedText: string; urls: string[] }> => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const urls = text.match(urlRegex);
-    
+
     if (!urls || urls.length === 0) {
       return { processedText: text, urls: [] };
     }
@@ -101,9 +101,9 @@ export default function MethodologyContent() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url })
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success && data.content) {
           const urlContent = `\n\n---\n【网页内容】${data.title ? `标题：${data.title}\n` : ''}${data.content}\n---\n`;
           processedText = processedText.replace(url, url + urlContent);
@@ -286,10 +286,15 @@ export default function MethodologyContent() {
 
   const categories = ['内容分析', '个人IP', '文章创作', '营销文案'] as const;
 
+  const handleBack = () => {
+    setSelectedPrompt(null);
+    setMessages([]);
+  };
+
   return (
     <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-      {/* 左侧 - Prompt 模板列表 */}
-      <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-stone-line overflow-y-auto p-4 md:p-6 no-scrollbar max-h-[40vh] md:max-h-none">
+      {/* 左侧 - Prompt 模板列表 (移动端选择后隐藏) */}
+      <div className={`w-full md:w-1/2 border-b md:border-b-0 md:border-r border-stone-line overflow-y-auto p-4 md:p-6 no-scrollbar md:block ${selectedPrompt ? 'hidden' : 'flex-1'}`}>
         <header className="mb-6 md:mb-8">
           <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-2 block">
             Creative Toolkit
@@ -408,13 +413,21 @@ export default function MethodologyContent() {
         })}
       </div>
 
-      {/* 右侧 - 聊天区域 */}
-      <div className="w-full md:w-1/2 flex-1 flex flex-col bg-white min-h-0">
+      {/* 右侧 - 聊天区域 (移动端选择后全屏) */}
+      <div className={`w-full md:w-1/2 flex-col bg-white min-h-0 md:flex ${selectedPrompt ? 'flex flex-1' : 'hidden'}`}>
         {selectedPrompt ? (
           <>
             <div className="p-4 border-b border-stone-line bg-cream/50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
+                  {/* 移动端返回按钮 */}
+                  <button
+                    onClick={handleBack}
+                    className="md:hidden p-2 -ml-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-colors"
+                    title="返回列表"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
                   <span className="text-2xl">{selectedPrompt.icon}</span>
                   <div>
                     <h2 className="font-semibold text-navy">{selectedPrompt.title}</h2>
@@ -434,7 +447,7 @@ export default function MethodologyContent() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-              {messages.length === 0 ? (
+              {messages.filter(m => m.content).length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8">
                   <Sparkles className="w-12 h-12 text-terra/30 mb-4" />
                   <p className="text-navy-light text-sm max-w-xs">
@@ -442,7 +455,7 @@ export default function MethodologyContent() {
                   </p>
                 </div>
               ) : (
-                messages.map((message, index) => (
+                messages.filter(m => m.content).map((message, index) => (
                   <div
                     key={index}
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -501,7 +514,6 @@ export default function MethodologyContent() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={selectedPrompt.placeholder}
                   className="flex-1 resize-none bg-white border border-stone-line rounded-xl p-3 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 min-h-[48px] max-h-[150px]"
                   rows={1}
                 />

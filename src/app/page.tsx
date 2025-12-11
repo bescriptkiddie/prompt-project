@@ -6,9 +6,10 @@ import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/home/Header';
 import PromptGrid from '@/components/home/PromptGrid';
 import MethodologyContent from '@/components/home/MethodologyContent';
+import AboutContent from '@/components/home/AboutContent';
 import { MOCK_PROMPTS } from '@/data/prompts';
 
-type TabType = 'methodology' | 'collection';
+type TabType = 'methodology' | 'collection' | 'about';
 
 export default function Home() {
   const [selectedPrompt, setSelectedPrompt] = useState('');
@@ -19,9 +20,9 @@ export default function Home() {
     <div className="flex h-full w-full overflow-hidden relative">
       <div className="flex-1 h-full overflow-y-auto no-scrollbar relative flex flex-col bg-cream">
         <Navbar onToggleSidebar={() => setIsSidebarOpen(true)} />
-        
+
         {/* Tab 切换 */}
-        <div className="px-4 md:px-8 pt-8 max-w-[1400px] mx-auto w-full">
+        <div className="px-4 md:px-8 pt-2 max-w-[1400px] mx-auto w-full flex justify-center">
           <div className="flex gap-1 bg-stone-line/30 p-1 rounded-lg w-fit">
             <button
               onClick={() => setActiveTab('methodology')}
@@ -43,11 +44,23 @@ export default function Home() {
             >
               精选集
             </button>
+            <button
+              onClick={() => setActiveTab('about')}
+              className={`px-6 py-2 text-sm font-medium rounded-md transition-all ${
+                activeTab === 'about'
+                  ? 'bg-white text-terra shadow-sm'
+                  : 'text-navy-light hover:text-navy'
+              }`}
+            >
+              关于我们
+            </button>
           </div>
         </div>
 
         {activeTab === 'methodology' ? (
           <MethodologyContent />
+        ) : activeTab === 'about' ? (
+          <AboutContent />
         ) : (
           <>
             <Header />

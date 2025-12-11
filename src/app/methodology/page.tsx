@@ -116,7 +116,7 @@ export default function Methodology() {
   const fetchUrlContent = async (text: string): Promise<{ processedText: string; urls: string[] }> => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const urls = text.match(urlRegex);
-    
+
     if (!urls || urls.length === 0) {
       return { processedText: text, urls: [] };
     }
@@ -132,9 +132,9 @@ export default function Methodology() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url })
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success && data.content) {
           const urlContent = `\n\n---\n【网页内容】${data.title ? `标题：${data.title}\n` : ''}${data.content}\n---\n`;
           processedText = processedText.replace(url, url + urlContent);
@@ -481,7 +481,7 @@ export default function Methodology() {
 
                 {/* 消息列表 */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-                  {messages.length === 0 ? (
+                  {messages.filter(m => m.content).length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-8">
                       <Sparkles className="w-12 h-12 text-terra/30 mb-4" />
                       <p className="text-navy-light text-sm max-w-xs">
@@ -489,7 +489,7 @@ export default function Methodology() {
                       </p>
                     </div>
                   ) : (
-                    messages.map((message, index) => (
+                    messages.filter(m => m.content).map((message, index) => (
                       <div
                         key={index}
                         className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -549,7 +549,6 @@ export default function Methodology() {
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder={selectedPrompt.placeholder}
                       className="flex-1 resize-none bg-white border border-stone-line rounded-xl p-3 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 min-h-[48px] max-h-[150px]"
                       rows={1}
                     />
