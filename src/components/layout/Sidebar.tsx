@@ -185,10 +185,31 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    const validFiles: File[] = [];
+    const oversizedFiles: string[] = [];
+
+    Array.from(files).forEach(file => {
+      if (file.size > MAX_SIZE) {
+        oversizedFiles.push(file.name);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (oversizedFiles.length > 0) {
+      alert(`以下文件超过 10MB 限制，已跳过：\n${oversizedFiles.join('\n')}`);
+    }
+
+    if (validFiles.length === 0) {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
     setIsUploading(true);
 
     try {
-      const uploadPromises = Array.from(files).map(async (file) => {
+      const uploadPromises = validFiles.map(async (file) => {
         const formData = new FormData();
         formData.append('image', file);
 
@@ -213,7 +234,6 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
       alert('上传出错，请重试');
     } finally {
       setIsUploading(false);
-      // Reset input so same file can be selected again if needed
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
