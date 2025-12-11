@@ -452,7 +452,6 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
                   value={model}
                   onChange={setModel}
                   options={[
-                    { label: 'Doubao', value: 'Doubao' },
                     { label: 'Gemini', value: 'Gemini' }
                   ]}
                 />
