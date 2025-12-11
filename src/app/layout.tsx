@@ -30,9 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${notoSerifSC.variable} ${playfairDisplay.variable} antialiased h-screen overflow-hidden flex flex-col`}
+        suppressHydrationWarning
       >
         {children}
       </body>

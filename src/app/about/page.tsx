@@ -9,17 +9,17 @@ export default function About() {
       <div className="flex-1 h-full overflow-y-auto no-scrollbar relative flex flex-col">
         <Navbar />
 
-        <main className="flex-1 px-8 py-16 max-w-[900px] mx-auto w-full animate-in fade-in duration-500">
-          <header className="mb-16 text-center">
-            <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-4 block">
+        <main className="flex-1 px-4 md:px-8 py-10 md:py-16 max-w-[900px] mx-auto w-full animate-in fade-in duration-500">
+          <header className="mb-10 md:mb-16 text-center">
+            <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-3 md:mb-4 block">
               About Us
             </span>
-            <h1 className="font-serif text-4xl md:text-5xl text-navy font-bold mb-6">
+            <h1 className="font-serif text-3xl md:text-5xl text-navy font-bold mb-4 md:mb-6">
               关于我们
             </h1>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
             <div className="col-span-12 md:col-span-7 prose prose-stone prose-lg text-navy/80">
               <p className="lead text-xl text-navy font-serif italic mb-6">
                 灵感工坊 (Inspiration Atelier) 致力于构建人与 AI 协作的新范式。

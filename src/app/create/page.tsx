@@ -167,18 +167,18 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-3 md:p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">萌宠图片处理</h1>
-          <p className="text-gray-600">上传你的萌宠图片，输入创意提示词，生成独特的萌宠表情包！</p>
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2 md:mb-4">萌宠图片处理</h1>
+          <p className="text-sm md:text-base text-gray-600">上传你的萌宠图片，输入创意提示词，生成独特的萌宠表情包！</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {/* 图片上传区域 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4 flex items-center">
-              <Upload className="mr-2" />
+          <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 flex items-center">
+              <Upload className="mr-2 w-5 h-5 md:w-6 md:h-6" />
               上传图片
             </h2>
 
@@ -245,9 +245,9 @@ export default function CreatePage() {
           </div>
 
           {/* 参数设置区域 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4 flex items-center">
-              <Wand2 className="mr-2" />
+          <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 flex items-center">
+              <Wand2 className="mr-2 w-5 h-5 md:w-6 md:h-6" />
               生成设置
             </h2>
 
