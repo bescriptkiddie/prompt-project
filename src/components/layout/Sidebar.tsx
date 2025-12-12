@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Play, Image as ImageIcon, Loader2, X, Key, Settings, Save } from 'lucide-react';
+import { ChevronDown, ChevronUp, Play, Image as ImageIcon, Loader2, X, Key, Settings, Save, Send, Copy, Check, Square } from 'lucide-react';
 import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
 interface SidebarProps {
   selectedPrompt: string;
@@ -12,167 +11,56 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
-interface Option {
-  label: string;
-  value: string;
-}
-
-function CustomSelect({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Option[];
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(target) &&
-        (!dropdownRef.current || !dropdownRef.current.contains(target))
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    // Update position on scroll/resize to keep attached or close
-    const handleScrollOrResize = () => {
-      if (isOpen) setIsOpen(false);
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    window.addEventListener("scroll", handleScrollOrResize, true);
-    window.addEventListener("resize", handleScrollOrResize);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("scroll", handleScrollOrResize, true);
-      window.removeEventListener("resize", handleScrollOrResize);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setCoords({
-        top: rect.bottom + 4,
-        left: rect.left,
-        width: rect.width,
-      });
-    }
-  }, [isOpen]);
-
-  const selectedOption = options.find((opt) => opt.value === value) || options[0];
-
-  return (
-    <div className="relative" ref={containerRef}>
-      <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
-        {label}
-      </label>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={clsx(
-          "w-full bg-cream border p-3 text-sm font-medium flex justify-between items-center transition-all duration-200 outline-none",
-          isOpen
-            ? "border-terra ring-1 ring-terra text-navy"
-            : "border-stone-line hover:border-terra text-navy"
-        )}
-      >
-        <span>{selectedOption?.label}</span>
-        <ChevronDown
-          className={clsx(
-            "w-4 h-4 text-navy-light transition-transform duration-200",
-            isOpen && "rotate-180 text-terra"
-          )}
-        />
-      </button>
-
-      {isOpen && createPortal(
-        <div
-          ref={dropdownRef}
-          className="fixed bg-paper border border-stone-line shadow-xl z-[9999] animate-in fade-in zoom-in-95 duration-100 max-h-60 overflow-auto rounded-sm"
-          style={{
-            top: coords.top,
-            left: coords.left,
-            width: coords.width,
-          }}
-        >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-              className={clsx(
-                "w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between group",
-                value === option.value
-                  ? "bg-mustard/10 text-navy font-bold"
-                  : "text-navy hover:bg-cream hover:text-terra"
-              )}
-            >
-              <span>{option.label}</span>
-              {value === option.value && (
-                <span className="w-1.5 h-1.5 rounded-full bg-terra" />
-              )}
-            </button>
-          ))}
-        </div>,
-        document.body
-      )}
-    </div>
-  );
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  imageUrl?: string; // AI 生成的图片
 }
 
 export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: SidebarProps) {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [resultImage, setResultImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const [model, setModel] = useState('Gemini');
-  const [aspectRatio, setAspectRatio] = useState('16:9');
+  // Chat states
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isChatLoading, setIsChatLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
+  // Image upload states
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  // Settings
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [doubaoKey, setDoubaoKey] = useState('');
+  const [showImageOptions, setShowImageOptions] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState('16:9');
   const [geminiKey, setGeminiKey] = useState('');
 
-  // Load API Keys from localStorage
   useEffect(() => {
-    setDoubaoKey(localStorage.getItem('doubao_key') || '');
     setGeminiKey(localStorage.getItem('gemini_key') || '');
   }, []);
 
   const saveSettings = () => {
-    localStorage.setItem('doubao_key', doubaoKey);
     localStorage.setItem('gemini_key', geminiKey);
     setIsSettingsOpen(false);
   };
 
-  // Sync prop to local state
   useEffect(() => {
     if (selectedPrompt) {
       setPrompt(selectedPrompt);
-      // Focus logic could go here but might be annoying if auto-triggered
-      setResultImage(null); // Reset result on new prompt selection
+      setChatMessages([]);
     }
   }, [selectedPrompt]);
 
-  // Handle ESC key to close fullscreen
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setPreviewImage(null);
@@ -181,24 +69,22 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
+  // File upload handler
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_SIZE = 10 * 1024 * 1024;
     const validFiles: File[] = [];
     const oversizedFiles: string[] = [];
 
     Array.from(files).forEach(file => {
-      if (file.size > MAX_SIZE) {
-        oversizedFiles.push(file.name);
-      } else {
-        validFiles.push(file);
-      }
+      if (file.size > MAX_SIZE) oversizedFiles.push(file.name);
+      else validFiles.push(file);
     });
 
     if (oversizedFiles.length > 0) {
-      alert(`以下文件超过 10MB 限制，已跳过：\n${oversizedFiles.join('\n')}`);
+      alert(`以下文件超过 10MB 限制：\n${oversizedFiles.join('\n')}`);
     }
 
     if (validFiles.length === 0) {
@@ -207,28 +93,17 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
     }
 
     setIsUploading(true);
-
     try {
       const uploadPromises = validFiles.map(async (file) => {
         const formData = new FormData();
         formData.append('image', file);
-
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
+        const response = await fetch('/api/upload', { method: 'POST', body: formData });
         const data = await response.json();
-
-        if (data.success) {
-          return data.url;
-        } else {
-          throw new Error(data.error || 'Upload failed');
-        }
+        if (data.success) return data.url;
+        throw new Error(data.error || 'Upload failed');
       });
-
       const urls = await Promise.all(uploadPromises);
       setUploadedImages(prev => [...prev, ...urls]);
-
     } catch (error) {
       console.error('Upload error:', error);
       alert('上传出错，请重试');
@@ -238,366 +113,427 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setUploadedImages(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleAspectRatioChange = (newRatio: string) => {
-    setAspectRatio(newRatio);
-
-    setPrompt((prev) => {
-      // Match --ar followed by any spacing and a ratio (digits:digits)
-      const arRegex = /--ar\s+\d+:\d+/;
-      const newArTag = `--ar ${newRatio}`;
-
-      if (arRegex.test(prev)) {
-        // Replace existing tag
-        return prev.replace(arRegex, newArTag);
-      } else {
-        // Append new tag
-        return prev.trim() ? `${prev.trim()} ${newArTag}` : newArTag;
-      }
-    });
-  };
-
+  // Image generation - 结果显示在对话流中
   const handleGenerate = async () => {
     if (!prompt) return;
-
     setIsGenerating(true);
-    setResultImage(null);
+
+    // 添加用户的生成请求到对话
+    setChatMessages(prev => [...prev, { role: 'user', content: `🎨 生成图片：${prompt.slice(0, 50)}${prompt.length > 50 ? '...' : ''}` }]);
 
     try {
-      const apiKey = model === 'Doubao' ? doubaoKey : geminiKey;
-
       const response = await fetch('/api/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt,
-          model,
+          model: 'Gemini',
           aspectRatio,
-          images: uploadedImages, // Include uploaded image URLs array
-          image: uploadedImages[0], // Keep backward compatibility
-          apiKey,
+          images: uploadedImages,
+          image: uploadedImages[0],
+          apiKey: geminiKey,
         }),
       });
-
       const data = await response.json();
-
       if (data.success && data.imageUrl) {
-        setResultImage(data.imageUrl);
+        setChatMessages(prev => [...prev, {
+          role: 'assistant',
+          content: '图片生成完成：',
+          imageUrl: data.imageUrl
+        }]);
       } else {
-        console.error('Generation failed:', data.error);
-        // You might want to show an error toast here
+        setChatMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `生成失败: ${data.error || '未知错误'}`
+        }]);
       }
     } catch (error) {
       console.error('API Error:', error);
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: '网络错误，请重试。'
+      }]);
     } finally {
       setIsGenerating(false);
     }
   };
 
+  // Chat functions
+  const handleStopChat = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setIsChatLoading(false);
+    }
+  };
+
+  // 文字对话：优化提示词
+  const handleSendChat = async () => {
+    if (!chatInput.trim() || isChatLoading) return;
+
+    const userMessage = chatInput.trim();
+    setChatInput('');
+    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setIsChatLoading(true);
+    setChatMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+
+    try {
+      const systemPrompt = `你是一个专业的 AI 绘画提示词助手。帮助用户优化和修改提示词。
+
+当前的提示词是：
+${prompt || '(用户还没有输入提示词)'}
+
+规则：
+1. 根据用户的要求修改提示词
+2. 输出修改后的完整提示词时，用【修改后的提示词】标记
+3. 保持提示词的专业性和完整性
+4. 简洁回复，重点输出修改后的提示词`;
+
+      const apiMessages = [
+        { role: 'system', content: systemPrompt },
+        ...chatMessages.filter(m => m.content).map(m => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMessage }
+      ];
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: apiMessages, stream: true }),
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error('No reader available');
+
+      let fullContent = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                fullContent += parsed.content;
+                setChatMessages(prev => {
+                  const newMessages = [...prev];
+                  newMessages[newMessages.length - 1] = { role: 'assistant', content: fullContent };
+                  return newMessages;
+                });
+              }
+            } catch { /* ignore */ }
+          }
+        }
+      }
+
+      // 检查是否有【修改后的提示词】标记，自动更新 prompt 并生成图片
+      const finalMatch = fullContent.match(/【修改后的提示词】[：:\s]*([\s\S]*?)(?=\n\n|$)/);
+      if (finalMatch && finalMatch[1]) {
+        const newPrompt = finalMatch[1].trim();
+        setPrompt(newPrompt);
+        
+        // 自动生成图片
+        setIsGenerating(true);
+        try {
+          const genResponse = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt: newPrompt,
+              model: 'Gemini',
+              aspectRatio,
+              images: uploadedImages,
+              image: uploadedImages[0],
+              apiKey: geminiKey,
+            }),
+          });
+          const genData = await genResponse.json();
+          if (genData.success && genData.imageUrl) {
+            setChatMessages(prev => [...prev, { 
+              role: 'assistant', 
+              content: '',
+              imageUrl: genData.imageUrl 
+            }]);
+          } else {
+            setChatMessages(prev => [...prev, { 
+              role: 'assistant', 
+              content: `生成失败: ${genData.error || '未知错误'}` 
+            }]);
+          }
+        } catch {
+          setChatMessages(prev => [...prev, { 
+            role: 'assistant', 
+            content: '图片生成失败，请重试。' 
+          }]);
+        } finally {
+          setIsGenerating(false);
+        }
+      }
+
+    } catch (error) {
+      console.error('Chat error:', error);
+      setChatMessages(prev => {
+        const newMessages = [...prev];
+        if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'assistant') {
+          newMessages[newMessages.length - 1] = { role: 'assistant', content: '网络错误，请重试。' };
+        }
+        return newMessages;
+      });
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
+
+  const handleChatKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendChat();
+    }
+  };
+
+  const copyToClipboard = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
     <>
-      {/* Fullscreen Modal */}
+      {/* Fullscreen Preview */}
       {previewImage && (
         <div
           className="fixed inset-0 z-[100] bg-navy/95 backdrop-blur-sm flex items-center justify-center p-8 animate-in fade-in duration-200"
           onClick={() => setPreviewImage(null)}
         >
-          <img
-            src={previewImage}
-            alt="Full Preview"
-            className="max-w-full max-h-full object-contain shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            className="absolute top-8 right-8 text-white/70 hover:text-white transition-colors"
-            onClick={() => setPreviewImage(null)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <img src={previewImage} alt="Preview" className="max-w-full max-h-full object-contain shadow-2xl" />
+          <button className="absolute top-8 right-8 text-white/70 hover:text-white" onClick={() => setPreviewImage(null)}>
+            <X className="w-8 h-8" />
           </button>
         </div>
       )}
 
       {/* Mobile Overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-navy/20 backdrop-blur-sm z-40 md:hidden animate-in fade-in"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 bg-navy/20 backdrop-blur-sm z-40 md:hidden animate-in fade-in" onClick={onClose} />
       )}
 
       <aside className={clsx(
         "h-full bg-paper border-l border-stone-line flex flex-col z-50 shadow-xl transition-transform duration-300 shrink-0",
-        // Mobile styles
-        "fixed inset-y-0 right-0 w-full sm:w-[600px]",
+        "fixed inset-y-0 right-0 w-full sm:w-[500px]",
         isOpen ? "translate-x-0" : "translate-x-full",
-        // Desktop styles (override mobile)
-        "md:relative md:translate-x-0 md:w-[600px]"
+        "md:relative md:translate-x-0 md:w-[500px]"
       )}>
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-stone-line/0 via-stone-line/50 to-stone-line/0 hidden md:block"></div>
-
-        <div className="p-8 pb-4 shrink-0 flex justify-between items-start">
+        {/* Header */}
+        <div className="p-4 pb-2 shrink-0 flex justify-between items-center border-b border-stone-line">
           <div>
-            <h2 className="font-serif text-2xl text-navy italic font-bold">创作工坊</h2>
-            <p className="text-xs text-navy-light mt-1 font-sans">实验与调优</p>
+            <h2 className="font-serif text-lg text-navy font-bold">创作工坊</h2>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all"
-              title="设置 API Key"
-            >
-              <Settings className="w-5 h-5" />
+            <button onClick={() => setIsSettingsOpen(true)} className="p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all" title="设置">
+              <Settings className="w-4 h-4" />
             </button>
-            <button
-              onClick={onClose}
-              className="md:hidden p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all"
-              title="关闭"
-            >
-              <X className="w-5 h-5" />
+            <button onClick={onClose} className="md:hidden p-2 text-navy-light hover:text-navy hover:bg-cream rounded-full transition-all">
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto min-h-0">
-          <div className="px-8">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-terra rounded-full"></span>
-                  提示词输入 (Prompt)
-                </label>
-                <div className="relative">
-                  <textarea
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    className="w-full h-32 bg-cream border border-stone-line p-4 pr-10 text-navy font-mono text-sm leading-7 resize-none focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all shadow-inner placeholder:text-navy-light/50"
-                    placeholder="从左侧选择一个案例开始创作..."
-                  ></textarea>
-                  {prompt && (
-                    <button
-                      onClick={() => setPrompt('')}
-                      className="absolute top-2 right-2 p-1 text-navy-light hover:text-terra transition-colors rounded-full hover:bg-stone-line/20"
-                      title="清空提示词"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
+        {/* Prompt Input */}
+        <div className="px-4 py-3 shrink-0 border-b border-stone-line bg-cream/30">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-bold text-navy uppercase tracking-widest">当前提示词</label>
+            {prompt && <button onClick={() => setPrompt('')} className="text-xs text-navy-light hover:text-terra">清空</button>}
+          </div>
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="w-full h-20 bg-white border border-stone-line p-3 text-navy font-mono text-xs leading-relaxed resize-none focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra rounded"
+            placeholder="从左侧选择一个 Prompt，或直接输入..."
+          />
+        </div>
+
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+            {chatMessages.filter(m => m.content || m.imageUrl).length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-center py-8">
+                <Send className="w-10 h-10 text-terra/20 mb-3" />
+                <p className="text-navy-light text-sm">对话优化提示词</p>
+                <p className="text-navy-light/60 text-xs mt-1">告诉 AI 你想要什么风格或修改</p>
+                <p className="text-navy-light/60 text-xs">确认后点击下方"生成图片"按钮</p>
+              </div>
+            ) : (
+              chatMessages.filter(m => m.content || m.imageUrl).map((message, index) => (
+                <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[90%] p-3 text-sm ${
+                    message.role === 'user'
+                      ? 'bg-terra text-white rounded-2xl rounded-tr-sm'
+                      : 'bg-white border border-stone-line rounded-2xl rounded-tl-sm text-navy'
+                  }`}>
+                    {message.content && <div className="whitespace-pre-wrap">{message.content}</div>}
+                    {message.imageUrl && (
+                      <img
+                        src={message.imageUrl}
+                        alt="Generated"
+                        className="mt-2 rounded-lg cursor-zoom-in max-w-full"
+                        onClick={() => setPreviewImage(message.imageUrl!)}
+                      />
+                    )}
+                    {message.role === 'assistant' && !message.imageUrl && (
+                      <button onClick={() => copyToClipboard(message.content, `chat-${index}`)} className="mt-2 flex items-center gap-1 text-xs text-navy-light hover:text-terra">
+                        {copiedId === `chat-${index}` ? <><Check className="w-3 h-3" /> 已复制</> : <><Copy className="w-3 h-3" /> 复制</>}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+            {isChatLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-stone-line rounded-2xl rounded-tl-sm p-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-terra" />
                 </div>
               </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
 
-              {/* Image Upload Section */}
-              <div>
-                <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-mustard rounded-full"></span>
-                  参考图 (可选)
-                </label>
-
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/png, image/jpeg"
-                  onChange={handleFileUpload}
-                  multiple
-                />
-
-                {!uploadedImages.length ? (
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className={clsx(
-                      "w-full h-24 border-2 border-dashed border-stone-line bg-cream rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-terra hover:bg-white transition-all group",
-                      isUploading && "opacity-50 pointer-events-none"
-                    )}
-                  >
-                    {isUploading ? (
-                      <Loader2 className="w-6 h-6 text-terra animate-spin" />
-                    ) : (
-                      <>
-                        <ImageIcon className="w-6 h-6 text-navy-light group-hover:text-terra mb-2 transition-colors" />
-                        <span className="text-xs text-navy-light group-hover:text-navy font-medium">点击上传图片 (可多选)</span>
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      {uploadedImages.map((url, index) => (
-                        <div key={index} className="relative w-full h-24 bg-cream border border-stone-line p-2 group">
-                          <img
-                            src={url}
-                            alt={`Reference ${index + 1}`}
-                            className="w-full h-full object-contain cursor-zoom-in"
-                            onClick={() => setPreviewImage(url)}
-                          />
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleRemoveImage(index);
-                            }}
-                            className="absolute top-1 right-1 p-1.5 bg-white/90 hover:bg-white text-navy hover:text-red-500 rounded-full shadow-md transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                          </button>
-                        </div>
-                      ))}
-                      <div
-                        className="relative w-full h-24 bg-cream border border-dashed border-stone-line flex items-center justify-center cursor-pointer hover:bg-white hover:border-terra transition-colors"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                         {isUploading ? (
-                          <Loader2 className="w-5 h-5 text-terra animate-spin" />
-                        ) : (
-                          <div className="text-center">
-                            <span className="text-xl text-navy-light/50">+</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <CustomSelect
-                  label="模型选择"
-                  value={model}
-                  onChange={setModel}
-                  options={[
-                    { label: 'Gemini', value: 'Gemini' }
-                  ]}
-                />
-                <CustomSelect
-                  label="画面比例"
-                  value={aspectRatio}
-                  onChange={handleAspectRatioChange}
-                  options={[
-                    { label: '16:9 (横屏)', value: '16:9' },
-                    { label: '4:3 (标准)', value: '4:3' },
-                    { label: '1:1 (方图)', value: '1:1' },
-                    { label: '3:4 (竖屏)', value: '3:4' },
-                    { label: '9:16 (全屏)', value: '9:16' }
-                  ]}
-                />
-              </div>
-
-              {/* Settings Modal */}
-              {isSettingsOpen && createPortal(
-                <div className="fixed inset-0 z-[100] bg-navy/20 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-                  <div className="bg-paper w-full max-w-md p-6 shadow-2xl border border-stone-line relative animate-in zoom-in-95 duration-200">
-                    <button
-                      onClick={() => setIsSettingsOpen(false)}
-                      className="absolute top-4 right-4 text-navy-light hover:text-navy transition-colors"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-
-                    <h3 className="font-serif text-xl text-navy font-bold mb-6 flex items-center gap-2">
-                      <Settings className="w-5 h-5" />
-                      API 配置
-                    </h3>
-
-                    <div className="space-y-6">
-                      <div>
-                        <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
-                          Doubao API Key
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="password"
-                            value={doubaoKey}
-                            onChange={(e) => setDoubaoKey(e.target.value)}
-                            className="w-full bg-cream border border-stone-line p-3 pr-10 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 font-mono"
-                            placeholder="sk-..."
-                          />
-                          <Key className="absolute right-3 top-3 w-4 h-4 text-navy-light" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-2">
-                          Gemini API Key
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="password"
-                            value={geminiKey}
-                            onChange={(e) => setGeminiKey(e.target.value)}
-                            className="w-full bg-cream border border-stone-line p-3 pr-10 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 font-mono"
-                            placeholder="AIza..."
-                          />
-                          <Key className="absolute right-3 top-3 w-4 h-4 text-navy-light" />
-                        </div>
-                      </div>
-
-                      <div className="pt-2">
-                        <button
-                          onClick={saveSettings}
-                          className="w-full bg-navy hover:bg-navy-light text-white font-bold py-3 transition-colors flex items-center justify-center gap-2"
-                        >
-                          <Save className="w-4 h-4" />
-                          保存配置
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>,
-                document.body
+          {/* Chat Input */}
+          <div className="px-4 py-3 border-t border-stone-line bg-cream/30">
+            <div className="flex gap-2 items-end">
+              <textarea
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={handleChatKeyDown}
+                placeholder="告诉 AI 如何修改提示词..."
+                className="flex-1 resize-none bg-white border border-stone-line rounded-lg p-2 text-sm text-navy focus:outline-none focus:border-terra min-h-[40px] max-h-[80px]"
+                rows={1}
+              />
+              {isChatLoading ? (
+                <button onClick={handleStopChat} className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shrink-0">
+                  <Square className="w-4 h-4 fill-current" />
+                </button>
+              ) : (
+                <button onClick={handleSendChat} disabled={!chatInput.trim()} className="p-2 bg-terra hover:bg-terra-dark disabled:opacity-50 text-white rounded-lg shrink-0">
+                  <Send className="w-4 h-4" />
+                </button>
               )}
-
-              <button
-                onClick={handleGenerate}
-                disabled={isGenerating || !prompt}
-                className="w-full bg-terra hover:bg-terra-dark disabled:opacity-70 disabled:cursor-not-allowed text-white font-serif font-bold text-lg py-3 transition-colors flex items-center justify-center gap-3"
-              >
-                <span>{isGenerating ? '生成中...' : '开始生成图像'}</span>
-                {isGenerating ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Play className="w-4 h-4" />
-                )}
-              </button>
             </div>
           </div>
+        </div>
 
-          <div className="bg-cream border-t border-stone-line p-8 relative flex flex-col justify-center items-center min-h-[300px] m-8 mt-6 border border-stone-line/50 shadow-inner group">
-            {!isGenerating && !resultImage && (
-              <div className="text-center opacity-40">
-                <ImageIcon className="w-16 h-16 mx-auto mb-4 text-navy stroke-1" />
-                <p className="font-serif italic text-navy">生成结果将在此处显现</p>
-              </div>
-            )}
+        {/* Image Generation Section */}
+        <div className="border-t border-stone-line bg-cream/50">
+          <button
+            onClick={() => setShowImageOptions(!showImageOptions)}
+            className="w-full px-4 py-2 flex items-center justify-between text-sm font-medium text-navy hover:bg-cream/50"
+          >
+            <span className="flex items-center gap-2">
+              <ImageIcon className="w-4 h-4 text-terra" />
+              图片生成选项
+            </span>
+            {showImageOptions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
 
-            {isGenerating && (
-              <div className="absolute inset-0 bg-cream flex flex-col items-center justify-center z-20">
-                <div className="w-12 h-12 border-2 border-terra border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="font-serif text-terra text-sm font-medium">
-                  正在处理创意逻辑...
-                </p>
-              </div>
-            )}
-
-            {resultImage && !isGenerating && (
-              <>
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <img
-                    src={resultImage}
-                    alt="Generated Result"
-                    className="max-w-full max-h-full object-contain shadow-lg border-4 border-white bg-white animate-in fade-in duration-500 cursor-zoom-in"
-                    onClick={() => setPreviewImage(resultImage)}
-                  />
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                     <span className="bg-navy/80 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">点击全屏预览</span>
-                  </div>
+          {showImageOptions && (
+            <div className="px-4 pb-3 space-y-3">
+              {/* Reference Images */}
+              <div>
+                <label className="text-xs font-medium text-navy-light mb-2 block">参考图 (可选)</label>
+                <input type="file" ref={fileInputRef} className="hidden" accept="image/png, image/jpeg" onChange={handleFileUpload} multiple />
+                <div className="flex gap-2 flex-wrap">
+                  {uploadedImages.map((url, i) => (
+                    <div key={i} className="relative w-16 h-16 bg-white border border-stone-line rounded overflow-hidden group">
+                      <img src={url} alt="" className="w-full h-full object-cover" onClick={() => setPreviewImage(url)} />
+                      <button
+                        onClick={() => setUploadedImages(prev => prev.filter((_, idx) => idx !== i))}
+                        className="absolute top-0 right-0 p-0.5 bg-white/90 text-red-500 rounded-bl opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-16 h-16 border-2 border-dashed border-stone-line rounded flex items-center justify-center text-navy-light hover:border-terra hover:text-terra"
+                  >
+                    {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : '+'}
+                  </button>
                 </div>
-              </>
-            )}
+              </div>
+
+              {/* Aspect Ratio */}
+              <div>
+                <label className="text-xs font-medium text-navy-light mb-2 block">画面比例</label>
+                <div className="flex gap-2 flex-wrap">
+                  {['16:9', '4:3', '1:1', '3:4', '9:16'].map(ratio => (
+                    <button
+                      key={ratio}
+                      onClick={() => setAspectRatio(ratio)}
+                      className={clsx(
+                        "px-3 py-1 text-xs rounded border transition-all",
+                        aspectRatio === ratio ? "bg-terra text-white border-terra" : "bg-white text-navy border-stone-line hover:border-terra"
+                      )}
+                    >
+                      {ratio}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Generate Button */}
+          <div className="px-4 pb-3">
+            <button
+              onClick={handleGenerate}
+              disabled={isGenerating || !prompt}
+              className="w-full bg-terra hover:bg-terra-dark disabled:opacity-50 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> 生成中...</> : <><Play className="w-4 h-4" /> 生成图片</>}
+            </button>
           </div>
         </div>
+
+        {/* Settings Modal */}
+        {isSettingsOpen && createPortal(
+          <div className="fixed inset-0 z-[100] bg-navy/20 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-paper w-full max-w-sm p-5 shadow-2xl border border-stone-line rounded-lg">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-navy">API 配置</h3>
+                <button onClick={() => setIsSettingsOpen(false)} className="text-navy-light hover:text-navy"><X className="w-5 h-5" /></button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-navy uppercase mb-2 block">Gemini API Key</label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={geminiKey}
+                      onChange={(e) => setGeminiKey(e.target.value)}
+                      className="w-full bg-cream border border-stone-line p-3 pr-10 text-sm rounded focus:outline-none focus:border-terra"
+                      placeholder="AIza..."
+                    />
+                    <Key className="absolute right-3 top-3 w-4 h-4 text-navy-light" />
+                  </div>
+                </div>
+                <button onClick={saveSettings} className="w-full bg-navy hover:bg-navy-light text-white font-bold py-2 rounded flex items-center justify-center gap-2">
+                  <Save className="w-4 h-4" /> 保存
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
       </aside>
     </>
   );
