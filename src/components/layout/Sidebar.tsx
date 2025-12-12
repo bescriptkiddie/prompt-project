@@ -363,8 +363,8 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col min-h-0">
-          <div className="px-8 overflow-y-auto flex-shrink-0">
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="px-8">
             <div className="space-y-6">
               <div>
                 <label className="block text-xs font-bold text-navy uppercase tracking-widest mb-3 flex items-center gap-2">
@@ -564,7 +564,7 @@ export default function Sidebar({ selectedPrompt, isOpen = false, onClose }: Sid
             </div>
           </div>
 
-          <div className="flex-1 bg-cream border-t border-stone-line p-8 relative flex flex-col justify-center items-center min-h-0 m-8 mt-6 border border-stone-line/50 shadow-inner group">
+          <div className="bg-cream border-t border-stone-line p-8 relative flex flex-col justify-center items-center min-h-[300px] m-8 mt-6 border border-stone-line/50 shadow-inner group">
             {!isGenerating && !resultImage && (
               <div className="text-center opacity-40">
                 <ImageIcon className="w-16 h-16 mx-auto mb-4 text-navy stroke-1" />

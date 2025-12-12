@@ -1,6 +1,12 @@
-import Link from 'next/link';
+type TabType = 'methodology' | 'collection' | 'about';
 
-export default function Navbar({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
+interface NavbarProps {
+  onToggleSidebar?: () => void;
+  activeTab?: TabType;
+  onTabChange?: (tab: TabType) => void;
+}
+
+export default function Navbar({ onToggleSidebar, activeTab, onTabChange }: NavbarProps) {
   return (
     <nav className="sticky top-0 z-40 bg-cream/95 backdrop-blur-sm border-b border-stone-line px-4 md:px-8 h-20 flex items-center justify-between shrink-0">
       <div className="flex items-center gap-4">
@@ -55,25 +61,37 @@ export default function Navbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
         </div>
       </div>
 
-      <div className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-navy-light">
-        <Link
-          href="/"
-          className="hover:text-terra transition-colors border-b-2 border-transparent hover:border-terra pb-0.5"
+      <div className="hidden md:flex gap-8 text-sm font-medium tracking-wide">
+        <button
+          onClick={() => onTabChange?.('collection')}
+          className={`transition-colors border-b-2 pb-0.5 ${
+            activeTab === 'collection'
+              ? 'text-terra border-terra'
+              : 'text-navy-light border-transparent hover:text-terra hover:border-terra'
+          }`}
         >
           精选集
-        </Link>
-        <Link
-          href="/methodology"
-          className="hover:text-terra transition-colors border-b-2 border-transparent hover:border-terra pb-0.5"
+        </button>
+        <button
+          onClick={() => onTabChange?.('methodology')}
+          className={`transition-colors border-b-2 pb-0.5 ${
+            activeTab === 'methodology'
+              ? 'text-terra border-terra'
+              : 'text-navy-light border-transparent hover:text-terra hover:border-terra'
+          }`}
         >
           创作方法论
-        </Link>
-        <Link
-          href="/about"
-          className="hover:text-terra transition-colors border-b-2 border-transparent hover:border-terra pb-0.5"
+        </button>
+        <button
+          onClick={() => onTabChange?.('about')}
+          className={`transition-colors border-b-2 pb-0.5 ${
+            activeTab === 'about'
+              ? 'text-terra border-terra'
+              : 'text-navy-light border-transparent hover:text-terra hover:border-terra'
+          }`}
         >
           关于我们
-        </Link>
+        </button>
       </div>
 
       <button

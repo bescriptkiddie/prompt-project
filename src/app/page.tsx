@@ -19,10 +19,14 @@ export default function Home() {
   return (
     <div className="flex h-full w-full overflow-hidden relative">
       <div className="flex-1 h-full overflow-y-auto no-scrollbar relative flex flex-col bg-cream">
-        <Navbar onToggleSidebar={() => setIsSidebarOpen(true)} />
+        <Navbar
+          onToggleSidebar={() => setIsSidebarOpen(true)}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
-        {/* Tab 切换 */}
-        <div className="px-4 md:px-8 pt-2 max-w-[1400px] mx-auto w-full flex justify-center">
+        {/* Tab 切换 - 仅移动端显示 */}
+        <div className="px-4 pt-4 max-w-[1400px] mx-auto w-full flex justify-center md:hidden">
           <div className="flex gap-1 bg-stone-line/30 p-1 rounded-lg w-fit">
             <button
               onClick={() => setActiveTab('methodology')}
