@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Markdown 微信公众号排版工具</title>
+    <!-- Google Fonts -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+      :root {
+        --bg-color: #faf8f5;
+        --card-bg: #ffffff;
+        --primary-color: #e07a5f; /* Soft Coral */
+        --secondary-color: #3d405b; /* Dark Blue-Grey */
+        --accent-color: #f2cc8f; /* Soft Yellow/Beige */
+        --text-color: #2c3e50;
+        --border-color: #e0e0e0;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        --font-serif: 'Noto Serif SC', 'Georgia', serif;
+        --font-sans: 'Noto Sans SC', sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* Header */
+      header {
+        background-color: var(--card-bg);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        z-index: 10;
+      }
+
+      .logo {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo span {
+        color: var(--primary-color);
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      button {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+
+      .btn-clear {
+        background-color: transparent;
+        color: #888;
+        border: 1px solid #ddd;
+      }
+
+      .btn-clear:hover {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .btn-copy {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 10px rgba(224, 122, 95, 0.3);
+      }
+
+      .btn-copy:hover {
+        background-color: #d66a4f;
+        transform: translateY(-1px);
+      }
+
+      .btn-copy:active {
+        transform: translateY(0);
+      }
+
+      /* Main Layout */
+      main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        flex: 1;
+        overflow: hidden;
+        gap: 0;
+      }
+
+      /* Editor Section */
+      .editor-pane {
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+      }
+
+      .pane-header {
+        padding: 0.8rem 1.5rem;
+        background: #fcfcfc;
+        border-bottom: 1px solid #eee;
+        font-size: 0.85rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
+
+      textarea {
+        flex: 1;
+        width: 100%;
+        border: none;
+        padding: 2rem;
+        resize: none;
+        outline: none;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #333;
+        background-color: #fff;
+      }
+
+      /* Preview Section */
+      .preview-pane {
+        background-color: var(--bg-color);
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* WeChat Simulation Container */
+      #preview-container {
+        width: 100%;
+        max-width: 677px; /* Typical WeChat article width */
+        background: white;
+        min-height: 100%;
+        padding: 40px;
+        box-shadow: var(--shadow);
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      /* --- WeChat Styling Theme (Warm & Elegant) --- */
+
+      /* Typography Reset for Preview */
+      #preview-content {
+        font-family: var(--font-sans);
+        color: #3f3f3f;
+        line-height: 1.8;
+        font-size: 16px;
+        text-align: justify;
+      }
+
+      /* Headings */
+      #preview-content h1 {
+        font-family: var(--font-serif);
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        text-align: center;
+        margin: 40px 0 30px 0;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--primary-color);
+      }
+
+      #preview-content h2 {
+        font-family: var(--font-serif);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 35px 0 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #preview-content h2::before,
+      #preview-content h2::after {
+        content: '✦';
+        font-size: 12px;
+        color: var(--accent-color);
+        margin: 0 10px;
+        vertical-align: middle;
+      }
+
+      #preview-content h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin: 25px 0 15px 0;
+        padding-left: 10px;
+        border-left: 4px solid var(--primary-color);
+        background: linear-gradient(to right, #fff5f2, transparent);
+        padding: 5px 10px;
+      }
+
+      /* Paragraphs */
+      #preview-content p {
+        margin-bottom: 20px;
+        letter-spacing: 0.05em;
+      }
+
+      /* Quotes */
+      #preview-content blockquote {
+        margin: 25px 0;
+        padding: 20px;
+        background-color: #faf8f5;
+        border-left: none;
+        border-top: 2px solid var(--primary-color);
+        color: #666;
+        font-family: var(--font-serif);
+        font-style: italic;
+        position: relative;
+        border-radius: 4px;
+      }
+
+      /* Lists */
+      #preview-content ul,
+      #preview-content ol {
+        margin: 0 0 20px 20px;
+        padding: 0;
+      }
+
+      #preview-content li {
+        margin-bottom: 8px;
+        list-style: none;
+        position: relative;
+        padding-left: 20px;
+      }
+
+      #preview-content ul li::before {
+        content: '•';
+        color: var(--primary-color);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      #preview-content ol {
+        counter-reset: item;
+      }
+
+      #preview-content ol li::before {
+        content: counter(item) '.';
+        counter-increment: item;
+        color: var(--primary-color);
+        font-weight: bold;
+        font-family: var(--font-serif);
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      /* Images */
+      #preview-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 30px auto;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Code Blocks */
+      #preview-content pre {
+        background-color: #f6f8fa;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 20px 0;
+        font-family: 'Menlo', monospace;
+        font-size: 13px;
+        border: 1px solid #eee;
+      }
+
+      #preview-content code {
+        background-color: #fff5f2;
+        color: var(--primary-color);
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-family: 'Menlo', monospace;
+        font-size: 0.9em;
+      }
+
+      #preview-content pre code {
+        background-color: transparent;
+        color: #333;
+        padding: 0;
+      }
+
+      /* Links */
+      #preview-content a {
+        color: var(--primary-color);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--primary-color);
+      }
+
+      /* Bold */
+      #preview-content strong {
+        color: var(--secondary-color);
+        font-weight: 700;
+      }
+
+      /* Horizontal Rule */
+      #preview-content hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0),
+          rgba(224, 122, 95, 0.75),
+          rgba(0, 0, 0, 0)
+        );
+        margin: 40px 0;
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background-color: #333;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-size: 14px;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        z-index: 100;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        main {
+          grid-template-columns: 1fr;
+          overflow-y: auto;
+        }
+
+        body {
+          overflow: auto;
+          height: auto;
+        }
+
+        .editor-pane {
+          height: 50vh;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-pane {
+          height: auto;
+          padding: 1rem;
+        }
+
+        header {
+          padding: 1rem;
+        }
+
+        .logo span:last-child {
+          display: none; /* Hide subtitle on mobile */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo"><span>✒️</span> 排版工具</div>
+      <div class="actions">
+        <button
+          class="btn-clear"
+          id="clearBtn"
+          title="清空所有内容"
+        >
+          清空内容
+        </button>
+        <button
+          class="btn-copy"
+          id="copyBtn"
+        >
+          ✨ 复制富文本
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Left: Input -->
+      <div class="editor-pane">
+        <div class="pane-header">Markdown 输入</div>
+        <textarea
+          id="markdown-input"
+          placeholder="在此输入 Markdown 内容..."
+        ></textarea>
+      </div>
+
+      <!-- Right: Preview -->
+      <div class="preview-pane">
+        <div id="preview-container">
+          <div id="preview-content">
+            <!-- Content will be rendered here -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div
+      class="toast"
+      id="toast"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      已复制到剪贴板，请到微信编辑器粘贴
+    </div>
+
+    <script>
+      // Default Sample Content
+      const defaultContent = `# 慢生活的艺术
+
+## 寻找内心的宁静
+
+在这个快节奏的时代，我们似乎总是被时间追赶。**焦虑**和**压力**成为了现代人的常态。然而，真正的生活美学，往往隐藏在慢下来的时光里。
+
+> "生活不是为了赶路，而是为了感受路。" —— 佚名
+
+### 为什么我们需要慢下来？
+
+1. **恢复精力**：持续的高压状态会耗尽我们的身心能量。
+2. **发现美好**：只有放慢脚步，才能注意到路边盛开的花朵。
+3. **深度思考**：慢下来，给大脑留出整理和创造的空间。
+
+### 如何开始？
+
+尝试在一个阳光明媚的午后，泡一杯茶，读一本好书。
+
+![阅读时光](https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80)
+
+当你开始享受独处的时光，你会发现，世界变得温柔了许多。
+
+---
+
+*愿你在这个喧嚣的世界里，拥有一方属于自己的宁静天地。*`
+
+      // Elements
+      const input = document.getElementById('markdown-input')
+      const preview = document.getElementById('preview-content')
+      const copyBtn = document.getElementById('copyBtn')
+      const clearBtn = document.getElementById('clearBtn')
+      const toast = document.getElementById('toast')
+
+      // Initialize Marked
+      marked.setOptions({
+        breaks: true, // Enable line breaks
+        gfm: true // Enable GitHub Flavored Markdown
+      })
+
+      // Render Function
+      function render() {
+        const markdownText = input.value
+        const html = marked.parse(markdownText)
+        preview.innerHTML = html
+      }
+
+      // Event Listeners
+      input.addEventListener('input', render)
+
+      // Set Default Content
+      input.value = defaultContent
+      render()
+
+      // Clear Function
+      clearBtn.addEventListener('click', () => {
+        if (confirm('确定要清空所有内容吗？')) {
+          input.value = ''
+          render()
+          input.focus()
+        }
+      })
+
+      // Copy Function
+      copyBtn.addEventListener('click', async () => {
+        try {
+          // Select the content
+          const range = document.createRange()
+          range.selectNode(preview)
+
+          const selection = window.getSelection()
+          selection.removeAllRanges()
+          selection.addRange(range)
+
+          // Execute copy command (best for rich text preservation)
+          document.execCommand('copy')
+
+          // Cleanup selection
+          selection.removeAllRanges()
+
+          // Show success message
+          showToast()
+        } catch (err) {
+          console.error('复制失败:', err)
+          alert('复制失败，请手动选择复制。')
+        }
+      })
+
+      // Toast Function
+      function showToast() {
+        toast.classList.add('show')
+        setTimeout(() => {
+          toast.classList.remove('show')
+        }, 3000)
+      }
+
+      // Handle Tab key in textarea
+      input.addEventListener('keydown', function (e) {
+        if (e.key == 'Tab') {
+          e.preventDefault()
+          var start = this.selectionStart
+          var end = this.selectionEnd
+
+          // set textarea value to: text before caret + tab + text after caret
+          this.value =
+            this.value.substring(0, start) + '\t' + this.value.substring(end)
+
+          // put caret at right position again
+          this.selectionStart = this.selectionEnd = start + 1
+
+          // Update preview
+          render()
+        }
+      })
+    </script>
+  </body>
+</html>
