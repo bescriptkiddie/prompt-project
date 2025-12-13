@@ -4,12 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-// 内部页面导航配置
+// 内部页面导航配置 - 全部使用独立路由
 export const internalPages = [
-  { name: '精选集', path: '/', tab: 'collection' },
-  { name: '创作方法论', path: '/', tab: 'methodology' },
-  { name: '关于我们', path: '/', tab: 'about' },
-  { name: 'MD排版', path: '/mdtohtml' }
+  { name: '精选集', path: '/' },
+  { name: '创作方法论', path: '/methodology' },
+  { name: 'MD排版', path: '/mdtohtml' },
+  { name: '关于我们', path: '/about' }
 ]
 
 // 外部链接配置
@@ -21,42 +21,12 @@ export const externalLinks = [
   }
 ]
 
-type TabType = 'methodology' | 'collection' | 'about'
-
-interface NavbarProps {
-  // 首页 Tab 切换相关
-  activeTab?: TabType
-  onTabChange?: (tab: TabType) => void
-  // 移动端菜单
-  onMobileMenuOpen?: () => void
-  // 是否显示返回首页按钮（用于独立页面）
-  showBackHome?: boolean
-}
-
-export default function Navbar({
-  activeTab,
-  onTabChange,
-  onMobileMenuOpen,
-  showBackHome = false
-}: NavbarProps) {
+export default function Navbar() {
   const [showLinksDropdown, setShowLinksDropdown] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const pathname = usePathname()
 
-  const isHomePage = pathname === '/'
-  const isActive = (page: (typeof internalPages)[0]) => {
-    if (page.tab && isHomePage) {
-      return activeTab === page.tab
-    }
-    return pathname === page.path && !page.tab
-  }
-
-  const handleNavClick = (page: (typeof internalPages)[0]) => {
-    if (page.tab && onTabChange) {
-      onTabChange(page.tab as TabType)
-    }
-    setShowMobileMenu(false)
-  }
+  const isActive = (path: string) => pathname === path
 
   return (
     <>
@@ -118,33 +88,19 @@ export default function Navbar({
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-6 text-sm font-medium tracking-wide items-center">
-          {internalPages.map((page) =>
-            page.tab ? (
-              <button
-                key={page.name}
-                onClick={() => handleNavClick(page)}
-                className={`transition-colors border-b-2 pb-0.5 ${
-                  isActive(page)
-                    ? 'text-terra border-terra'
-                    : 'text-navy-light border-transparent hover:text-terra hover:border-terra'
-                }`}
-              >
-                {page.name}
-              </button>
-            ) : (
-              <Link
-                key={page.name}
-                href={page.path}
-                className={`transition-colors border-b-2 pb-0.5 ${
-                  isActive(page)
-                    ? 'text-terra border-terra'
-                    : 'text-navy-light border-transparent hover:text-terra hover:border-terra'
-                }`}
-              >
-                {page.name}
-              </Link>
-            )
-          )}
+          {internalPages.map((page) => (
+            <Link
+              key={page.path}
+              href={page.path}
+              className={`transition-colors border-b-2 pb-0.5 ${
+                isActive(page.path)
+                  ? 'text-terra border-terra'
+                  : 'text-navy-light border-transparent hover:text-terra hover:border-terra'
+              }`}
+            >
+              {page.name}
+            </Link>
+          ))}
 
           {/* External Links Dropdown */}
           <div className="relative">
@@ -283,34 +239,20 @@ export default function Navbar({
                 页面
               </div>
               <div className="space-y-1">
-                {internalPages.map((page) =>
-                  page.tab ? (
-                    <button
-                      key={page.name}
-                      onClick={() => handleNavClick(page)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        isActive(page)
-                          ? 'bg-terra/10 text-terra'
-                          : 'text-navy hover:bg-cream'
-                      }`}
-                    >
-                      {page.name}
-                    </button>
-                  ) : (
-                    <Link
-                      key={page.name}
-                      href={page.path}
-                      onClick={() => setShowMobileMenu(false)}
-                      className={`block px-3 py-2 rounded-lg transition-colors ${
-                        isActive(page)
-                          ? 'bg-terra/10 text-terra'
-                          : 'text-navy hover:bg-cream'
-                      }`}
-                    >
-                      {page.name}
-                    </Link>
-                  )
-                )}
+                {internalPages.map((page) => (
+                  <Link
+                    key={page.path}
+                    href={page.path}
+                    onClick={() => setShowMobileMenu(false)}
+                    className={`block px-3 py-2 rounded-lg transition-colors ${
+                      isActive(page.path)
+                        ? 'bg-terra/10 text-terra'
+                        : 'text-navy hover:bg-cream'
+                    }`}
+                  >
+                    {page.name}
+                  </Link>
+                ))}
               </div>
 
               {/* External Links */}
