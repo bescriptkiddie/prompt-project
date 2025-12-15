@@ -369,7 +369,7 @@ ${prompt || '(用户还没有输入提示词)'}
                 <Send className="w-10 h-10 text-terra/20 mb-3" />
                 <p className="text-navy-light text-sm">对话优化提示词</p>
                 <p className="text-navy-light/60 text-xs mt-1">告诉 AI 你想要什么风格或修改</p>
-                <p className="text-navy-light/60 text-xs">确认后点击下方"生成图片"按钮</p>
+                <p className="text-navy-light/60 text-xs">确认后点击下方“生成图片”按钮</p>
               </div>
             ) : (
               chatMessages.filter(m => m.content || m.imageUrl).map((message, index) => (
