@@ -202,5 +202,17 @@ export const MOCK_PROMPTS: PromptItem[] = [
     category: "写作辅助",
     source: "原创",
     type: "article"
+  },
+  {
+    "id": "19",
+    "title": "记录小确幸｜实景涂鸦治愈照片生成器",
+    "model": "Nano Banana Pro",
+    "promptZh": "保持原图片的真实摄影风格作为背景，不要重绘整个画面。\n\n仅在 {画面主体，如：猫咪/狗狗/鸭子/花朵/食物} 上使用简单的白色或黑色线条进行勾勒，添加可爱的涂鸦风格的眼睛、嘴巴、腮红等元素，使其拟人化，呈现出治愈、温暖的氛围。\n\n添加一个手绘风格的对话气泡，气泡内写上：「{治愈系文案，如：今天也要开心鸭～/晒会太阳吧/慢慢来，不着急}」\n\n⚠️ 重要约束：\n- 气泡内的文字必须使用中文\n- 线条风格保持简约可爱，不要过于复杂\n- 整体效果应为：实景照片 + 趣味线条涂鸦\n- 保留照片的真实质感和光影",
+    "promptEn": "Keep the original photo as the real photographic background. Do NOT repaint or redraw the entire scene.\n\nOnly add simple white or black doodle outlines on the {main subject, e.g., cat/dog/duck/flower/food}. Add cute doodle-style eyes, mouth, blush, etc. to anthropomorphize the subject and create a warm, healing vibe.\n\nAdd a hand-drawn speech bubble with Chinese text inside: \"{healing Chinese caption, e.g., 今天也要开心鸭～ / 晒会太阳吧 / 慢慢来，不着急}\"\n\nImportant constraints:\n- The text inside the bubble MUST be Chinese\n- Keep the line style minimal and cute (not overly complex)\n- Final look should be: real photo + playful line doodles\n- Preserve the photo's real texture and lighting",
+    "description": "在实景照片上给主体加简约涂鸦和治愈气泡文案，适合小红书/朋友圈记录小确幸。",
+    "category": "创意合成",
+    "source": "原创",
+    "imageUrl": "/images/记录小确幸｜实景涂鸦治愈照片生成器.png",
+    "type": "image"
   }
 ];

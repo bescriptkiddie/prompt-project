@@ -332,9 +332,9 @@ export default function Methodology() {
       <div className="flex-1 h-full overflow-hidden relative flex flex-col">
         <Navbar />
 
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
           {/* 左侧 - Prompt 模板列表 */}
-          <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-stone-line overflow-y-auto p-4 md:p-6 no-scrollbar max-h-[40vh] md:max-h-none">
+          <div className="w-full md:w-1/2 flex-1 min-h-0 border-b md:border-b-0 md:border-r border-stone-line overflow-y-auto p-4 md:p-6 no-scrollbar">
             <header className="mb-6 md:mb-8">
               <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-2 block">
                 Creative Toolkit

@@ -12,6 +12,7 @@ interface PromptGridProps {
 
 export default function PromptGrid({ prompts, onSelect }: PromptGridProps) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const orderedPrompts = [...prompts].reverse();
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -24,7 +25,7 @@ export default function PromptGrid({ prompts, onSelect }: PromptGridProps) {
   return (
     <>
       <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
-        {prompts.map((item, index) => (
+        {orderedPrompts.map((item, index) => (
           <PromptCard
             key={item.id}
             item={item}
