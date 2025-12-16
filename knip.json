@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "project": ["./tsconfig.knip.json"],
+  "entry": [
+    "./src/app/**/{page,layout,route,loading,error,not-found,default}.ts",
+    "./src/app/**/{page,layout,route,loading,error,not-found,default}.tsx",
+    "./next.config.ts",
+    "./eslint.config.mjs",
+    "./postcss.config.mjs"
+  ]
+}
