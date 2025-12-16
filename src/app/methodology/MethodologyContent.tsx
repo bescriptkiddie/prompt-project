@@ -41,7 +41,16 @@ export default function MethodologyContent() {
     const saved = localStorage.getItem('allPrompts');
     if (saved) {
       try {
-        setAllPrompts(JSON.parse(saved));
+        const savedPrompts = JSON.parse(saved) as CreativePrompt[];
+
+        // 迁移逻辑：保留用户对旧 prompts 的编辑/自定义，同时自动补齐新加入的预设 prompts
+        const savedById = new Map(savedPrompts.map((p) => [p.id, p] as const));
+        const mergedPresets = CREATIVE_PROMPTS.map((p) => savedById.get(p.id) ?? p);
+        const extraPrompts = savedPrompts.filter((p) => !CREATIVE_PROMPTS.some((d) => d.id === p.id));
+        const merged = [...mergedPresets, ...extraPrompts];
+
+        setAllPrompts(merged);
+        localStorage.setItem('allPrompts', JSON.stringify(merged));
       } catch {
         setAllPrompts(CREATIVE_PROMPTS);
         localStorage.setItem('allPrompts', JSON.stringify(CREATIVE_PROMPTS));

@@ -281,8 +281,8 @@ export default function MdToHtmlPage() {
         </div>
 
         {/* 预览 */}
-        <div className="overflow-y-auto p-4 md:p-6 flex justify-center bg-cream">
-          <div className="w-full max-w-[677px] min-h-full p-6 md:p-10 mb-8 rounded-lg bg-white shadow-sm">
+        <div className="overflow-y-auto p-4 md:p-6 flex justify-center items-start bg-white">
+          <div className="w-full max-w-[677px] p-6 md:p-10 rounded-lg bg-white shadow-sm self-start">
             <div 
               ref={previewRef}
               className="preview-content"
