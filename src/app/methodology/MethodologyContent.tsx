@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Check, Copy, Edit3, Loader2, Plus, Save, Send, Sparkles, Square, Trash2, X } from 'lucide-react';
+import { Check, Copy, Edit3, ImagePlus, Loader2, Plus, Save, Send, Sparkles, Square, Trash2, X } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { CREATIVE_PROMPTS, CREATIVE_CATEGORIES, type CreativePrompt } from '@/data/prompts';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  images?: string[]; // base64 图片数组
 }
 
 export default function MethodologyContent() {
@@ -19,7 +20,9 @@ export default function MethodologyContent() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const [pendingImages, setPendingImages] = useState<string[]>([]);
 
   // prompt 管理相关状态
   const [allPrompts, setAllPrompts] = useState<CreativePrompt[]>([]);
@@ -86,6 +89,61 @@ export default function MethodologyContent() {
     setSelectedPrompt(prompt);
     setMessages([]);
     setInputValue('');
+    setPendingImages([]);
+  };
+
+  // 图片上传处理
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach((file) => {
+      if (!file.type.startsWith('image/')) return;
+      if (file.size > 10 * 1024 * 1024) {
+        alert('图片大小不能超过 10MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setPendingImages((prev) => [...prev, base64]);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 清空 input 以便重复选择同一文件
+    e.target.value = '';
+  };
+
+  const removePendingImage = (index: number) => {
+    setPendingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // 粘贴图片处理
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) continue;
+
+        if (file.size > 10 * 1024 * 1024) {
+          alert('图片大小不能超过 10MB');
+          continue;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64 = event.target?.result as string;
+          setPendingImages((prev) => [...prev, base64]);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
   };
 
   const handleStop = () => {
@@ -134,11 +192,13 @@ export default function MethodologyContent() {
   };
 
   const handleSend = async () => {
-    if (!inputValue.trim() || !selectedPrompt || isLoading) return;
+    if ((!inputValue.trim() && pendingImages.length === 0) || !selectedPrompt || isLoading) return;
 
     const userMessage = inputValue.trim();
+    const imagesToSend = [...pendingImages];
     setInputValue('');
-    setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
+    setPendingImages([]);
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage, images: imagesToSend.length > 0 ? imagesToSend : undefined }]);
     setIsLoading(true);
 
     abortControllerRef.current = new AbortController();
@@ -148,16 +208,39 @@ export default function MethodologyContent() {
     setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
 
     try {
+      // 构建消息内容：如果有图片，使用多模态格式
+      const userContent = imagesToSend.length > 0
+        ? [
+            { type: 'text', text: processedText || '请分析这张图片' },
+            ...imagesToSend.map((img) => ({ type: 'image_url', image_url: { url: img } }))
+          ]
+        : processedText;
+
       const apiMessages = [
         { role: 'system', content: selectedPrompt.systemPrompt },
-        ...messages.map((m) => ({ role: m.role, content: m.content })),
-        { role: 'user', content: processedText }
+        ...messages.map((m) => {
+          if (m.images && m.images.length > 0) {
+            return {
+              role: m.role,
+              content: [
+                { type: 'text', text: m.content || '' },
+                ...m.images.map((img) => ({ type: 'image_url', image_url: { url: img } }))
+              ]
+            };
+          }
+          return { role: m.role, content: m.content };
+        }),
+        { role: 'user', content: userContent }
       ];
 
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages, stream: true }),
+        body: JSON.stringify({ 
+          messages: apiMessages, 
+          images: imagesToSend.length > 0 ? imagesToSend : undefined,
+          stream: true 
+        }),
         signal: abortControllerRef.current.signal
       });
 
@@ -538,7 +621,7 @@ export default function MethodologyContent() {
                     </div>
                   ) : (
                     messages
-                      .filter((m) => m.content)
+                      .filter((m) => m.content || (m.images && m.images.length > 0))
                       .map((message, index) => (
                         <div
                           key={index}
@@ -551,13 +634,28 @@ export default function MethodologyContent() {
                                 : 'bg-cream border border-stone-line rounded-2xl rounded-tl-sm'
                             }`}
                           >
-                            <div
-                              className={`text-sm whitespace-pre-wrap ${
-                                message.role === 'assistant' ? 'text-navy' : ''
-                              }`}
-                            >
-                              {message.content}
-                            </div>
+                            {/* 显示用户上传的图片 */}
+                            {message.images && message.images.length > 0 && (
+                              <div className="flex gap-2 flex-wrap mb-2">
+                                {message.images.map((img, imgIndex) => (
+                                  <img
+                                    key={imgIndex}
+                                    src={img}
+                                    alt={`图片 ${imgIndex + 1}`}
+                                    className="max-w-[200px] max-h-[200px] object-contain rounded-lg"
+                                  />
+                                ))}
+                              </div>
+                            )}
+                            {message.content && (
+                              <div
+                                className={`text-sm whitespace-pre-wrap ${
+                                  message.role === 'assistant' ? 'text-navy' : ''
+                                }`}
+                              >
+                                {message.content}
+                              </div>
+                            )}
                             {message.role === 'assistant' && (
                               <button
                                 onClick={() => copyToClipboard(message.content, `msg-${index}`)}
@@ -595,12 +693,51 @@ export default function MethodologyContent() {
 
                 {/* 输入区域 */}
                 <div className="p-4 border-t border-stone-line bg-cream/30">
-                  <div className="flex gap-3 items-end">
+                  {/* 待发送图片预览 */}
+                  {pendingImages.length > 0 && (
+                    <div className="flex gap-2 mb-3 flex-wrap">
+                      {pendingImages.map((img, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={img}
+                            alt={`待发送图片 ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded-lg border border-stone-line"
+                          />
+                          <button
+                            onClick={() => removePendingImage(index)}
+                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex gap-2 items-end">
+                    {/* 隐藏的文件输入 */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageSelect}
+                      className="hidden"
+                    />
+                    {/* 图片上传按钮 */}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="p-3 bg-white border border-stone-line hover:border-terra text-navy-light hover:text-terra rounded-xl transition-colors shrink-0"
+                      title="上传图片"
+                    >
+                      <ImagePlus className="w-5 h-5" />
+                    </button>
                     <textarea
                       ref={textareaRef}
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={handleKeyDown}
+                      onPaste={handlePaste}
+                      placeholder="输入内容或粘贴图片..."
                       className="flex-1 resize-none bg-white border border-stone-line rounded-xl p-3 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 min-h-[48px] max-h-[150px]"
                       rows={1}
                     />
@@ -615,7 +752,7 @@ export default function MethodologyContent() {
                     ) : (
                       <button
                         onClick={handleSend}
-                        disabled={!inputValue.trim()}
+                        disabled={!inputValue.trim() && pendingImages.length === 0}
                         className="p-3 bg-terra hover:bg-terra-dark disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors shrink-0"
                       >
                         <Send className="w-5 h-5" />
@@ -629,7 +766,7 @@ export default function MethodologyContent() {
                         正在抓取网页内容...
                       </span>
                     )}
-                    <p className="text-xs text-navy-light text-center">按 Enter 发送 · 支持粘贴文章链接自动抓取</p>
+                    <p className="text-xs text-navy-light text-center">按 Enter 发送 · 支持粘贴/上传图片</p>
                   </div>
                 </div>
               </>
