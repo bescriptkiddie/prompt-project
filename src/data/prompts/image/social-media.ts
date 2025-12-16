@@ -1,0 +1,26 @@
+import type { ImagePrompt } from '../types';
+
+export const SOCIAL_MEDIA_PROMPTS: ImagePrompt[] = [
+  {
+    id: '2',
+    title: '潮流OOTD手绘插画',
+    model: 'Nano Banana Pro',
+    promptZh: '核心指令：将上传照片中的人物转换成小红书 City Walk 风格的潮流 OOTD 手绘插画。保持人物特征，但采用更修长、时髦的时尚插画比例（Xiaohongshu Aesthetic）。\n\n风格设定：\n- 构图：竖版构图，潮流穿搭分解图。\n- 画风：精致手绘马克笔风格，线条流畅且有质感，City Boy/Girl 氛围感。\n- 背景：柔和浅米黄色纯色，无渐变。\n- 色彩：饱和但柔和，蓝色需为舒适的中亮潮流蓝。\n\n描边规则：严禁黑色描边。使用"就近色描边"规则（如：衣服用深一点的同色描边，皮肤用深肉棕描边）。\n\n人物转换规则：\n- 面部：保留发型与特征，五官进行"精致化"简化（保留眼神光）。\n- 比例：7-8头身模特比例，四肢修长，体态轻盈舒展。严禁出现矮胖、圆润或Q版身材。\n\n画面装饰元素：包含手绘布料纹理放大图、下装结构图、鞋子款式爆炸图；四周散落 4 个符合人物个性的物品（粗描边、不填色风格）；添加灰蓝色手绘箭头、手写注释。',
+    promptEn: 'Core Instruction: Transform the person in the uploaded photo into a Xiaohongshu City Walk style trendy OOTD hand-drawn illustration. Maintain the character\'s features but adopt a more slender, fashionable illustration proportion (Xiaohongshu Aesthetic).\n\nStyle Settings:\n- Composition: Vertical composition, trendy outfit breakdown.\n- Art Style: Exquisite hand-drawn marker style, smooth and textured lines, City Boy/Girl atmosphere.\n- Background: Soft light beige solid color, no gradient.\n- Colors: Saturated but soft, blue needs to be a comfortable medium-bright trendy blue.\n\nOutline Rules: Strictly no black outlines. Use "nearest color outline" rule (e.g., clothes use a darker shade of the same color, skin uses dark meat brown).\n\nCharacter Transformation Rules:\n- Face: Retain hairstyle and features, "refine" and simplify facial features (retain eye catchlights).\n- Proportions: 7-8 head tall model proportions, slender limbs, light and extended posture. Strictly no short, fat, round, or chibi figures.\n\nDecorative Elements: Include hand-drawn fabric texture zoom-ins, bottom structure diagrams, shoe style exploded views; scatter 4 items matching the character\'s personality around (thick outline, no fill style); add gray-blue hand-drawn arrows and handwritten notes.',
+    description: '专为小红书风格打造的OOTD插画，强调时尚感和手绘质感。',
+    category: '社交媒体',
+    source: '社区投稿',
+    imageUrl: '/images/潮流OOTD手绘插画.png',
+  },
+  {
+    id: '3',
+    title: '人物转潮流 OOTD 插画 (详细版)',
+    model: 'Nano Banana Pro',
+    promptZh: '「将我上传照片中的人物转换成潮流 OOTD 手绘插画风格。保持用户照片中的脸部特征、发型、气质，但用更可爱、年轻的潮流插画比例呈现。\n\n整体风格要求：\n\n竖版构图、潮流穿搭分解图、手绘潮流插画风。背景为柔和浅米黄色纯色，无渐变。线条粗、随意、有手绘马克笔的抖动感。颜色饱和但柔和，蓝色呈中亮、舒服的潮流蓝，不刺眼。\n\n人物转换规则（基于用户照片）：\n\n保留用户本人的脸部特征、发型\n\n脸部五官简化：眼睛为深蓝小圆点；眉毛浅灰蓝细线；鼻子为极淡的肉色阴影点；嘴巴为浅橘线条；两颊有柔和橘粉腮红\n\n将人物比例转换为：短身比例，腿短一点、身体略圆润、潮流插画比例但不Q版\n\n肤色保持用户真实肤色，但以柔和暖调呈现，不出现蓝色阴影\n\n服装生成逻辑：\n\n自动根据用户上传照片中的服装外观，将其转化为：\n\nOversize 潮流版型（更宽大、更松弛）\n更大袖口、更阔的裤子\n鞋子短小肥厚（厚底＋饱满鞋身）\n\n所有物体使用就近色描边规则，比如：\n衣服 → 比衣服深一点的同色描边\n皮肤 → 深肉棕描边\n其他部分也同理\n没有黑色描边\n\n饰品、眼镜类物品都要体现出来\n\n画面附加 OOTD 分解元素：\n手绘衣服布料纹理放大图\n下装结构图\n对应鞋子款式的爆炸图\n\n随身物件：符合人物个性的4个物品（粗描边，不填色的手绘风格）四周摆放，不要排列整齐\n\n手绘灰蓝色箭头（线+面性箭头，箭头不用太粗）、注释、小 doodle，都是粗线条\n整体像潮流插画师画的穿搭原稿\n动作、表情与图片一致。\n\n最终效果：\n真实人物 → 转换成潮流手绘、短身比例、粗线条、穿搭拆解图的 OOTD 插画。」',
+    promptEn: '"Transform the person in my uploaded photo into a trendy OOTD hand-drawn illustration style. Maintain the user\'s facial features, hairstyle, and temperament, but present them in a cuter, younger trendy illustration proportion.\n\nOverall Style Requirements:\n\nVertical composition, trendy outfit breakdown, hand-drawn trendy illustration style. Background is soft light beige solid color, no gradient. Lines are thick, casual, with the jitter of hand-drawn markers. Colors are saturated but soft, blue is medium-bright, comfortable trendy blue, not glaring.\n\nCharacter Transformation Rules (Based on User Photo):\n\nRetain user\'s facial features and hairstyle.\n\nFacial Features Simplification: Eyes are dark blue small dots; eyebrows are light gray-blue thin lines; nose is a very faint flesh-colored shadow dot; mouth is a light orange line; cheeks have soft orange-pink blush.\n\nConvert body proportions to: Short body proportions, slightly shorter legs, slightly round body, trendy illustration proportions but not Chibi.\n\nSkin tone keeps user\'s real skin tone, but presented in soft warm tones, no blue shadows.\n\nClothing Generation Logic:\n\nAutomatically convert clothing based on the uploaded photo to:\n\nOversize trendy fit (wider, looser)\nLarger cuffs, wider pants\nShoes are short and chunky (thick soles + full shoe body)\n\nAll objects use nearest color outline rule, e.g.:\nClothes -> Darker shade of same color outline\nSkin -> Dark meat brown outline\nSame for other parts\nNo black outlines\n\nAccessories, glasses must be reflected.\n\nAdditional OOTD Breakdown Elements:\nHand-drawn fabric texture zoom-in\nBottoms structure diagram\nExploded view of corresponding shoe style\n\nPersonal Items: 4 items matching character personality (thick outline, no fill hand-drawn style) scattered around, not arranged neatly.\n\nHand-drawn gray-blue arrows (line + plane arrows, not too thick), notes, small doodles, all thick lines.\nOverall looks like a fashion illustrator\'s original outfit draft.\nAction, expression consistent with the picture.\n\nFinal Effect:\nReal person -> Transformed into trendy hand-drawn, short body proportion, thick line, outfit breakdown OOTD illustration."',
+    description: '详细版的OOTD插画生成指令，包含对面部、比例、服装和装饰元素的具体要求。',
+    category: '社交媒体',
+    source: '内部优化',
+    imageUrl: '/images/人物转潮流 OOTD 插画 (详细版).png',
+  },
+];

@@ -1,0 +1,48 @@
+import type { ImagePrompt } from '../types';
+
+export const PHOTOGRAPHY_PROMPTS: ImagePrompt[] = [
+  {
+    id: '9',
+    title: '九宫格超写实时尚摄影',
+    model: 'Nano Banana Pro',
+    promptZh: '整体画面设定\n画面为竖版三比四比例，单张图固定九宫格布局，三行三列，每个格子为独立镜头。\n整体风格为超写实时尚摄影，带生活感、轻微胶片颗粒与柔和暗角，可直接作为今日穿搭发布。\n整张图用九个镜头讲完一套穿搭的故事，同时呈现整体造型、身体重点与生活细节。\n\n参考图绑定规则\n以上传参考图为唯一视觉依据。\n模特五官与身材比例、发型发色、妆容氛围完全沿用参考图，不改变人物身份。\n服装版型、颜色、叠穿层次与配饰组合全部继承参考图，包括耳饰、包包、鞋子、指甲等。\n场景类型、光线方向与整体色调以参考图为准，只在同一地点或同一场景体系内轻微延展。\n九个格子中模特始终为同一人、同一套穿搭，只改变机位、构图与景别。\n\n九宫格分镜结构\n\n顶行：整体视角与空间感\n画面一为正面全身照，模特从头到脚完整展示整套穿搭，姿态自然，可轻微行走或转身，环境与光线沿用参考图，用作整体造型基准画面。\n画面二为俯视角度，机位略高于人物，为全身或大半身视角，突出身材纵深感与地面关系，便于阅读整体轮廓与在空间中的占比。\n画面三为仰视角度，机位略低于人物，为全身或大半身视角，加强下装线条与服装垂坠感，同时带出建筑、天花或天空的延伸，营造气场与立体感。\n\n中行：身体重点部位细节\n画面四展示面部细节，画面集中在头部与颈部，呈现妆容氛围、五官特点、发际与刘海，以及耳边局部配饰，肤质自然真实，光线方向与参考图一致。\n画面五展示胸部与上衣结构细节，范围覆盖锁骨、胸部与上半躯干，突出上衣版型、领口形状、肩线走向、面料厚度与叠穿关系，呈现褶皱与收省位置，强化上半身比例。\n画面六展示臀部与下装结构细节，画面集中在腰部以下至大腿上缘或臀部区域，呈现下装剪裁、臀部线条与布料贴合方式，口袋位置、缝线走向与褶皱方向清晰可见，强调下半身廓形与比例。\n\n底行：肢体与配饰细节\n画面七展示脚部与鞋子细节，画面集中在脚踝到鞋底区域，呈现鞋型轮廓、鞋面材质、鞋帮高度与鞋底厚度，带出地面材质与光影，可同时呈现袜子搭配、裤脚收口或裙摆收边。\n画面八展示手部与动作细节，画面集中在手部与前臂局部，呈现自然手势，如持包、扶物或拿日常小物，指甲颜色、指节纹理与指甲油光泽清晰可见，戒指、手链、手表等一并呈现。\n画面九展示重要配饰与材质特写，聚焦一至二个关键配饰，如耳饰、项链局部、包袋局部或腰带局部，强调金属、皮革、布料、宝石等材质的高光与纹理，背景简化，确保视线集中在配饰本身。\n\n服装版型与布料\n主穿搭结构与颜色严格沿用参考图，不随意更换单品种类。\n不同镜头中多次强化肩线、腰线、裤型或裙型以及衣摆长度等关键轮廓。\n针织面料呈现清晰针脚与轻微绒感，薄外套与衬衫呈现柔和高光与自然皱褶，牛仔面料呈现纹理、刷色与车线，皮革呈现细腻高光与折痕与暗部层次。\n\n配饰与微细节\n所有配饰完全依据参考图，包括耳饰、项链、戒指、包包、腰带、手表等。\n金属边缘具有清晰高光与柔和反射，可见细小刻痕与结构细节。\n包袋缝线均匀，边缘处理细腻，五金件质感明确，标志图形清晰不变形。\n鞋面纹路、鞋底厚度与鞋头曲线清楚可辨，可有轻微磨损或折痕，以增强真实感。\n\n发质与肤质\n发型与发色完全继承参考图，只因角度变化改变发丝流向与受光面，可见细小飞散发丝与柔和高光，发根略暗。\n肤质自然真实，可见轻微毛孔与小瑕疵，避免过度磨皮，整体状态与参考图氛围一致。\n\n环境与色调\n场景类型以参考图为主，街拍则延展为同一街区或相近户外环境，室内则延展为同一空间或同一风格房间。\n顶行保留较多环境信息，中行与底行背景适度虚化，以人物与穿搭细节为主。\n全局色调统一，可根据参考图风格调整为暖调、冷调或中性调，避免九个分镜出现色彩断裂或风格跳跃。',
+    promptEn: 'Overall Visual Settings\nVertical 3:4 aspect ratio, fixed 9-grid layout in a single image, 3 rows by 3 columns, each grid is an independent shot.\nOverall style is hyper-realistic fashion photography, with a sense of life, slight film grain, and soft vignetting, ready for immediate OOTD posting.\nThe entire image tells an outfit story through 9 shots, presenting the overall look, body highlights, and lifestyle details.\n\nReference Image Binding Rules\nStrictly use the uploaded reference image as the sole visual basis.\nModel\'s facial features, body proportions, hairstyle, hair color, and makeup atmosphere must completely follow the reference image, without changing identity.\nClothing cut, color, layering, and accessories combination must all inherit from the reference image, including earrings, bags, shoes, nails, etc.\nScene type, lighting direction, and overall tone are based on the reference image, only slightly extended within the same location or scene system.\nThe model in all 9 grids is the same person, same outfit, only changing camera position, composition, and shot scale.\n\n[...Truncated English translation of the detailed 9-grid structure...]',
+    description: '专业的九宫格时尚摄影生成指令，全方位展示穿搭细节。',
+    category: '摄影',
+    source: '时尚摄影师',
+    imageUrl: '/images/九宫格超写实时尚摄影.png',
+  },
+  {
+    id: '10',
+    title: '青春拼贴肖像',
+    model: 'Nano Banana Pro',
+    promptZh: '使用此提示生成一张俏皮、时尚的肖像拼贴画，准确复制上传照片中的人物特征，捕捉清新、青春的美学，并带有剪贴簿风格的装饰和可爱的杂志风格细节。\n\n--- 提示词 ----\n\n重现上传照片中人物的外貌，准确保留发型、面部细节和表情。将其呈现为垂直拼贴格式的明亮、清新和青春的时尚肖像。\n\n她穿着时尚的青春服装，嘴边拿着红色的棒棒糖。她的脸上俏皮地装饰着心形、草莓和星星形状的可爱彩色贴纸，营造出生动、时尚的氛围。她的眼睛富有表情，妆容柔和自然，脸上露出梦幻般的表情。\n\n背景是一个覆盖着彩色便利贴和备忘录纸的软木板，营造出校园和手帐的氛围。手绘的星星、箭头和类似元素的涂鸦增加了可爱的杂志风格美学。围绕主体的是约4个剪贴簿风格的相框，形状各异，展示同一人的不同服装和姿势。\n\n总体而言，图像应利用柔和的摄影棚照明、高清细节、利落的剪贴簿美学、韩国时尚杂志风格和鲜艳的色彩。\n\n宽高比：9:16。',
+    promptEn: 'Use this prompt to generate a playful, stylish portrait collage that accurately replicates a person\'s features from your uploaded photo, capturing a fresh, youthful aesthetic with scrapbook-inspired decorations and cute, magazine-style details.\n\n--- prompt ----\n\nRecreate the character\'s appearance from the uploaded photo, accurately preserving hairstyle, facial details, and expression. Present it as a bright, fresh, and youthful fashion portrait in a vertical collage format.\n\nShe wears trendy youthful clothing, holding a red lollipop near her lips. Her face is playfully decorated with cute colorful stickers shaped like hearts, strawberries, and stars, creating a lively, stylish atmosphere. Her eyes are expressive, makeup is soft and natural, and her face shows a dreamy expression.\n\nThe background features a corkboard covered with colorful sticky notes and memo papers, creating a campus and journaling vibe. Hand-drawn doodles of stars, arrows, and similar elements add to the cute, magazine-style aesthetic. Surrounding the main subject are ～4 scrapbook-style photo frames in various shapes, showcasing different outfits and poses of the same person.\n\nOverall, the image should utilize soft studio lighting, high-definition details, a clean-cut scrapbook aesthetic, Korean fashion-magazine style, and vibrant colors.\n\nAspect ratio: 9:16.',
+    description: '生成青春活力的拼贴风格肖像，适合社交媒体头像和海报。',
+    category: '人像摄影',
+    source: 'Instagram 潮流',
+    imageUrl: '/images/青春拼贴肖像.png',
+  },
+  {
+    id: '12',
+    title: '超广角重构：姿态与透视极限',
+    model: 'Nano Banana Pro',
+    promptZh: '极端广角视角与动态姿势的重混编辑。\n这是一张「在原图基础上进行编辑」的图片，而不是一个全新的角色。\n\n请将原始图像作为严格参考，用于：\n– 人物的身份、发型以及整体穿衣风格\n– 背景与场景的大体类型（同一条街道、同一个房间、同一片海滩、同一种建筑环境等）\n\n你可以完全改变相机机位、角度和姿势，但必须保持：\n– 相同的面部特征（可以有不同的表情）\n– 相同的服装细节\n\n光线与画面渲染：\n– 保持与原图类似的时间与光线氛围（白天 / 夜晚、室内 / 室外、柔光 / 硬光），但可以增强对比与色彩，让画面更有冲击力和戏剧性\n– 保持真实的阴影以及与地面 / 地板的接触关系\n– 高分辨率与清晰细节\n\n变化与随机性：\n– 每一次编辑都应当与原图、以及其他编辑版本有明显区别，在以下方面保持多样化：\n• 相机角度\n• 姿势类型\n• 哪些身体部位最靠近镜头\n• 构图方向（正向、倾斜、俯视、仰视等）\n– 避免一再重复完全相同的"大头照"或者"伸腿照"，尝试各种不同的透视组合\n\n整体目标：\n将原始照片转化为一张戏剧化的、写实的、超广角视角的照片。相机机位极端（包括从正下方或正上方的视角），一处或多处身体部位紧贴镜头，看起来巨大，其余身体在透视中向远处延伸；同一个人物在与原始环境类似的场景中，展现出极具张力的动态瞬间。',
+    promptEn: 'Remix edit of extreme wide-angle perspective and dynamic poses.\nThis is an image "edited based on the original", not a brand new character.\n\nPlease use the original image as a strict reference for:\n– Identity, hairstyle, and overall clothing style of the person\n– General type of background and scene (same street, same room, same beach, same architectural environment, etc.)\n\nYou can completely change the camera position, angle, and pose, but must maintain:\n– Same facial features (can have different expressions)\n– Same clothing details\n\nLighting and Rendering:\n– Maintain time and lighting atmosphere similar to original (day/night, indoor/outdoor, soft/hard light), but can enhance contrast and color for impact and drama\n– Maintain realistic shadows and contact with ground/floor\n– High resolution and sharp details\n\nVariation and Randomness:\n– Each edit should be distinctly different from original and other edits in:\n• Camera angle\n• Pose type\n• Which body parts are closest to lens\n• Composition orientation (straight, tilted, high angle, low angle, etc.)\n– Avoid repeating same "big head" or "extended leg" shots, try various perspective combinations\n\nOverall Goal:\nTransform original photo into a dramatic, realistic, ultra-wide-angle photo. Extreme camera positions (including from directly below or above), one or more body parts close to lens appearing huge, rest of body extending into distance in perspective; same person in scene similar to original environment, showing dynamic moments with tension.',
+    description: '利用超广角透视夸张表现人物动态，创造极具视觉冲击力的画面。',
+    category: '创意摄影',
+    source: '先锋摄影',
+    imageUrl: '/images/超广角重构：姿态与透视极限.png',
+  },
+  {
+    id: '16',
+    title: '电影写真集',
+    model: 'Nano Banana Pro',
+    promptZh: '选取《你的名字》电影里经典画面的实景，使用参考图中角色（动作符合电影氛围），制作一本女性的写真集，比例为3:4或9:16。请让指定的角色看起来像是在那个地方旅游。像写真集一样美地布局。',
+    promptEn: 'Select real-life scenes from classic shots of the movie "Your Name", use the character from the reference photo (action fits the movie atmosphere), and create a female photobook, aspect ratio 3:4 or 9:16. Make the specified character look like they are traveling there. Layout as beautiful as a photobook.',
+    description: '同款电影场景的写真集风格生成，唯美且具有故事感。',
+    category: '摄影',
+    source: '电影周边',
+    imageUrl: '/images/电影写真集.png',
+  },
+];

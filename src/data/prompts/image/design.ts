@@ -1,0 +1,48 @@
+import type { ImagePrompt } from '../types';
+
+export const DESIGN_PROMPTS: ImagePrompt[] = [
+  {
+    id: '1',
+    title: '百科全书信息图表',
+    model: 'DOUBAO',
+    promptZh: '角色与主题：一张宏大的、百科全书式的16:9 3D信息图表海报，标题为"【产品名称】的演变"。视觉风格是博物馆级产品摄影与复杂技术工程蓝图的高端融合。\n\n主角阵容（时间轴核心）：8-12个【产品名称】历史版本的完整线性时间轴阵容，从最初的原型到最新的未来模型。它们精确排列在横跨中心水平运行的测量刻度/尺子基座上。渲染：超写实3D，8k分辨率。强调纹理的演变：展示早期【材质氛围】的老化与现代版本崭新、高科技饰面的对比。\n\n品牌氛围（画布）：背景：深沉、浓郁的【品牌颜色】纹理背景。它重叠着低不透明度的复古专利图纸水印、手写工程笔记和与品牌历史相关的新闻剪报。页眉：顶部中心展示醒目的高对比度品牌标志，配以粗体排版标题。\n\n"超密集"信息层（PUNCH风格）：布局被有组织的信息淹没（创造"数据美学"外观）：\n\n密集注释网络：数百条细白发丝线将特定【关键组件】（如曲线、按钮、引擎）连接到漂浮在空间中的紧凑文本块和数据表。\n\n情境区域："时代模块"漂浮在产品上方，用图标标记代表不同的历史年代。\n\n放大插入：散落在空白处的圆形"放大"透镜，展示纹理细节和内部机制的极度微距特写。\n\n技术规格条：底部的结构化数据条列出了精确的规格（重量、尺寸、年份、材料代码）。\n\n技术规格：Octane渲染，虚幻引擎5美学，编辑布局，信息设计杰作，体积光，清晰聚焦，专业调色。 --ar 16:9 --v 6.0 --stylize 300',
+    promptEn: 'Role & Subject: A massive, encyclopedic 16:9 3D infographic poster titled "THE EVOLUTION OF [Product Name]". The visual style is a high-end fusion of museum-grade product photography and complex technical engineering blueprints.\n\nThe Hero Lineup (Chronological Core): A complete, linear chronological lineup of 8-12 historical versions of [Product Name], ranging from the very first prototype to the latest futuristic model. They are arranged with precision on a measurement scale/ruler base running horizontally across the center. Rendering: Hyper-realistic 3D, 8k resolution. Emphasis on the evolution of textures: showing the aging of early [Material Vibe] vs. the pristine, high-tech finish of modern versions.\n\nBrand Atmosphere (The Canvas): Background: A deep, rich [Brand Color] textured background. It is heavily layered with low-opacity watermarks of vintage patent drawings, handwritten engineering notes, and newspaper clippings related to the brand\'s history. Header: A prominent, high-contrast brand logo displayed at the top center, with a bold typography title.\n\nThe "Hyper-Dense" Information Layer (The PUNCH Style): The layout is overwhelmed with organized information (creating a "Data aesthetics" look):\n\nDense Annotation Network: Hundreds of fine white hairlines connecting specific [Key Components] (e.g., curves, buttons, engines) to compact text blocks and data tables floating in the space.\n\nContextual Zones: "Era Modules" floating above the products, representing different historical decades with iconographic markers.\n\nMagnifying Inserts: Circular "Zoom-in" lenses scattered in empty spaces, showing extreme macro close-ups of texture details and internal mechanisms.\n\nTech Specs Strip: A structured data bar at the very bottom listing precise specifications (weight, dimensions, year, material code).\n\nTechnical Specs: Octane render, Unreal Engine 5 aesthetic, editorial layout, information design masterpiece, volumetric lighting, sharp focus, professional color grading. --ar 16:9 --v 6.0 --stylize 300',
+    description: '适合制作产品演变史、技术解析图，具有极高的信息密度和专业质感。',
+    category: '设计资源',
+    source: 'Midjourney Gallery',
+    imageUrl: '/images/百科全书信息图表.png',
+  },
+  {
+    id: '4',
+    title: '卡通风格信息图',
+    model: 'Nano Banana Pro',
+    promptZh: '请根据提供的内容创作一幅卡通风格的信息图，遵循以下指南：\n\n- 手绘插画风格，横向构图（16:9比例）。\n\n- 包含少量简单的卡通元素、图标或著名人物，以增强视觉趣味性和记忆点。\n\n- 如果内容包含敏感或受版权保护的人物，请用视觉上相似的替代品替换；不要拒绝生成插画。\n\n- 所有图像和文字必须严格遵守手绘风格；避免写实的视觉元素。\n\n- 保持信息简洁，突出关键词和核心概念。利用充足的留白清晰强调关键点。\n\n- 除非另有说明，否则使用与提供内容相同的语言。\n\n请使用 nano banana pro 根据提供的输入创建插画。',
+    promptEn: 'Please create a cartoon-style infographic based on the provided content, following these guidelines:\n\n- Hand-drawn illustration style, landscape orientation (16:9 aspect ratio).\n\n- Include a small number of simple cartoon elements, icons, or famous personalities to enhance visual interest and memorability.\n\n- If the content includes sensitive or copyrighted figures, replace them with visually similar alternatives; do not refuse to generate the illustration.\n\n- All imagery and text must strictly adhere to a hand-drawn style; avoid realistic visual elements.\n\n- Keep information concise, highlighting keywords and core concepts. Utilize ample whitespace to clearly emphasize key points.\n\n- Unless otherwise specified, use the same language as the provided content.\n\nPlease use nano banana pro to create the illustration based on the input provided.',
+    description: '将枯燥的信息转化为生动有趣的手绘卡通信息图。',
+    category: '办公效率',
+    source: 'Prompt Engineering Guide',
+    imageUrl: '/images/卡通风格信息图.png',
+  },
+  {
+    id: '6',
+    title: '盖洛普才干卡片',
+    model: 'DOUBAO',
+    promptZh: '核心指令：\n一张现代 UI 设计风格的才干展示卡片，竖构图。插画风格需要遵循 Modern Flat（现代扁平）美学，特征包括：干净的矢量线条、柔和的投影（Soft Shadows）、高饱和度的配色，以及 Dribbble 风格的高级质感。\n\n主体描述（POV 视角）：\n画面采用 第一人称视角（First-person view），展示一双手正在桌面上进行操作。\n场景的核心是 {才干核心行为}（例如：正在勾选清单 / 正在递送纸巾 / 正在排列复杂的拼图）。\n桌面上摆放着 {关键道具}，这些物品需要暗示 {才干名称} 的特质。\n\n背景与排版：\n卡片采用"三段式"布局。\n\n1. 顶部： {主题色} 的圆角矩形色块，中间有一个白色的 {图标描述} 图标。\n\n2. 中部（插画区）： 纯白背景，放置上述的 POV 插画，插画周围可以有少量的装饰性几何元素漂浮。\n\n3. 底部： {主题色} 的色块，上面有一句白色的引言。\n\n配色方案：\n整体色调以 {主题色}（例如：执行力-紫色 / 关系建立-蓝色）为主，搭配白色背景和深灰色的轮廓线。',
+    promptEn: 'Core Instruction:\nA modern UI design style talent display card, vertical composition. The illustration style needs to follow Modern Flat aesthetics, characterized by: clean vector lines, soft shadows, high saturation color scheme, and Dribbble-style premium texture.\n\nSubject Description (POV Perspective):\nThe image uses First-person view, showing a pair of hands operating on a desktop.\nThe core of the scene is {Core Talent Behavior} (e.g., checking a list / handing over tissues / arranging complex puzzles).\n{Key Props} are placed on the desktop, implying the characteristics of {Talent Name}.\n\nBackground & Typography:\nThe card uses a "Three-Section" layout.\n\n1. Top: {Theme Color} rounded rectangle block, with a white {Icon Description} icon in the center.\n\n2. Middle (Illustration Area): Pure white background, placing the above POV illustration, with small decorative geometric elements floating around.\n\n3. Bottom: {Theme Color} block, with a white quote on it.\n\nColor Scheme:\nOverall tone dominated by {Theme Color} (e.g., Executing-Purple / Relationship Building-Blue), paired with white background and dark gray outlines.',
+    description: '设计盖洛普优势才干卡片，用于展示个人优势和特质。',
+    category: '设计资源',
+    source: 'UI 设计社区',
+    imageUrl: '/images/盖洛普才干卡片.png',
+  },
+  {
+    id: '13',
+    title: '日本高端写真集扫描风',
+    model: 'DOUBAO',
+    promptZh: '**[类型]：** 扫描自日本高端写真集（Shashin-shu）的页面。**九宫格照片排版，印制在纹理哑光艺术纸上。** **[版面设计]：9 张照片以简洁的网格形式排列，底部留有**宽阔的白色边距**，以便于排版。\n\n**[主题一致性]：** 所有 9 张照片必须展示**同一个女性**，穿着**同一套服装**，在**同一个地点**拍摄，讲述一个连贯的故事。**\n\n**[字体设计与日式元素——艺术点缀]：** *（AI 必须在底部空白处渲染标题文本）*\n**[随机选择一首主题曲]：**\n1. **{主题：夏天}：** 大日文文字 **"青い夏"** 下方带有小英文文字 **"BLUE SUMMER"**。\n2. **{主题：私人}：** 大日文文字 **"私"** 下方带有小英文文字 **"PRIVATE"**。\n\n**[网格叙事 - "从白天到黑夜"的旅程]：**\n第一排：户外呼吸（风与光）\n1. **左上角（宽幅）：** 人物站在风中，头发飘扬，**被阳光逆光照射**。\n2. **顶部中间（细节）：** **一只手拿着一瓶汽水**或遮挡阳光的特写。\n3. **右上角（特写）：** **看着相机的笑脸特写**，过度曝光（日系风格）。\n\n**[美学风格]：**\n* **胶片：** Fujifilm Pro 400H（青色阴影，明亮高光）。\n* **纹理：** **可见的纸张纹理**，轻微的暗角，版式设计风格。\n\n**[参数]:** --ar 2:3 --style raw --v 6.0 --stylize 200 --cref [URL] --cw 80 --无商业微笑，僵硬的姿势，工作室灯光。',
+    promptEn: '**[Type]:** Scanned page from a high-end Japanese photobook (Shashin-shu). **9-grid photo layout printed on textured matte art paper.** **[Layout]: 9 photos arranged in a clean grid with a **wide white margin** at the bottom for typography.\n\n**[Subject Consistency]:** All 9 photos must show the **same woman**, wearing the **same outfit**, shot in the **same location**, telling a coherent story.**\n\n**[Typography & Japanese Elements - Art Embellishment]:** *(AI must render title text in the bottom white space)*\n**[Randomly select a theme song]:**\n1. **{Theme: Summer}:** Large Japanese text **"青い夏"** with small English text **"BLUE SUMMER"** below.\n2. **{Theme: Private}:** Large Japanese text **"私"** with small English text **"PRIVATE"** below.\n\n**[Grid Narrative - "Day to Night" Journey]:**\nRow 1: Outdoor Breath (Wind & Light)\n1. **Top Left (Wide):** Character standing in wind, hair blowing, **backlit by sunlight**.\n2. **Top Middle (Detail):** Close-up of **a hand holding a soda bottle** or shielding sun.\n3. **Top Right (Close-up):** **Smiling face looking at camera**, overexposed (Japanese style).\n\n**[Aesthetic Style]:**\n* **Film:** Fujifilm Pro 400H (Cyan shadows, bright highlights).\n* **Texture:** **Visible paper texture**, slight vignette, editorial style.\n\n**[Parameters]:** --ar 2:3 --style raw --v 6.0 --stylize 200 --cref [URL] --cw 80 --no commercial smile, stiff poses, studio lighting.',
+    description: '模拟高端日系写真集排版和质感，营造文艺清新的视觉体验。',
+    category: '排版设计',
+    source: '日本平面设计',
+    imageUrl: '/images/日本高端写真集扫描风.png',
+  },
+];

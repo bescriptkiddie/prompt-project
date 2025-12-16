@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Copy, Edit3, Loader2, Plus, Save, Send, Sparkles, Square, Trash2, X } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
-import { CREATIVE_PROMPTS, CreativePrompt } from '@/data/creativePrompts';
+import { CREATIVE_PROMPTS, CREATIVE_CATEGORIES, type CreativePrompt } from '@/data/prompts';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -340,7 +340,7 @@ export default function MethodologyContent() {
     }
   };
 
-  const categories = ['内容分析', '个人IP', '文章创作', '营销文案'] as const;
+  const categories = CREATIVE_CATEGORIES;
 
   return (
     <div className="flex h-full w-full flex-col bg-cream overflow-hidden">
