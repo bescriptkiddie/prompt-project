@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Check, Copy, Edit3, ImagePlus, Loader2, Plus, Save, Send, Sparkles, Square, Trash2, X } from 'lucide-react';
+import { Check, Copy, Edit3, History, ImagePlus, Loader2, MessageSquarePlus, Plus, Save, Send, Sparkles, Square, Trash2, X } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { CREATIVE_PROMPTS, CREATIVE_CATEGORIES, type CreativePrompt } from '@/data/prompts';
 
@@ -10,6 +10,21 @@ interface Message {
   content: string;
   images?: string[]; // base64 图片数组
 }
+
+// 聊天会话接口 - 预留 userId 用于未来账号系统
+interface ChatSession {
+  id: string;
+  title: string;
+  promptId: string;
+  messages: Message[];
+  createdAt: number;
+  updatedAt: number;
+  userId?: string; // 预留：未来接入账号系统
+}
+
+// 聊天记录存储 key
+const CHAT_SESSIONS_KEY = 'methodology_chat_sessions';
+const CURRENT_SESSION_KEY = 'methodology_current_session';
 
 export default function MethodologyContent() {
   const [selectedPrompt, setSelectedPrompt] = useState<CreativePrompt | null>(null);
@@ -23,6 +38,11 @@ export default function MethodologyContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const [pendingImages, setPendingImages] = useState<string[]>([]);
+
+  // 聊天记录管理状态
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   // prompt 管理相关状态
   const [allPrompts, setAllPrompts] = useState<CreativePrompt[]>([]);
@@ -69,6 +89,116 @@ export default function MethodologyContent() {
     localStorage.setItem('allPrompts', JSON.stringify(prompts));
   };
 
+  // ========== 聊天记录管理 ==========
+  // 加载聊天记录
+  useEffect(() => {
+    const savedSessions = localStorage.getItem(CHAT_SESSIONS_KEY);
+    if (savedSessions) {
+      try {
+        const sessions = JSON.parse(savedSessions) as ChatSession[];
+        setChatSessions(sessions);
+      } catch {
+        setChatSessions([]);
+      }
+    }
+    const savedCurrentId = localStorage.getItem(CURRENT_SESSION_KEY);
+    if (savedCurrentId) {
+      setCurrentSessionId(savedCurrentId);
+    }
+  }, []);
+
+  // 保存聊天记录到 localStorage
+  const saveSessions = (sessions: ChatSession[]) => {
+    setChatSessions(sessions);
+    localStorage.setItem(CHAT_SESSIONS_KEY, JSON.stringify(sessions));
+  };
+
+  // 生成会话标题（取第一条用户消息的前20字）
+  const generateSessionTitle = (msgs: Message[]): string => {
+    const firstUserMsg = msgs.find((m) => m.role === 'user' && m.content);
+    if (firstUserMsg) {
+      return firstUserMsg.content.slice(0, 20) + (firstUserMsg.content.length > 20 ? '...' : '');
+    }
+    return '新对话';
+  };
+
+  // 创建新会话
+  const createNewSession = (promptId: string): string => {
+    const newSession: ChatSession = {
+      id: `session-${Date.now()}`,
+      title: '新对话',
+      promptId,
+      messages: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      // userId: undefined, // 预留：未来从账号系统获取
+    };
+    const newSessions = [newSession, ...chatSessions];
+    saveSessions(newSessions);
+    setCurrentSessionId(newSession.id);
+    localStorage.setItem(CURRENT_SESSION_KEY, newSession.id);
+    return newSession.id;
+  };
+
+  // 更新当前会话的消息
+  const updateCurrentSession = (newMessages: Message[]) => {
+    if (!currentSessionId || !selectedPrompt) return;
+
+    const updatedSessions = chatSessions.map((s) => {
+      if (s.id === currentSessionId) {
+        return {
+          ...s,
+          messages: newMessages,
+          title: s.title === '新对话' ? generateSessionTitle(newMessages) : s.title,
+          updatedAt: Date.now(),
+        };
+      }
+      return s;
+    });
+    saveSessions(updatedSessions);
+  };
+
+  // 切换到指定会话
+  const switchToSession = (sessionId: string) => {
+    const session = chatSessions.find((s) => s.id === sessionId);
+    if (!session) return;
+
+    // 找到对应的 prompt
+    const prompt = allPrompts.find((p) => p.id === session.promptId);
+    if (prompt) {
+      setSelectedPrompt(prompt);
+      setMessages(session.messages);
+      setCurrentSessionId(sessionId);
+      localStorage.setItem(CURRENT_SESSION_KEY, sessionId);
+      setPendingImages([]);
+      setShowHistory(false);
+    }
+  };
+
+  // 删除会话
+  const deleteSession = (sessionId: string) => {
+    const newSessions = chatSessions.filter((s) => s.id !== sessionId);
+    saveSessions(newSessions);
+    if (currentSessionId === sessionId) {
+      setCurrentSessionId(null);
+      setMessages([]);
+      localStorage.removeItem(CURRENT_SESSION_KEY);
+    }
+  };
+
+  // 当消息变化时，自动保存到当前会话
+  useEffect(() => {
+    if (currentSessionId && messages.length > 0) {
+      updateCurrentSession(messages);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
+
+  // 获取当前 prompt 的历史会话
+  const currentPromptSessions = selectedPrompt
+    ? chatSessions.filter((s) => s.promptId === selectedPrompt.id).sort((a, b) => b.updatedAt - a.updatedAt)
+    : [];
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -87,9 +217,28 @@ export default function MethodologyContent() {
 
   const handleSelectPrompt = (prompt: CreativePrompt) => {
     setSelectedPrompt(prompt);
-    setMessages([]);
     setInputValue('');
     setPendingImages([]);
+    
+    // 查找该 prompt 最近的会话，如果没有则创建新会话
+    const recentSession = chatSessions.find((s) => s.promptId === prompt.id);
+    if (recentSession) {
+      setMessages(recentSession.messages);
+      setCurrentSessionId(recentSession.id);
+      localStorage.setItem(CURRENT_SESSION_KEY, recentSession.id);
+    } else {
+      setMessages([]);
+      setCurrentSessionId(null);
+    }
+  };
+
+  // 开始新对话
+  const startNewChat = () => {
+    if (!selectedPrompt) return;
+    createNewSession(selectedPrompt.id);
+    setMessages([]);
+    setPendingImages([]);
+    setShowHistory(false);
   };
 
   // 图片上传处理
@@ -193,6 +342,11 @@ export default function MethodologyContent() {
 
   const handleSend = async () => {
     if ((!inputValue.trim() && pendingImages.length === 0) || !selectedPrompt || isLoading) return;
+
+    // 如果没有当前会话，自动创建一个
+    if (!currentSessionId) {
+      createNewSession(selectedPrompt.id);
+    }
 
     const userMessage = inputValue.trim();
     const imagesToSend = [...pendingImages];
@@ -334,7 +488,12 @@ export default function MethodologyContent() {
   };
 
   const clearChat = () => {
+    // 删除当前会话并开始新对话
+    if (currentSessionId) {
+      deleteSession(currentSessionId);
+    }
     setMessages([]);
+    setCurrentSessionId(null);
   };
 
   // 创建新的自定义 prompt
@@ -591,30 +750,97 @@ export default function MethodologyContent() {
                         <p className="text-xs text-navy-light">{selectedPrompt.description}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={startNewChat}
+                        className="p-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all"
+                        title="新建对话"
+                      >
+                        <MessageSquarePlus className="w-[18px] h-[18px]" />
+                      </button>
+                      {currentPromptSessions.length > 0 && (
+                        <button
+                          onClick={() => setShowHistory(!showHistory)}
+                          className={`relative p-2 rounded-lg transition-all ${
+                            showHistory
+                              ? 'text-terra bg-terra/10'
+                              : 'text-navy-light hover:text-terra hover:bg-terra/10'
+                          }`}
+                          title="历史记录"
+                        >
+                          <History className="w-[18px] h-[18px]" />
+                          <span className="absolute -top-1 -right-1 min-w-[16px] h-4 flex items-center justify-center text-[10px] font-medium bg-terra text-white rounded-full px-1">
+                            {currentPromptSessions.length}
+                          </span>
+                        </button>
+                      )}
                       <button
                         onClick={() => handleEditPrompt(selectedPrompt)}
-                        className="flex items-center gap-1 px-3 py-1.5 text-sm text-terra border border-terra/30 hover:bg-terra/10 rounded-lg transition-colors"
+                        className="p-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all"
+                        title="编辑 Prompt"
                       >
-                        <Edit3 className="w-3.5 h-3.5" />
-                        <span>编辑</span>
+                        <Edit3 className="w-[18px] h-[18px]" />
                       </button>
                       {messages.length > 0 && (
                         <button
                           onClick={clearChat}
-                          className="p-2 text-navy-light hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                          className="p-2 text-navy-light hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                           title="清空对话"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-[18px] h-[18px]" />
                         </button>
                       )}
                     </div>
                   </div>
                 </div>
 
+                {/* 历史记录面板 */}
+                {showHistory && currentPromptSessions.length > 0 && (
+                  <div className="border-b border-stone-line bg-cream/30 p-3 max-h-[200px] overflow-y-auto">
+                    <div className="text-xs text-navy-light mb-2 font-medium">历史对话</div>
+                    <div className="space-y-1">
+                      {currentPromptSessions.map((session) => (
+                        <div
+                          key={session.id}
+                          className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors group ${
+                            currentSessionId === session.id
+                              ? 'bg-terra/10 border border-terra/30'
+                              : 'hover:bg-stone-line/50'
+                          }`}
+                          onClick={() => switchToSession(session.id)}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm text-navy truncate">{session.title}</div>
+                            <div className="text-xs text-navy-light">
+                              {new Date(session.updatedAt).toLocaleDateString('zh-CN', {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                              {' · '}
+                              {session.messages.length} 条消息
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteSession(session.id);
+                            }}
+                            className="p-1 text-navy-light hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                            title="删除对话"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* 消息列表 */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-                  {messages.filter((m) => m.content).length === 0 ? (
+                  {messages.filter((m) => m.content || (m.images && m.images.length > 0)).length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-8">
                       <Sparkles className="w-12 h-12 text-terra/30 mb-4" />
                       <p className="text-navy-light text-sm max-w-xs">{selectedPrompt.placeholder}</p>
