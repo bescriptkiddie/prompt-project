@@ -11,4 +11,87 @@ export const CODE_PROMPTS: CodePrompt[] = [
     category: '代码开发',
     source: '原创',
   },
+  {
+    id: '21',
+    title: '网站设计',
+    model: 'GPT-4',
+    promptZh:
+      '你的任务：根据我的描述，创建一个设计出色、内容丰富、用户体验友好的网站方案，并最终交付可运行的前端代码。\n\n' +
+      '网站主题（我会填写）：{把你的需求写在这里}\n\n' +
+      '工作流程（按顺序产出，逐步确认）：\n' +
+      '1) 逆向工作法 PRFAQ（约 1000 字）：先写新闻稿（PR）+ 常见问题（FAQ），体现深度思考与产品叙事。\n' +
+      '2) 需求洞察：穿透用户表述，补齐显性/隐性需求，形成完整清单：\n' +
+      '   - 用户角色与使用场景\n' +
+      '   - 核心任务路径（Happy path）\n' +
+      '   - 边界条件与异常流程\n' +
+      '   - 数据结构/内容模型（字段、关系、示例数据）\n' +
+      '3) PRD：结构化输出，包含目标用户、功能列表、优先级（MoSCoW）、信息架构草图（站点地图 + 任务流）。\n' +
+      '4) 设计灵感采样（转译而非模仿）：\n' +
+      '   - 从“灵感来源池”随机抽取 2 位（仅借鉴气质与方法，禁止临摹具体作品）。\n' +
+      '   - 对每位给出“灵感 → 网页实现”的转译说明（版式/色彩/形态/动态/语义）。\n' +
+      '5) 交互与视觉方案：基于前端设计原则输出可交付规范：\n' +
+      '   - 页面结构\n' +
+      '   - 组件清单\n' +
+      '   - 状态说明（默认/悬停/激活/禁用/错误/空态/加载）\n' +
+      '   - 可访问性与动效规范（200–300ms；支持 prefers-reduced-motion 回退）\n' +
+      '   - 响应式断点策略\n' +
+      '6) 设计系统（Design Tokens）：颜色、字体、栅格、间距系统；并用文字描述 2–3 个关键页面线框。\n' +
+      '7) 前端工程交付：在理解需求与设计规范基础上，输出完整 HTML/CSS/JS 代码（可直接复制运行）。\n\n' +
+      '前端代码硬性要求：\n' +
+      '- 使用 HTML5 语义结构：header/main/aside/section/nav/footer；标题层级正确。\n' +
+      '- 通过 CDN 引入 Google Fonts（示例：Inter），并提供中英文混排备用字体栈。\n' +
+      '- 图标：优先用 SVG 图标（可选 Lucide/Heroicons/Tabler），避免使用 emoji。\n' +
+      '- 三断点响应式；可点击区域不小于 44×44px；表格与图表具备小屏策略。\n' +
+      '- 必备 meta：viewport 与 color-scheme。\n' +
+      '- 需要图片时必须给出真实可访问链接（例如 Picsum：https://picsum.photos/id/157/800/600），不留空白占位。\n' +
+      '- 色彩与可读性：避免千篇一律紫色/纯蓝主色；优先更具辨识度的中性色或高品质品牌色，并保证对比度达标。\n\n' +
+      '灵感来源池（随机抽样 2 位）：\n' +
+      'Saul Bass, Maurice Binder, Pablo Ferro, Paula Scher, Neville Brody, April Greiman, David Carson, Massimo Vignelli, Josef Müller-Brockmann, Otl Aicher, Muriel Cooper, Piet Mondrian, Sonia Delaunay, Josef Albers, Victor Vasarely, Bridget Riley, M. C. Escher, Yayoi Kusama, Takashi Murakami, Katsushika Hokusai（葛饰北斋）, Xu Bing（徐冰）, Zaha Hadid, Bjarke Ingels (BIG), Thomas Heatherwick, Tadao Ando（安藤忠雄）, SANAA, Kengo Kuma（隈研吾）, Dieter Rams（Braun）, Jony Ive（Apple）, Naoto Fukasawa（无印良品）, Nendo（Oki Sato）, Susan Kare（界面图标语义）\n\n' +
+      '转译而非模仿（必须遵守）：\n' +
+      '- 版式：非对称分栏、超大标题、网格秩序与“破格”、分镜式章节标题\n' +
+      '- 色彩：高对比撞色、三原色几何、工业警示条、渐变/光散射\n' +
+      '- 形态：曲线切割、体块叠合、模块化卡片、纸感与细微纹理\n' +
+      '- 动态：200–300ms 入场/勾勒/滚动反馈；支持 prefers-reduced-motion 静态回退\n' +
+      '- 语义：极简图形符号、变量字体轴（字重/宽度小幅过渡）、数字/指标等宽排版\n' +
+      '- 禁止复刻具体作品的构图/配色/字体组合/标语/品牌元素；不生成高度相似页面布局或元素组合\n\n' +
+      '请先输出第 1 步 PRFAQ，再进入第 2 步。',
+    promptEn:
+      'Your task: based on my description, produce a website plan that is visually outstanding, content-rich, and user-friendly, and finally deliver runnable frontend code.\n\n' +
+      'Website theme (I will fill in): {describe your website needs here}\n\n' +
+      'Workflow (deliver in order, confirm step by step):\n' +
+      '1) Working backwards PRFAQ (~1000 words): write a Press Release (PR) + FAQ first, showing deep thinking and product narrative.\n' +
+      '2) Requirements insight: expand explicit/implicit needs into a complete list:\n' +
+      '   - User roles & scenarios\n' +
+      '   - Core task paths (happy path)\n' +
+      '   - Edge cases & exception flows\n' +
+      '   - Data/content model (fields, relations, sample data)\n' +
+      '3) PRD: structured doc including target users, features, MoSCoW prioritization, IA sketches (sitemap + task flows).\n' +
+      '4) Design inspiration sampling (translate, don\'t imitate):\n' +
+      '   - Randomly pick 2 from the inspiration pool (borrow vibe/method only; no copying specific works).\n' +
+      '   - For each, explain “inspiration → web implementation” (layout/color/form/motion/semantics).\n' +
+      '5) Interaction & visual spec: deliverable structure, component list, states (default/hover/active/disabled/error/empty/loading), accessibility & motion (200–300ms; prefers-reduced-motion fallback), responsive breakpoints.\n' +
+      '6) Design system (tokens): colors, typography, grid, spacing; describe 2–3 key page wireframes in words.\n' +
+      '7) Engineering delivery: output complete HTML/CSS/JS code that can be copied and run.\n\n' +
+      'Hard frontend requirements:\n' +
+      '- Semantic HTML5 structure: header/main/aside/section/nav/footer; correct heading hierarchy.\n' +
+      '- Include Google Fonts via CDN (e.g., Inter) + bilingual fallback font stack.\n' +
+      '- Icons: prefer SVG icon set (Lucide/Heroicons/Tabler); avoid emoji.\n' +
+      '- 3 responsive breakpoints; minimum touch target 44×44px; tables/charts must adapt for small screens.\n' +
+      '- Required meta: viewport and color-scheme.\n' +
+      '- Use real, accessible image URLs when needed (e.g., Picsum: https://picsum.photos/id/157/800/600); no empty placeholders.\n' +
+      '- Color & readability: avoid generic purple/pure blue primaries; prefer distinctive neutrals or premium brand colors; ensure accessible contrast.\n\n' +
+      'Inspiration pool (randomly sample 2):\n' +
+      'Saul Bass, Maurice Binder, Pablo Ferro, Paula Scher, Neville Brody, April Greiman, David Carson, Massimo Vignelli, Josef Müller-Brockmann, Otl Aicher, Muriel Cooper, Piet Mondrian, Sonia Delaunay, Josef Albers, Victor Vasarely, Bridget Riley, M. C. Escher, Yayoi Kusama, Takashi Murakami, Katsushika Hokusai, Xu Bing, Zaha Hadid, Bjarke Ingels (BIG), Thomas Heatherwick, Tadao Ando, SANAA, Kengo Kuma, Dieter Rams, Jony Ive, Naoto Fukasawa, Nendo, Susan Kare\n\n' +
+      'Translate—not imitate (must follow):\n' +
+      '- Layout: asymmetrical columns, oversized headings, grid order + intentional breaks, storyboard-like section headers\n' +
+      '- Color: high-contrast, primary-color geometry, industrial warning stripes, gradients/light dispersion\n' +
+      '- Form: curved cuts, block layering, modular cards, subtle paper-like textures\n' +
+      '- Motion: 200–300ms entrance/outline/scroll feedback; prefers-reduced-motion static fallback\n' +
+      '- Semantics: minimal graphic symbols, variable font axis micro-transitions, tabular numerals for metrics\n' +
+      '- Do NOT recreate specific compositions/palettes/type pairings/slogans/brand elements; do not produce highly similar page layouts\n\n' +
+      'Start with Step 1 (PRFAQ) before moving to Step 2.',
+    description: '从产品思考到视觉与交互规范，再到可运行前端代码的一体化网站设计提示词。',
+    category: '网页设计',
+    source: '原创',
+  }
 ];

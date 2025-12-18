@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Circle, Globe, Tag, Sparkles, Languages, Code, FileText } from 'lucide-react';
+import { ArrowRight, Circle, Globe, Tag, Sparkles, Languages, Code } from 'lucide-react';
 import { PromptItem } from '@/types';
 import { clsx } from 'clsx';
 
@@ -16,7 +16,7 @@ export default function PromptCard({ item, onSelect, onPreview, index }: PromptC
 
   const currentPrompt = lang === 'zh' ? item.promptZh : item.promptEn;
 
-  if (item.type === 'article' || item.type === 'code') {
+  if (item.type === 'code') {
     return (
       <article
         className="article-fade-in group relative break-inside-avoid bg-terra p-6 shadow-sm text-cream flex flex-col justify-between min-h-[350px]"
@@ -25,11 +25,7 @@ export default function PromptCard({ item, onSelect, onPreview, index }: PromptC
         <div>
           <div className="flex justify-between items-start mb-4">
             <div className="text-mustard">
-              {item.type === 'code' ? (
-                <Code className="w-12 h-12 stroke-[1.5]" />
-              ) : (
-                <FileText className="w-12 h-12 stroke-[1.5]" />
-              )}
+              <Code className="w-12 h-12 stroke-[1.5]" />
             </div>
             {item.category && (
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-mustard/20 text-mustard border border-mustard/30">

@@ -35,15 +35,4 @@ export interface CodePrompt {
   source?: string;
 }
 
-export interface ArticlePrompt {
-  id: string;
-  title: string;
-  model: string;
-  promptZh: string;
-  promptEn: string;
-  description?: string;
-  category: string;
-  source?: string;
-}
-
 

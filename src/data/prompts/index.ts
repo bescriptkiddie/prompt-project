@@ -12,17 +12,12 @@ export { IMAGE_PROMPTS } from './image';
 export * from './code';
 export { CODE_PROMPTS } from './code';
 
-export * from './article';
-export { ARTICLE_PROMPTS } from './article';
-
 // Combined generation prompts (backward compatible with MOCK_PROMPTS)
 import { IMAGE_PROMPTS } from './image';
 import { CODE_PROMPTS } from './code';
-import { ARTICLE_PROMPTS } from './article';
 import type { PromptItem } from '@/types';
 
 export const MOCK_PROMPTS: PromptItem[] = [
   ...IMAGE_PROMPTS.map(p => ({ ...p, type: 'image' as const })),
   ...CODE_PROMPTS.map(p => ({ ...p, type: 'code' as const })),
-  ...ARTICLE_PROMPTS.map(p => ({ ...p, type: 'article' as const })),
 ];
