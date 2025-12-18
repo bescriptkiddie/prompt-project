@@ -9,6 +9,7 @@ export const internalPages = [
   { name: '精选集', path: '/' },
   { name: '创作方法论', path: '/methodology' },
   { name: '教练提效', path: '/coach-routes' },
+  { name: 'HTML', path: '/html' },
   { name: 'MD排版', path: '/mdtohtml' },
   { name: '关于我们', path: '/about' }
 ]

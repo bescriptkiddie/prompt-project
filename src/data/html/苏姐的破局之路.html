@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>从北大学霸到创业导师：苏姐的破局之路</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Claude-inspired Palette */
+        --color-primary: #cc785c;
+        --color-primary-dark: #d97757;
+        --color-bg: #f5f5f0;
+        --color-bg-alt: #eaeae5;
+        --color-text: #1f1f1f;
+        --color-text-light: #555555;
+        --color-card: #ffffff;
+        --color-border: #e5e5e5;
+
+        /* Typography */
+        --font-serif: "Lora", serif;
+        --font-sans: "Inter", sans-serif;
+
+        /* Spacing & Layout */
+        --spacing-unit: 8px;
+        --container-width: 1000px;
+        --radius: 16px;
+        --shadow-subtle: 0 4px 24px rgba(0, 0, 0, 0.03);
+        --shadow-hover: 0 8px 32px rgba(204, 120, 92, 0.12);
+
+        /* Transitions */
+        --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-sans);
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        color: var(--color-text);
+        line-height: 1.3;
+      }
+
+      p {
+        color: var(--color-text-light);
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .container {
+        max-width: var(--container-width);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      section {
+        padding: 100px 0;
+      }
+
+      /* Utility Classes */
+      .text-center {
+        text-align: center;
+      }
+      .text-primary {
+        color: var(--color-primary);
+      }
+      .mb-large {
+        margin-bottom: 64px;
+      }
+      .mb-medium {
+        margin-bottom: 32px;
+      }
+      .mb-small {
+        margin-bottom: 16px;
+      }
+
+      /* Animation Classes */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: var(--transition);
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .hero h2 {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--color-text-light);
+        margin-bottom: 2rem;
+        font-family: var(--font-sans);
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 60px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-top: 40px;
+      }
+
+      .stat-item strong {
+        display: block;
+        font-size: 2.5rem;
+        color: var(--color-primary);
+        font-family: var(--font-serif);
+        margin-bottom: 8px;
+      }
+
+      .stat-item span {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--color-text-light);
+      }
+
+      /* Cards General */
+      .card {
+        background: var(--color-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow-subtle);
+        transition: var(--transition);
+        height: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.02);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      /* Part 1: Three Faces */
+      .faces-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 32px;
+      }
+
+      .face-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .face-icon {
+        font-size: 1.8rem;
+      }
+
+      /* Part 2: Where Are You */
+      .states-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
+      .state-item {
+        background: var(--color-card);
+        padding: 32px;
+        border-radius: var(--radius);
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+      }
+
+      .state-item:hover {
+        background: #fffbf9; /* Very light orange tint */
+      }
+
+      .state-number {
+        font-family: var(--font-serif);
+        font-size: 3rem;
+        color: rgba(204, 120, 92, 0.15);
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-weight: 700;
+      }
+
+      .state-item h4 {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Part 3: Framework */
+      .framework-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        text-align: center;
+      }
+
+      .framework-col {
+        position: relative;
+      }
+
+      .framework-col::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        width: 1px;
+        height: 60%;
+        background: rgba(0, 0, 0, 0.1);
+        transform: translateY(-50%);
+      }
+
+      .framework-col:last-child::after {
+        display: none;
+      }
+
+      .framework-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(204, 120, 92, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        color: var(--color-primary);
+        font-size: 1.5rem;
+      }
+
+      /* Part 4: Quotes */
+      .quotes-container {
+        display: grid;
+        gap: 40px;
+      }
+
+      .quote-card {
+        border-left: 4px solid var(--color-primary);
+        padding-left: 32px;
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        color: var(--color-text);
+        font-style: italic;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      /* Part 5: 3 Laws */
+      .laws-list {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .law-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 32px;
+        background: var(--color-card);
+        padding: 24px;
+        border-radius: var(--radius);
+      }
+
+      .law-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        font-family: var(--font-serif);
+        margin-right: 32px;
+        min-width: 50px;
+      }
+
+      /* Part 6: Tracks */
+      .tracks-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .track-card {
+        padding: 48px;
+      }
+
+      .track-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 16px;
+      }
+
+      .track-list {
+        list-style: none;
+      }
+
+      .track-list li {
+        margin-bottom: 12px;
+        padding-left: 20px;
+        position: relative;
+        color: var(--color-text-light);
+      }
+
+      .track-list li::before {
+        content: "•";
+        color: var(--color-primary);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      /* Part 7: Core Elements */
+      .core-elements {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .core-item {
+        background: var(--color-card);
+        width: 100%;
+        padding: 24px;
+        text-align: center;
+        border-radius: var(--radius);
+        font-family: var(--font-serif);
+        font-size: 1.25rem;
+        position: relative;
+      }
+
+      .core-item:not(:last-child)::after {
+        content: "↓";
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--color-primary);
+        font-size: 1.2rem;
+      }
+
+      /* Footer CTA */
+      .footer-cta {
+        background: var(--color-text);
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        border-radius: 24px 24px 0 0;
+      }
+
+      .footer-cta h2 {
+        color: white;
+        margin-bottom: 32px;
+      }
+
+      .promise-list {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
+      }
+
+      .promise-item {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background-color: var(--color-primary);
+        color: white;
+        padding: 18px 48px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(204, 120, 92, 0.3);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+        .hero-stats {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .framework-grid {
+          grid-template-columns: 1fr;
+        }
+        .framework-col::after {
+          display: none;
+        }
+        .tracks-grid {
+          grid-template-columns: 1fr;
+        }
+        .section {
+          padding: 60px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="reveal">
+          <h1>从北大学霸到创业导师</h1>
+          <h2>苏姐的破局之路</h2>
+          <p style="max-width: 600px; margin: 0 auto 2rem">
+            在不确定的时代，寻找确定的内核。<br />
+            这是一个关于从外求到内求，从优秀到卓越的真实故事。
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <strong>700+</strong>
+              <span>优势教练</span>
+            </div>
+            <div class="stat-item">
+              <strong>1000万</strong>
+              <span>年度营收</span>
+            </div>
+            <div class="stat-item">
+              <strong>5年</strong>
+              <span>持续增长</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 1: Life Phases -->
+    <section id="journey">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>不只是履历，更是选择</h2>
+          <p>人生没有白走的路，每一步都算数</p>
+        </div>
+
+        <div class="faces-grid">
+          <div class="card face-card reveal">
+            <h3><span class="face-icon">🎓</span> A面：精英之路</h3>
+            <p>
+              北大本科，伦敦政经硕士，港铁高管。这是一条标准的精英上升通道，光鲜亮丽，令人艳羡。
+            </p>
+          </div>
+          <div class="card face-card reveal" style="transition-delay: 0.1s">
+            <h3><span class="face-icon">😔</span> B面：迷茫瓶颈</h3>
+            <p>
+              30岁遭遇职业瓶颈，外表的成功无法掩盖内心的空虚。质疑价值，找不到方向，陷入深深的焦虑。
+            </p>
+          </div>
+          <div class="card face-card reveal" style="transition-delay: 0.2s">
+            <h3><span class="face-icon">🚀</span> C面：破局重生</h3>
+            <p>
+              投资大脑，重塑认知。从发现自我优势开始，开启创业之路，实现了从打工者到创业导师的跃迁。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 2: Current State -->
+    <section id="status" style="background-color: var(--color-bg-alt)">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>六种状态，找到你的位置</h2>
+          <p>看见，是改变的开始</p>
+        </div>
+
+        <div class="states-grid">
+          <div class="state-item reveal">
+            <span class="state-number">01</span>
+            <h4>主业危机</h4>
+            <p>行业下行，随时可能被替代，却不知道自己还能做什么。</p>
+          </div>
+          <div class="state-item reveal">
+            <span class="state-number">02</span>
+            <h4>副业犹豫</h4>
+            <p>想做副业，但总觉得那是虚假的安全感，迟迟不敢迈出第一步。</p>
+          </div>
+          <div class="state-item reveal">
+            <span class="state-number">03</span>
+            <h4>学做脱节</h4>
+            <p>学了很多课，考了很多证，却始终无法变现，陷入知识焦虑。</p>
+          </div>
+          <div class="state-item reveal">
+            <span class="state-number">04</span>
+            <h4>业务不稳</h4>
+            <p>偶尔有单，偶尔没单，不知道成败的原因，归因模糊。</p>
+          </div>
+          <div class="state-item reveal">
+            <span class="state-number">05</span>
+            <h4>重度付费</h4>
+            <p>到处付费学习，试图寻找捷径，却依然看不到清晰的路径。</p>
+          </div>
+          <div class="state-item reveal">
+            <span class="state-number">06</span>
+            <h4>成功转型</h4>
+            <p>基于优势，找到了第二曲线，实现了财富与精神的双重富足。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 3: Framework -->
+    <section id="framework">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>破局三大根基</h2>
+          <p>构建属于你的生命商业系统</p>
+        </div>
+
+        <div class="framework-grid">
+          <div class="framework-col reveal">
+            <div class="framework-icon">🦴</div>
+            <h3>商业闭环</h3>
+            <p
+              class="mb-small"
+              style="font-weight: 500; color: var(--color-primary)"
+            >
+              骨骼系统
+            </p>
+            <p>产品 → 流量 → 成交 → 交付<br />缺一不可的商业逻辑</p>
+          </div>
+          <div class="framework-col reveal" style="transition-delay: 0.1s">
+            <div class="framework-icon">🩸</div>
+            <h3>优势所在</h3>
+            <p
+              class="mb-small"
+              style="font-weight: 500; color: var(--color-primary)"
+            >
+              血肉能量
+            </p>
+            <p>本自具足的天赋才干<br />做自己擅长且热爱的事</p>
+          </div>
+          <div class="framework-col reveal" style="transition-delay: 0.2s">
+            <div class="framework-icon">🌬️</div>
+            <h3>他人需求</h3>
+            <p
+              class="mb-small"
+              style="font-weight: 500; color: var(--color-primary)"
+            >
+              生存氧气
+            </p>
+            <p>真实付费的具体痛点<br />利他才是最好的利己</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4: Quotes -->
+    <section id="insights" style="background-color: white">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>核心洞察</h2>
+        </div>
+
+        <div class="quotes-container">
+          <div class="quote-card reveal">
+            "真正的铁饭碗，不是在一个地方吃一辈子饭，而是走到哪里都有能力给自己造饭碗。"
+          </div>
+          <div class="quote-card reveal">
+            "知道自己想要什么，是人生重大的成就。"
+          </div>
+          <div class="quote-card reveal">
+            "创富之前，先创自己。技能是你的剑，优势是你的剑法。"
+          </div>
+          <div class="quote-card reveal">
+            "独立交易的能力，是你在这个时代给自己颁发的最强安全感。"
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 5: Three Laws -->
+    <section id="laws">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>什么样的优势能持续变现？</h2>
+          <p>变现三铁律</p>
+        </div>
+
+        <div class="laws-list">
+          <div class="law-item reveal">
+            <div class="law-number">1</div>
+            <div>
+              <h3>符合社会发展规律</h3>
+              <p style="margin-bottom: 0">
+                顺势而为，站在风口上，努力才能事半功倍。
+              </p>
+            </div>
+          </div>
+          <div class="law-item reveal">
+            <div class="law-number">2</div>
+            <div>
+              <h3>能给他人带来真实价值</h3>
+              <p style="margin-bottom: 0">
+                商业的本质是价值交换，解决问题才有回报。
+              </p>
+            </div>
+          </div>
+          <div class="law-item reveal">
+            <div class="law-number">3</div>
+            <div>
+              <h3>能让自己感到充实不内耗</h3>
+              <p style="margin-bottom: 0">只有滋养自己的事业，才能长久坚持。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 6: Tracks -->
+    <section id="tracks" style="background-color: var(--color-bg-alt)">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>700+ 教练的选择</h2>
+          <p>四大赛道，无限可能</p>
+        </div>
+
+        <div class="tracks-grid">
+          <div class="card track-card reveal">
+            <div class="track-header">
+              <span style="font-size: 2rem">💰</span>
+              <h3>赚钱赛道</h3>
+            </div>
+            <ul class="track-list">
+              <li>职业规划咨询</li>
+              <li>副业变现指导</li>
+              <li>个人品牌打造</li>
+              <li>理财思维提升</li>
+            </ul>
+          </div>
+          <div class="card track-card reveal">
+            <div class="track-header">
+              <span style="font-size: 2rem">❤️</span>
+              <h3>情感赛道</h3>
+            </div>
+            <ul class="track-list">
+              <li>亲密关系修复</li>
+              <li>原生家庭疗愈</li>
+              <li>脱单恋爱指导</li>
+              <li>高情商沟通</li>
+            </ul>
+          </div>
+          <div class="card track-card reveal">
+            <div class="track-header">
+              <span style="font-size: 2rem">🎓</span>
+              <h3>教育赛道</h3>
+            </div>
+            <ul class="track-list">
+              <li>亲子关系辅导</li>
+              <li>学习动力激发</li>
+              <li>升学规划咨询</li>
+              <li>青春期陪伴</li>
+            </ul>
+          </div>
+          <div class="card track-card reveal">
+            <div class="track-header">
+              <span style="font-size: 2rem">🌿</span>
+              <h3>健康赛道</h3>
+            </div>
+            <ul class="track-list">
+              <li>精力管理教练</li>
+              <li>情绪压力释放</li>
+              <li>健康生活方式</li>
+              <li>身心整合疗愈</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 7: Core Elements -->
+    <section id="core">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>决定你能走多远的，不是方法</h2>
+          <p>而是这些底层内核</p>
+        </div>
+
+        <div class="core-elements">
+          <div class="core-item reveal">愿力</div>
+          <div class="core-item reveal">思维模式</div>
+          <div class="core-item reveal">学习能力</div>
+          <div class="core-item reveal">执行力</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <footer class="footer-cta">
+      <div class="container">
+        <div class="reveal">
+          <h2>优势动力的承诺</h2>
+          <div class="promise-list">
+            <div class="promise-item">培养 10,000 名优势创富教练</div>
+            <div class="promise-item">助力 1,000,000 人活出高配人生</div>
+          </div>
+          <a href="#" class="btn-primary">开始你的优势觉醒之旅</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Intersection Observer for scroll animations
+      document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.1
+        }
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active")
+              observer.unobserve(entry.target) // Only animate once
+            }
+          })
+        }, observerOptions)
+
+        const revealElements = document.querySelectorAll(".reveal")
+        revealElements.forEach((el) => observer.observe(el))
+      })
+    </script>
+  </body>
+</html>
