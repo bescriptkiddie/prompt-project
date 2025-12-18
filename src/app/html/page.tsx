@@ -19,13 +19,9 @@ export default async function Page() {
       <main className="flex-1 overflow-y-auto no-scrollbar px-4 md:px-8 py-8 max-w-[1000px] mx-auto w-full">
         <header className="mb-8">
           <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-2 block">
-            Html Library
+            Library
           </span>
-          <h1 className="font-serif text-2xl md:text-3xl text-navy font-bold mb-2">HTML 页面</h1>
-          <p className="text-navy-light text-sm">
-            这里会自动读取 <code className="px-1 bg-white/70 border border-stone-line">src/data/html</code>{' '}
-            目录下的所有 .html 文件。
-          </p>
+          <h1 className="font-serif text-2xl md:text-3xl text-navy font-bold mb-2">名人堂</h1>
         </header>
 
         {files.length === 0 ? (
