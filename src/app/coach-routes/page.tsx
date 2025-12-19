@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
+import CommunicationCourse from './CommunicationCourse';
 
 type DomainOption =
   | ''
@@ -141,6 +142,8 @@ function tryParseCoachRoutesPayloadFromText(input: string): CoachRoutesPayload |
 const defaultMaterial = `【材料示例】\n\n- 你可以粘贴：音频转写 / 手记 / 文本\n- 建议包含一些“客户原话”，这样证据链会更强\n\n示例：\n客户：我最近总觉得团队不理解我，我也不想把压力带给他们。\n客户：我其实很在意关系，但一到冲突就会退一步。\n客户：我希望下个月能更坚定地表达边界，但又不想伤人。\n`;
 
 export default function CoachRoutesPage() {
+  const [activeTab, setActiveTab] = useState<'routes' | 'communication'>('communication');
+
   const [material, setMaterial] = useState(defaultMaterial);
   const [domain, setDomain] = useState<DomainOption>('Relationship Building');
   const [topThemesInput, setTopThemesInput] = useState('');
@@ -388,18 +391,36 @@ ${htmlBody}
         <div className="max-w-[1100px] mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <h1 className="font-serif text-2xl md:text-3xl text-navy font-bold">教练提效 · 多路线会谈设计</h1>
-              <p className="text-sm text-navy-light mt-1">同一材料输出 2–3 套路线，并按对方盖洛普域适配语气（如 Relationship Building 更温和、关系导向）。</p>
+              <h1 className="font-serif text-2xl md:text-3xl text-navy font-bold">教练提效</h1>
+              <p className="text-sm text-navy-light mt-1">
+                {activeTab === 'routes'
+                  ? '同一材料输出 2–3 套路线，并按对方盖洛普域适配语气（如 Relationship Building 更温和、关系导向）。'
+                  : '互动训练：从澄清问题→对话模板→角色扮演→逐句点评与改写。'}
+              </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-              <button
-                onClick={handleGenerate}
-                disabled={loading || !material.trim()}
-                className="px-4 py-2 rounded-lg bg-terra text-white font-semibold disabled:opacity-50 hover:bg-terra-dark"
+            <div className="flex gap-2">
+            <button
                 type="button"
+                onClick={() => setActiveTab('communication')}
+                className={`px-3 py-2 rounded-lg border text-sm ${
+                  activeTab === 'communication'
+                    ? 'bg-terra text-white border-terra'
+                    : 'bg-cream text-navy border-stone-line hover:border-terra'
+                }`}
               >
-                {loading ? '生成中…' : '生成路线'}
+                沟通训练
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('routes')}
+                className={`px-3 py-2 rounded-lg border text-sm ${
+                  activeTab === 'routes'
+                    ? 'bg-terra text-white border-terra'
+                    : 'bg-cream text-navy border-stone-line hover:border-terra'
+                }`}
+              >
+                会谈路线
               </button>
             </div>
           </div>
@@ -407,10 +428,22 @@ ${htmlBody}
       </div>
 
       <main className="flex-1 overflow-y-auto no-scrollbar">
-        <div className="max-w-[1100px] mx-auto px-4 md:px-8 py-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="max-w-[1100px] mx-auto px-4 md:px-8 py-6">
+          {activeTab === 'communication' ? (
+            <CommunicationCourse />
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <section className="bg-white border border-stone-line rounded-xl overflow-hidden">
-            <div className="px-4 py-3 border-b border-stone-line bg-cream/40">
+            <div className="px-4 py-3 border-b border-stone-line bg-cream/40 flex items-center justify-between">
               <div className="text-xs font-bold text-navy uppercase tracking-widest">输入材料</div>
+              <button
+                onClick={handleGenerate}
+                disabled={loading || !material.trim()}
+                className="px-3 py-2 rounded-lg bg-terra text-white font-semibold disabled:opacity-50 hover:bg-terra-dark text-sm"
+                type="button"
+              >
+                {loading ? '生成中…' : '生成路线'}
+              </button>
             </div>
             <div className="p-4 space-y-4">
               <div>
@@ -705,6 +738,8 @@ ${htmlBody}
               )}
             </div>
           </section>
+            </div>
+          )}
         </div>
       </main>
     </div>

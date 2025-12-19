@@ -1,17 +1,24 @@
 import { NextRequest } from 'next/server';
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  apiKey: 'sk-88fb4fd5dad2619831741f5e6f14670bf9308134dd08ed41a1a79400a3de874e',
-  baseURL: 'https://api.qnaigc.com/v1',
-  timeout: 120000
-});
+function createClient(customApiKey?: string) {
+  const apiKey = (customApiKey || process.env.GEMINI_API_KEY || '').trim();
+  if (!apiKey) throw new Error('Missing GEMINI_API_KEY');
+
+  return new OpenAI({
+    apiKey,
+    baseURL: process.env.GEMINI_BASE_URL || 'https://api.qnaigc.com/v1',
+    timeout: 120000
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
     let { messages } = body;
-    const { prompt, images, stream = true } = body;
+    const { prompt, images, stream = true, apiKey } = body;
+
+    const client = createClient(apiKey);
 
     // 如果提供了 prompt 和 images，构造 messages
     if (!messages && prompt) {
@@ -95,8 +102,9 @@ export async function POST(request: NextRequest) {
     return Response.json({ success: true, content });
   } catch (error) {
     console.error('OpenAI API Error:', error);
+    const msg = error instanceof Error ? error.message : '';
     return Response.json(
-      { success: false, error: 'Failed to fetch response from OpenAI' },
+      { success: false, error: msg.includes('Missing GEMINI_API_KEY') ? '未配置 Gemini API Key' : 'Failed to fetch response from OpenAI' },
       { status: 500 }
     );
   }

@@ -198,7 +198,7 @@ ${prompt || '(用户还没有输入提示词)'}
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages, stream: true }),
+        body: JSON.stringify({ messages: apiMessages, stream: true, apiKey: geminiKey }),
       });
 
       if (!response.ok) throw new Error('Network response was not ok');

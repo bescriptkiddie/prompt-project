@@ -393,6 +393,7 @@ export default function MethodologyContent() {
         body: JSON.stringify({ 
           messages: apiMessages, 
           images: imagesToSend.length > 0 ? imagesToSend : undefined,
+          apiKey: localStorage.getItem('gemini_key') || undefined,
           stream: true 
         }),
         signal: abortControllerRef.current.signal
