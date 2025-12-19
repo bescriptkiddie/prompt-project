@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>拨乱反正,看清本质</title>
+    <style>
+      :root {
+        /* Claude-inspired Palette */
+        --color-bg: #f5f5f0;
+        --color-surface: #ffffff;
+        --color-primary: #cc785c;
+        --color-primary-hover: #d97757;
+        --color-primary-light: rgba(204, 120, 92, 0.1);
+        --color-text-main: #1f1f1f;
+        --color-text-secondary: #4a4a4a;
+        --color-text-muted: #6b6b6b;
+        --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.03);
+        --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.06);
+        --radius-card: 16px;
+        --radius-sm: 8px;
+
+        /* Typography */
+        --font-serif: "Charter", "Bitstream Charter", "Sitka Text", "Cambria",
+          serif;
+        --font-sans: "Söhne", "Inter", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-text-main);
+        font-family: var(--font-sans);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        color: var(--color-text-main);
+        line-height: 1.3;
+      }
+
+      p {
+        color: var(--color-text-secondary);
+        margin-bottom: 1rem;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Utility Classes */
+      .text-primary {
+        color: var(--color-primary);
+      }
+      .text-center {
+        text-align: center;
+      }
+      .mt-4 {
+        margin-top: 1.5rem;
+      }
+      .mb-4 {
+        margin-bottom: 1.5rem;
+      }
+
+      /* Animation Classes */
+      .fade-in-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        will-change: opacity, visibility;
+      }
+
+      .fade-in-section.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 120px 0 80px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .hero .subtitle {
+        font-size: 1.25rem;
+        color: var(--color-primary);
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        font-family: var(--font-sans);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .hero .core-theme {
+        font-size: 1.1rem;
+        color: var(--color-text-muted);
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50px;
+        display: inline-block;
+      }
+
+      /* Section Styling */
+      section {
+        padding: 80px 0;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .section-header h2 {
+        font-size: 2.5rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      /* Cards Grid */
+      .grid-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+      }
+
+      .card {
+        background: var(--color-surface);
+        border-radius: var(--radius-card);
+        padding: 32px;
+        box-shadow: var(--shadow-soft);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      /* Pitfalls Section */
+      .pitfall-card .header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .pitfall-number {
+        background-color: var(--color-primary);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .pitfall-emoji {
+        font-size: 1.5rem;
+        margin-right: 12px;
+      }
+
+      .pitfall-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-text-main);
+      }
+
+      .pitfall-subtitle {
+        font-size: 0.95rem;
+        color: var(--color-primary);
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .pitfall-list li {
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        color: var(--color-text-secondary);
+      }
+
+      .pitfall-list li::before {
+        content: "•";
+        color: var(--color-primary);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      .golden-quote {
+        margin-top: auto;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        font-style: italic;
+        font-family: var(--font-serif);
+        color: var(--color-text-main);
+        font-size: 0.95rem;
+      }
+
+      /* Principles Section (3 Columns) */
+      .principles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+      }
+
+      .principle-card {
+        text-align: center;
+        padding: 40px 24px;
+      }
+
+      .principle-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .principle-title {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+      }
+
+      /* Guardrails Section */
+      .guardrails-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
+      .guardrail-card {
+        background-color: var(--color-primary-light);
+        border: 1px solid rgba(204, 120, 92, 0.2);
+      }
+
+      .guardrail-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        color: #b54d2e; /* Darker orange for text contrast */
+      }
+
+      .guardrail-header h3 {
+        margin-left: 10px;
+        color: #b54d2e;
+      }
+
+      /* Teacher Selection */
+      .teacher-checklist {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .check-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .check-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .check-icon {
+        color: var(--color-primary);
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-right: 16px;
+        margin-top: 2px;
+      }
+
+      .check-content strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--color-text-main);
+      }
+
+      /* Product Cognition */
+      .product-card {
+        border-left: 4px solid var(--color-primary);
+      }
+
+      .product-card h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      /* Quote Wall */
+      .quote-wall {
+        columns: 2 300px;
+        column-gap: 24px;
+      }
+
+      .quote-block {
+        break-inside: avoid;
+        background: white;
+        padding: 30px;
+        border-radius: var(--radius-card);
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-soft);
+        position: relative;
+      }
+
+      .quote-block::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 30px;
+        bottom: 30px;
+        width: 4px;
+        background-color: var(--color-primary);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .quote-text {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        color: var(--color-text-main);
+        font-style: italic;
+      }
+
+      /* Footer */
+      footer {
+        padding: 80px 0 40px;
+        text-align: center;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        margin-top: 60px;
+      }
+
+      .footer-brand {
+        font-family: var(--font-serif);
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: var(--color-text-main);
+        margin-bottom: 10px;
+      }
+
+      .footer-tagline {
+        color: var(--color-text-secondary);
+        font-size: 0.9rem;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+        .principles-grid {
+          grid-template-columns: 1fr;
+        }
+        .section-header h2 {
+          font-size: 2rem;
+        }
+        .quote-wall {
+          columns: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <header class="hero fade-in-section">
+      <div class="container">
+        <div class="subtitle">优势动力 · 个人IP创富私享会 Day 2</div>
+        <h1>拨乱反正，看清本质</h1>
+        <div class="core-theme">
+          带你拆解商业的"根" — 产品 · 流量 · 成交 · 交付
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Section 1: 7 Pitfalls -->
+      <section id="pitfalls" class="container">
+        <div class="section-header fade-in-section">
+          <h2>拨乱：先看清这七个巨坑</h2>
+          <p>避开这些坑，你已经赢了一半</p>
+        </div>
+
+        <div class="grid-cards">
+          <!-- Card 1 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">1</span>
+              <span class="pitfall-emoji">🌊</span>
+              <span class="pitfall-title">流量迷思</span>
+            </div>
+            <span class="pitfall-subtitle">"先搞流量=先搞钱"</span>
+            <ul class="pitfall-list">
+              <li>流量来了你也接不住</li>
+              <li>没流量时把一切归咎于此</li>
+              <li>被数据操控心智</li>
+            </ul>
+            <div class="golden-quote">
+              "流量是朋友，不是老板。你若把它当老板，它就会把你当奴隶。"
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">2</span>
+              <span class="pitfall-emoji">✍️</span>
+              <span class="pitfall-title">写作陷阱</span>
+            </div>
+            <span class="pitfall-subtitle">"日更就是创业本身"</span>
+            <ul class="pitfall-list">
+              <li>行动没有指向性</li>
+              <li>进步感大于进步本身</li>
+              <li>用战术勤奋掩盖战略懒惰</li>
+            </ul>
+            <div class="golden-quote">
+              "不要让写文章成为你逃避思考商业本质的舒适区。"
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">3</span>
+              <span class="pitfall-emoji">🔄</span>
+              <span class="pitfall-title">分销幻觉</span>
+            </div>
+            <span class="pitfall-subtitle">"学会自媒体就能分销成功"</span>
+            <ul class="pitfall-list">
+              <li>只有销售老手或大影响力者能成</li>
+              <li>技能不等于销售基因</li>
+              <li>普通人应打造自己的产品</li>
+            </ul>
+            <div class="golden-quote">
+              "不要看别人在台上领奖，就以为那条路你也能走通。"
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">4</span>
+              <span class="pitfall-emoji">💼</span>
+              <span class="pitfall-title">项目迷信</span>
+            </div>
+            <span class="pitfall-subtitle">"找个好项目就能赚钱"</span>
+            <ul class="pitfall-list">
+              <li>没有闭环能力，只是平台的用户</li>
+              <li>缺销售经验/影响力/闭环，必败</li>
+              <li>否则你不是创业者，是被收割对象</li>
+            </ul>
+            <div class="golden-quote">
+              "宝贝儿，清醒一点，你不是去创业的，你只是人家的用户。"
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">5</span>
+              <span class="pitfall-emoji">🤝</span>
+              <span class="pitfall-title">合作幻想</span>
+            </div>
+            <span class="pitfall-subtitle">"我有资源，要找人合作"</span>
+            <ul class="pitfall-list">
+              <li>没有闭环前的合作都是瞎耽误</li>
+              <li>权责利谈不清必然崩盘</li>
+              <li>用找合作逃避该做的事</li>
+            </ul>
+            <div class="golden-quote">
+              "两个商业认知不对等的人合作，凑在一起还是臭皮匠。"
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">6</span>
+              <span class="pitfall-emoji">🎪</span>
+              <span class="pitfall-title">情绪价值</span>
+            </div>
+            <span class="pitfall-subtitle">"线下课氛围好，能链接人"</span>
+            <ul class="pitfall-list">
+              <li>被共情 ≠ 问题被解决</li>
+              <li>感受型场域不对结果负责</li>
+              <li>没结果的社交没有信用</li>
+            </ul>
+            <div class="golden-quote">
+              "情绪价值是糖，吃多了会腻，还会蛀牙。"
+            </div>
+          </div>
+
+          <!-- Card 7 -->
+          <div class="card pitfall-card fade-in-section">
+            <div class="header">
+              <span class="pitfall-number">7</span>
+              <span class="pitfall-emoji">🔁</span>
+              <span class="pitfall-title">路径依赖</span>
+            </div>
+            <span class="pitfall-subtitle">"传统模式做不下去了"</span>
+            <ul class="pitfall-list">
+              <li>实体店 = 财务自杀</li>
+              <li>直播低价课 = 为所有人打工</li>
+              <li>企业服务 = 守株待兔</li>
+            </ul>
+            <div class="golden-quote">
+              "把经验封装成线上可交付、高客单、解决具体问题的产品。"
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: 3 Iron Rules -->
+      <section id="principles" style="background: white">
+        <div class="container">
+          <div class="section-header fade-in-section">
+            <h2>反正：选择赛道的三个原则</h2>
+          </div>
+          <div class="principles-grid">
+            <div class="card principle-card fade-in-section">
+              <span class="principle-icon">🧓</span>
+              <h3 class="principle-title">越老越吃香</h3>
+              <p>
+                技能要随时间积累更显价值。例如：优势教练、咨询、深度沟通。警惕纯工具型、风口型技能。
+              </p>
+            </div>
+            <div class="card principle-card fade-in-section">
+              <span class="principle-icon">🌍</span>
+              <h3 class="principle-title">刚需且持续</h3>
+              <p>
+                唯四黄金赛道：<br />• 赚钱 (发展/创富)<br />• 情感
+                (关系/成长)<br />• 教育 (培养/规划)<br />• 健康 (精力/身心)
+              </p>
+            </div>
+            <div class="card principle-card fade-in-section">
+              <span class="principle-icon">🏢</span>
+              <h3 class="principle-title">可独立营业</h3>
+              <p>
+                建立属于自己的商业闭环。不依赖单一平台或渠道，成为独立经营者。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Guardrails -->
+      <section id="guardrails" class="container">
+        <div class="section-header fade-in-section">
+          <h2>避坑：三大要点护住你</h2>
+        </div>
+        <div class="guardrails-grid">
+          <div class="card guardrail-card fade-in-section">
+            <div class="guardrail-header">
+              <span>⚠️</span>
+              <h3>不信躺赚</h3>
+            </div>
+            <p>"普通人能轻松躺赚"都是割韭菜。大部分人只适合从主动收入做起。</p>
+          </div>
+          <div class="card guardrail-card fade-in-section">
+            <div class="guardrail-header">
+              <span>⚠️</span>
+              <h3>只信逻辑</h3>
+            </div>
+            <p>不要相信非逻辑、非科学的玄学。商业建立在理性与可验证方法上。</p>
+          </div>
+          <div class="card guardrail-card fade-in-section">
+            <div class="guardrail-header">
+              <span>⚠️</span>
+              <h3>先闭环</h3>
+            </div>
+            <p>一定要先完成0-1闭环，再扩大。没跑通一个产品前，别盲目投资。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Choosing Teachers -->
+      <section id="teachers" style="background: white">
+        <div class="container">
+          <div class="section-header fade-in-section">
+            <h2>选对老师：四条铁律</h2>
+          </div>
+          <div class="teacher-checklist fade-in-section">
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-content">
+                <strong>选"做交付"的</strong>
+                <span class="text-muted">而非"做传播"的</span>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-content">
+                <strong>选交付"可复制路径"的</strong>
+                <span class="text-muted">而非仅靠魅力的</span>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-content">
+                <strong>选"专业+商业+心力"三合一的</strong>
+                <span class="text-muted">而非拆开拼凑</span>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">✓</div>
+              <div class="check-content">
+                <strong>选能"持续陪跑"的</strong>
+                <span class="text-muted">而非讲完理论就走</span>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <p
+                class="golden-quote"
+                style="
+                  border: none;
+                  font-size: 1.1rem;
+                  color: var(--color-primary);
+                "
+              >
+                "选老师，就是选你的领航员。"
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Product Cognition -->
+      <section id="product" class="container">
+        <div class="section-header fade-in-section">
+          <h2>商业闭环第一环：产品</h2>
+        </div>
+        <div class="grid-cards">
+          <div class="card product-card fade-in-section">
+            <h3>💎 定位不重要</h3>
+            <p>
+              卡在定位半年？根本不重要！有技能能交付，就能开始。热爱不是前提，"不讨厌"就够了。
+            </p>
+          </div>
+          <div class="card product-card fade-in-section">
+            <h3>💎 产品定位 > 个人定位</h3>
+            <p>
+              高客单产品 =
+              为有付费能力的用户群，解决一个重要问题的"解决方案"。不是课程，是完整的解决方案。
+            </p>
+          </div>
+          <div class="card product-card fade-in-section">
+            <h3>💎 最小单元：1对1咨询</h3>
+            <p>
+              最小单元的产品是一对一咨询。先让最小单元跑通。产品是1，流量成交是后面的0。
+            </p>
+          </div>
+          <div class="card product-card fade-in-section">
+            <h3>💎 重新定义产品</h3>
+            <p>
+              录播课、社群、训练营...这些都不是产品，它们只是交付手段的组成部分。产品是完整的解决方案。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Quote Wall -->
+      <section id="quotes" style="background: white">
+        <div class="container">
+          <div class="section-header fade-in-section">
+            <h2>金句墙</h2>
+            <p>人间清醒，直击本质</p>
+          </div>
+          <div class="quote-wall">
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "拨乱，不是为了否定过去，而是为了给未来清出一条清晰的路。"
+              </p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "有流量≠能变现。能变现的核心是：你有明确的产品，和把流量转化为客户的闭环能力。顺序一错，全盘皆耗。"
+              </p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "真正的创业，从回答'别人为什么要付钱给我'开始。"
+              </p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "不要用战术上的努力（学技能），掩盖战略上的懒惰（不愿打造自己的核心产品）。"
+              </p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "找到自己的基因，才能长出属于自己的果实。"
+              </p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">"你缺的不是资源，是让自己值钱的能力。"</p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "真正的成长发生在离开温暖会场、独自面对问题的时刻。"
+              </p>
+            </div>
+            <div class="quote-block fade-in-section">
+              <p class="quote-text">
+                "能让你扎根生长的，永远是那些苦口却对症的真相。"
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-brand">优势动力 | 苏姐</div>
+        <p class="footer-tagline">"不制造幻想，只交付真相"</p>
+        <p class="footer-tagline">"帮你人间清醒不止一倍"</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.1
+        }
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible")
+              observer.unobserve(entry.target) // Only animate once
+            }
+          })
+        }, observerOptions)
+
+        const sections = document.querySelectorAll(".fade-in-section")
+        sections.forEach((section) => {
+          observer.observe(section)
+        })
+      })
+    </script>
+  </body>
+</html>

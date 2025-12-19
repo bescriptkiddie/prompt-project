@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>苏姐 | 商业模式与人生状态</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Claude Palette */
+        --bg-color: #f5f5f0;
+        --card-bg: #ffffff;
+        --text-main: #1f1f1f;
+        --text-secondary: #555555;
+        --text-light: #737373;
+        --accent-primary: #d97757;
+        --accent-secondary: #cc785c;
+        --accent-light: #fff0eb;
+        --border-color: #e6e6e6;
+
+        /* Spacing */
+        --spacing-xs: 8px;
+        --spacing-sm: 16px;
+        --spacing-md: 24px;
+        --spacing-lg: 48px;
+        --spacing-xl: 80px;
+
+        /* Shadows & Radius */
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+        --radius-md: 12px;
+        --radius-lg: 16px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: "Noto Serif SC", "Merriweather", serif;
+        font-weight: 700;
+        color: var(--text-main);
+        line-height: 1.3;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+      }
+
+      /* Animations */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: var(--spacing-xl) 0 var(--spacing-lg);
+        text-align: center;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+        color: var(--accent-primary);
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: var(--spacing-sm);
+        text-transform: uppercase;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin-bottom: var(--spacing-md);
+        color: var(--text-main);
+      }
+
+      .hero-core {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto;
+        font-family: "Noto Serif SC", serif;
+        font-style: italic;
+      }
+
+      /* Cards General */
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.02);
+        height: 100%;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Section Styling */
+      section {
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-lg);
+        text-align: center;
+        position: relative;
+      }
+
+      .section-title::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: var(--accent-primary);
+        margin: var(--spacing-sm) auto 0;
+        opacity: 0.6;
+      }
+
+      /* Section 1: Business Models */
+      .models-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .model-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: var(--spacing-sm);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .model-card ul {
+        list-style: none;
+        color: var(--text-secondary);
+      }
+
+      .model-card li {
+        margin-bottom: 8px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .model-card li::before {
+        content: "•";
+        color: var(--accent-primary);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      .model-star {
+        border: 2px solid var(--accent-light);
+        background: linear-gradient(to bottom right, #fff, #fffbf9);
+      }
+
+      .star-badge {
+        background-color: var(--accent-primary);
+        color: white;
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+      }
+
+      /* Section 2: Quotes */
+      .quotes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .quote-block {
+        border-left: 4px solid var(--accent-primary);
+        padding: var(--spacing-md);
+        background: #fff;
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        font-family: "Noto Serif SC", serif;
+        font-size: 1.1rem;
+        color: var(--text-main);
+        box-shadow: var(--shadow-sm);
+      }
+
+      /* Section 3: Musk */
+      .musk-section {
+        background: var(--text-main);
+        color: #fff;
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .musk-section h3 {
+        color: #fff;
+        margin-bottom: var(--spacing-sm);
+        font-family: "Inter", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.9rem;
+        opacity: 0.7;
+      }
+
+      .musk-quote {
+        font-size: 1.4rem;
+        font-family: "Noto Serif SC", serif;
+        line-height: 1.6;
+      }
+
+      .rocket-icon {
+        font-size: 3rem;
+        margin-bottom: var(--spacing-sm);
+        display: block;
+      }
+
+      /* Section 4: Framework */
+      .framework-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-lg);
+        background: #fff;
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+      }
+
+      @media (max-width: 768px) {
+        .framework-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .framework-col h3 {
+        margin-bottom: var(--spacing-md);
+        color: var(--accent-secondary);
+        font-size: 1.2rem;
+      }
+
+      .framework-list {
+        list-style: none;
+      }
+
+      .framework-list li {
+        margin-bottom: var(--spacing-sm);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+      }
+
+      .framework-list li:last-child {
+        border-bottom: none;
+      }
+
+      .arrow {
+        margin-right: 10px;
+        color: var(--accent-primary);
+      }
+
+      /* Section 5: Breakdown */
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+      }
+
+      @media (max-width: 768px) {
+        .comparison-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .compare-card {
+        background: #fff;
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+      }
+
+      .compare-card.highlight {
+        background-color: #fffcfa;
+        border-color: var(--accent-light);
+      }
+
+      .compare-title {
+        font-weight: 700;
+        margin-bottom: var(--spacing-sm);
+        display: block;
+        font-size: 1.1rem;
+      }
+
+      .iron-rule {
+        margin-top: var(--spacing-md);
+        text-align: center;
+        font-weight: 600;
+        color: var(--accent-secondary);
+        background: var(--bg-color);
+        padding: var(--spacing-sm);
+        border-radius: var(--radius-md);
+      }
+
+      /* Section 6: Pitfalls */
+      .pitfall-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .pitfall-card {
+        background-color: var(--accent-light);
+        border: 1px solid #f2dcd6;
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-md);
+      }
+
+      .pitfall-title {
+        color: #b34020;
+        font-weight: 700;
+        margin-bottom: var(--spacing-sm);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pitfall-card ul {
+        list-style: none;
+        color: #5a3a32;
+      }
+
+      .pitfall-card li {
+        margin-bottom: 6px;
+        font-size: 0.95rem;
+      }
+
+      .advice-box {
+        margin-top: var(--spacing-md);
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        background: #fff;
+        padding: var(--spacing-sm);
+        border-radius: var(--radius-md);
+      }
+
+      /* Section 7: Questions */
+      .qa-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .qa-card {
+        display: flex;
+        align-items: flex-start;
+        padding: var(--spacing-md);
+        background: #fff;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .qa-icon {
+        font-size: 1.5rem;
+        margin-right: var(--spacing-md);
+        flex-shrink: 0;
+      }
+
+      .qa-content h4 {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+
+      .qa-content p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .qa-bad .qa-icon {
+        color: #d95757;
+      }
+      .qa-good .qa-icon {
+        color: #57d9a3;
+      }
+
+      /* Interaction */
+      .interaction-area {
+        background: #fff;
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .interaction-options {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+      }
+
+      .option-btn {
+        background: var(--bg-color);
+        border: 2px solid transparent;
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+      }
+
+      .option-btn:hover {
+        background: #fff;
+        border-color: var(--accent-secondary);
+        transform: scale(1.01);
+      }
+
+      .option-btn.active {
+        background: var(--accent-light);
+        border-color: var(--accent-primary);
+        color: var(--accent-secondary);
+        font-weight: 600;
+      }
+
+      .checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        margin-right: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .option-btn.active .checkbox {
+        border-color: var(--accent-primary);
+        background: var(--accent-primary);
+      }
+
+      .option-btn.active .checkbox::after {
+        content: "✓";
+        color: white;
+        font-size: 14px;
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        padding: var(--spacing-xl) 0;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        margin-top: var(--spacing-xl);
+      }
+
+      .footer-brand {
+        font-family: "Noto Serif SC", serif;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Hero Section -->
+      <header class="hero fade-in">
+        <div class="hero-subtitle">苏姐开年点醒 · 第三天</div>
+        <h1>选错商业模式<br />你就是在用命换钱</h1>
+        <p class="hero-core">赚钱效率与人生幸福感，根源在商业模式的选择</p>
+      </header>
+
+      <main>
+        <!-- Section 1: Business Models -->
+        <section class="fade-in">
+          <h2 class="section-title">算清这笔账</h2>
+          <div class="models-grid">
+            <div class="card model-card">
+              <h3>① 低客单模式</h3>
+              <ul>
+                <li>卖三位数产品/服务</li>
+                <li>赚的是辛苦钱</li>
+                <li>想赚多需要团队管理</li>
+                <li>时间被琐事填满</li>
+              </ul>
+            </div>
+            <div class="card model-card">
+              <h3>② 高客单但不可复利</h3>
+              <ul>
+                <li>一单赚几万十几万</li>
+                <li>每单都要从0开始</li>
+                <li>极度依赖个人交付</li>
+                <li>累且无法积累资产</li>
+              </ul>
+            </div>
+            <div class="card model-card model-star">
+              <h3>③ 高客单且可复利 <span class="star-badge">推荐</span></h3>
+              <ul>
+                <li>基于优势打造解决方案</li>
+                <li>一次打造，反复销售</li>
+                <li>随时间增值</li>
+                <li>越做越轻松</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Quotes -->
+        <section class="fade-in">
+          <h2 class="section-title">核心金句</h2>
+          <div class="quotes-grid">
+            <div class="quote-block">
+              "人生赚钱，是用1年赚100万，还是用5年？这有本质差别。你的商业模式选择，决定了你的时间单价和人生状态。"
+            </div>
+            <div class="quote-block">
+              "不是要等到全世界都支持你，你才配开始。而是你先开始，用改变和结果，让世界来支持你。"
+            </div>
+            <div class="quote-block">
+              "你自己的思想、观念、自己的决策，才是导致你命运起起伏伏的核心原因。"
+            </div>
+            <div class="quote-block">
+              "所有过往经历，不管是高光还是低谷，都化为生命的养料。只要你不倒下，没有人可以打倒你。"
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Musk -->
+        <section class="fade-in">
+          <div class="musk-section">
+            <span class="rocket-icon">🚀</span>
+            <h3>Elon Musk Viewpoint</h3>
+            <p class="musk-quote">
+              "如果你做一件事（特别是创业）还需要被别人鼓励，那你最好不要做。创业者需要的是强大的内在自主性。"
+            </p>
+          </div>
+        </section>
+
+        <!-- Section 4: Framework -->
+        <section class="fade-in">
+          <h2 class="section-title">5年只做一件事</h2>
+          <div class="framework-container">
+            <div class="framework-col">
+              <h3>明线：四大维度</h3>
+              <ul class="framework-list">
+                <li>
+                  <span class="arrow">→</span>
+                  <strong>产品层：</strong>打磨有价值的解决方案
+                </li>
+                <li>
+                  <span class="arrow">→</span>
+                  <strong>商业层：</strong>构建完整商业闭环
+                </li>
+                <li>
+                  <span class="arrow">→</span>
+                  <strong>优势层：</strong>转化核心优势为产品与品牌
+                </li>
+                <li>
+                  <span class="arrow">→</span>
+                  <strong>心力层：</strong>支撑一切的底层能量
+                </li>
+              </ul>
+            </div>
+            <div class="framework-col">
+              <h3>暗线：成长飞轮</h3>
+              <ul class="framework-list">
+                <li><span class="arrow">↻</span> 学习 Input</li>
+                <li><span class="arrow">↻</span> 训练 Practice</li>
+                <li><span class="arrow">↻</span> 实战 Action</li>
+                <li><span class="arrow">↻</span> 反馈 Feedback</li>
+                <li><span class="arrow">↻</span> 迭代 Iteration</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Professional Breakdown -->
+        <section class="fade-in">
+          <h2 class="section-title">从"开药"到"治愈"</h2>
+          <div class="comparison-grid">
+            <div class="compare-card">
+              <span class="compare-title">🔷 1V1咨询（验货品）</span>
+              <p style="color: var(--text-secondary); margin-bottom: 12px">
+                单次付费，解决点状问题
+              </p>
+              <ul style="padding-left: 20px; color: var(--text-secondary)">
+                <li>解决具体卡点</li>
+                <li>建立深度连接</li>
+                <li>体验专业度</li>
+              </ul>
+            </div>
+            <div class="compare-card highlight">
+              <span class="compare-title">🔷 私教/高客单（利润品）</span>
+              <p style="color: var(--text-secondary); margin-bottom: 12px">
+                系统交付，拿到最终结果
+              </p>
+              <ul style="padding-left: 20px; color: var(--text-secondary)">
+                <li>系统性解决问题</li>
+                <li>完整闭环陪伴</li>
+                <li>可持续创富核心</li>
+              </ul>
+            </div>
+          </div>
+          <div class="iron-rule">
+            苏姐商业铁律："1000块钱以下，都是引流品。"
+          </div>
+        </section>
+
+        <!-- Section 6: Pitfalls -->
+        <section class="fade-in">
+          <h2 class="section-title">别掉进这些坑</h2>
+          <div class="pitfall-grid">
+            <div class="pitfall-card">
+              <div class="pitfall-title">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                  ></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                心理咨询天坑
+              </div>
+              <ul>
+                <li>- 证书无效，无职业背书</li>
+                <li>- 学了不会做，案源难找</li>
+                <li>- 陷入学习怪圈，花几十万</li>
+                <li>- 极度耗能，每天负面情绪</li>
+              </ul>
+            </div>
+            <div class="pitfall-card">
+              <div class="pitfall-title">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                  ></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                疗愈与玄学陷阱
+              </div>
+              <ul>
+                <li>- 缺乏科学与理论根基</li>
+                <li>- 走向"宇宙显化"歧路</li>
+                <li>- 本质是情绪生意</li>
+                <li>- 即使有技能仍需商业闭环</li>
+              </ul>
+            </div>
+          </div>
+          <div class="advice-box">
+            💡 建议：买几本正统好书，听专业课程（如得到APP），花费几百元足矣
+          </div>
+        </section>
+
+        <!-- Section 7: Questions -->
+        <section class="fade-in">
+          <h2 class="section-title">会提问，比找答案更重要</h2>
+          <div class="qa-container">
+            <div class="qa-card qa-bad">
+              <div class="qa-icon">❌</div>
+              <div class="qa-content">
+                <h4>"我适合学这个吗？"</h4>
+                <p>背后是包裹着恐惧的纠结，试图寻找外部确认。</p>
+              </div>
+            </div>
+            <div class="qa-card qa-good">
+              <div class="qa-icon">✅</div>
+              <div class="qa-content">
+                <h4>"我现在的核心诉求是什么？"</h4>
+                <p>向内探索，明确目标。</p>
+              </div>
+            </div>
+            <div class="qa-card qa-good">
+              <div class="qa-icon">✅</div>
+              <div class="qa-content">
+                <h4>"这个完整的交付体系，能满足我的诉求吗？"</h4>
+                <p>理性评估，结果导向。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interaction Section -->
+        <section class="fade-in">
+          <div class="interaction-area">
+            <h3>你目前的状态</h3>
+            <div class="interaction-options" id="options">
+              <div class="option-btn" onclick="selectOption(this)">
+                <div class="checkbox"></div>
+                低客单，事多钱少，忙到没时间思考
+              </div>
+              <div class="option-btn" onclick="selectOption(this)">
+                <div class="checkbox"></div>
+                有高客单机会，但每一单都像新项目，累且不稳定
+              </div>
+              <div class="option-btn" onclick="selectOption(this)">
+                <div class="checkbox"></div>
+                正在探索，希望找到那个能"复利"的支点
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="footer-brand">优势动力 | 优势创富计划</div>
+        <p>"不制造焦虑，只用硬核内容让你自己判断"</p>
+      </footer>
+    </div>
+
+    <script>
+      // Simple Interaction Logic
+      function selectOption(element) {
+        // Remove active class from all siblings
+        const parent = element.parentElement
+        const siblings = parent.getElementsByClassName("option-btn")
+        for (let btn of siblings) {
+          btn.classList.remove("active")
+        }
+        // Add active class to clicked element
+        element.classList.add("active")
+      }
+
+      // Scroll Animation Observer
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1
+      }
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible")
+            observer.unobserve(entry.target)
+          }
+        })
+      }, observerOptions)
+
+      document.querySelectorAll(".fade-in").forEach((section) => {
+        observer.observe(section)
+      })
+    </script>
+  </body>
+</html>
