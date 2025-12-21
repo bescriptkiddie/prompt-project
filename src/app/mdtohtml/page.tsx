@@ -127,15 +127,33 @@ export default function MdToHtmlPage() {
 
   useEffect(() => {
     const loadMarked = async () => {
-      const { marked } = await import('marked');
-      marked.setOptions({
+      const { Marked } = await import('marked');
+      const marked = new Marked();
+
+      const renderer = {
+        heading(this: any, token: any): string {
+          const text = this.parser.parseInline(token.tokens);
+          if (token.depth === 2) {
+            return `<h2 style="display: flex; align-items: center; justify-content: center;"><span style="color: ${theme.accent}; margin: 0 10px; font-size: 12px;">✦</span>${text}<span style="color: ${theme.accent}; margin: 0 10px; font-size: 12px;">✦</span></h2>`;
+          }
+          return `<h${token.depth}>${text}</h${token.depth}>`;
+        },
+        listitem(this: any, token: any): string {
+          const content = this.parser.parse(token.tokens, !!token.loose);
+          return `<li><span style="color: #3f3f3f;">${content}</span></li>`;
+        }
+      };
+
+      marked.use({
         breaks: true,
         gfm: true,
+        renderer
       });
+      
       setHtml(marked.parse(markdown) as string);
     };
     loadMarked();
-  }, [markdown]);
+  }, [markdown, currentTheme]);
 
   const handleCopy = async () => {
     try {
@@ -307,7 +325,7 @@ export default function MdToHtmlPage() {
 
       <style key={currentTheme} dangerouslySetInnerHTML={{ __html: `
         .preview-content {
-          font-family: 'Noto Sans SC', sans-serif;
+          font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
           color: #3f3f3f;
           line-height: 1.8;
           font-size: 16px;
@@ -315,7 +333,7 @@ export default function MdToHtmlPage() {
         }
 
         .preview-content h1 {
-          font-family: 'Noto Serif SC', serif;
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
           font-size: 24px;
           font-weight: 700;
           color: #333;
@@ -326,7 +344,7 @@ export default function MdToHtmlPage() {
         }
 
         .preview-content h2 {
-          font-family: 'Noto Serif SC', serif;
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
           font-size: 18px;
           font-weight: 700;
           color: ${theme.primary};
@@ -334,15 +352,6 @@ export default function MdToHtmlPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-
-        .preview-content h2::before,
-        .preview-content h2::after {
-          content: '✦';
-          font-size: 12px;
-          color: ${theme.accent};
-          margin: 0 10px;
-          vertical-align: middle;
         }
 
         .preview-content h3 {
@@ -367,7 +376,7 @@ export default function MdToHtmlPage() {
           border-left: none;
           border-top: 2px solid ${theme.primary};
           color: #666;
-          font-family: 'Noto Serif SC', serif;
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
           font-style: italic;
           border-radius: 4px;
         }
@@ -375,38 +384,20 @@ export default function MdToHtmlPage() {
         .preview-content ul,
         .preview-content ol {
           margin: 0 0 20px 20px;
-          padding: 0;
+          padding-left: 20px;
         }
 
         .preview-content li {
           margin-bottom: 8px;
-          list-style: none;
-          position: relative;
-          padding-left: 20px;
-        }
-
-        .preview-content ul li::before {
-          content: '•';
           color: ${theme.primary};
-          font-weight: bold;
-          position: absolute;
-          left: 0;
-          top: 0;
         }
-
-        .preview-content ol {
-          counter-reset: item;
+        
+        .preview-content ul li {
+            list-style-type: disc;
         }
-
-        .preview-content ol li::before {
-          content: counter(item) '.';
-          counter-increment: item;
-          color: ${theme.primary};
-          font-weight: bold;
-          font-family: 'Noto Serif SC', serif;
-          position: absolute;
-          left: 0;
-          top: 0;
+        
+        .preview-content ol li {
+            list-style-type: decimal;
         }
 
         .preview-content img {
