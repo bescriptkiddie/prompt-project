@@ -93,7 +93,7 @@ export const SOLARTERM_PROMPTS: ImagePrompt[] = [
 
 底部部分：
 
-右：红色方形印章"手作"（1.5 英寸），手印纹理凹凸不平
+右：红色方形印章"{节气}手作"（1.5 英寸），手印纹理凹凸不平
 
 左图：优雅的《{季节植物}》插图（3 英寸），以精致的黑色墨水绘制，并略加色彩晕染。
 
@@ -194,7 +194,7 @@ Small wellness icon symbols: teacup, heart, clock icons in muted {tone} tones
 
 BOTTOM SECTION:
 
-Right: Red square seal stamp "手作" (1.5 inches) with uneven hand-stamping texture
+Right: Red square seal stamp "{节气}手作" (1.5 inches) with uneven hand-stamping texture
 
 Left: Elegant {seasonal plant} illustration (3 inches) in delicate black ink with subtle color wash
 
