@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { ArrowRight, Circle, Globe, Tag, Sparkles, Languages, Code } from 'lucide-react';
+import { ArrowRight, Tag, Sparkles, Languages, Code } from 'lucide-react';
 import { PromptItem } from '@/types';
-import { clsx } from 'clsx';
 
 interface PromptCardProps {
   item: PromptItem;
@@ -12,6 +11,8 @@ interface PromptCardProps {
 
 export default function PromptCard({ item, onSelect, onPreview, index }: PromptCardProps) {
   const [lang, setLang] = useState<'zh' | 'en'>('zh');
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
   const animationDelay = `${(index + 1) * 0.1}s`;
 
   const currentPrompt = lang === 'zh' ? item.promptZh : item.promptEn;
@@ -85,16 +86,38 @@ export default function PromptCard({ item, onSelect, onPreview, index }: PromptC
       style={{ animationDelay }}
     >
       <div className="aspect-[16/9] overflow-hidden bg-cream relative mb-4 border border-stone-line/50">
-        {item.imageUrl && (
-          <img
-            src={item.imageUrl}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 cursor-zoom-in"
-            alt={item.title}
-            onClick={(e) => {
-              e.stopPropagation();
-              onPreview?.(item.imageUrl!);
-            }}
-          />
+        {item.imageUrl && !imageError ? (
+          <>
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-cream">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-8 h-8 border-2 border-terra/30 border-t-terra rounded-full animate-spin"></div>
+                  <span className="text-xs text-navy/50">加载中...</span>
+                </div>
+              </div>
+            )}
+            <img
+              src={item.imageUrl}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 cursor-zoom-in"
+              alt={item.title}
+              onLoad={() => setImageLoading(false)}
+              onError={() => {
+                setImageError(true);
+                setImageLoading(false);
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onPreview?.(item.imageUrl!);
+              }}
+            />
+          </>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cream to-stone-line/30">
+            <div className="flex flex-col items-center gap-2 text-navy/40">
+              <Sparkles className="w-10 h-10 stroke-[1.5]" />
+              <span className="text-xs font-serif">{item.title}</span>
+            </div>
+          </div>
         )}
         {item.category && (
           <div className="absolute top-2 right-2 bg-paper/90 backdrop-blur-sm px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-navy border border-stone-line shadow-sm">
