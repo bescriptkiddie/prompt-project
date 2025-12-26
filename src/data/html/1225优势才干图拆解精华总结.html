@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优势才干图拆解精华总结</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #D97757;
+            --primary-dark: #B85D42;
+            --accent: #F4A261;
+            --bg-cream: #FAF7F5;
+            --bg-white: #FFFFFF;
+            --text-dark: #2C2A29;
+            --text-medium: #6B6966;
+            --text-light: #A8A5A3;
+            --border: #E8E3DF;
+            --success: #52B788;
+            --info: #4A90E2;
+            --warning: #E76F51;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            line-height: 1.8;
+            color: var(--text-dark);
+            background: var(--bg-cream);
+            overflow-x: hidden;
+        }
+
+        /* 装饰性背景元素 */
+        .bg-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.03;
+        }
+
+        .bg-circle-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary);
+            top: -200px;
+            right: -200px;
+        }
+
+        .bg-circle-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        /* 主容器 */
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Header */
+        header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,
+                rgba(217, 119, 87, 0.95) 0%,
+                rgba(184, 93, 66, 0.95) 100%),
+                url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            text-align: center;
+            color: white;
+            max-width: 900px;
+            padding: 40px 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: clamp(0.9em, 2vw, 1.1em);
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+        }
+
+        .header-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .header-meta-item:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.8;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* 浮动导航 */
+        .floating-nav {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot::before {
+            content: attr(data-label);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background: var(--text-dark);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-dot:hover::before {
+            opacity: 1;
+        }
+
+        .nav-dot:hover,
+        .nav-dot.active {
+            background: var(--primary);
+            transform: scale(1.5);
+        }
+
+        /* 内容区域 */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 首屏section默认可见 */
+        section:first-of-type {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 章节标题 */
+        .section-number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            color: var(--primary);
+            opacity: 0.15;
+            line-height: 1;
+            margin-bottom: -20px;
+        }
+
+        h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.8em, 4vw, 2.8em);
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.3em, 3vw, 1.8em);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 40px 0 20px 0;
+        }
+
+        h4 {
+            font-size: clamp(1.1em, 2.5vw, 1.3em);
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            margin: 20px 0;
+            color: var(--text-medium);
+            font-size: clamp(0.95em, 2vw, 1.05em);
+        }
+
+        /* 卡片样式 */
+        .case-study {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow:
+                0 1px 3px rgba(0,0,0,0.05),
+                0 10px 40px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .case-study::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .case-study:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 5px 10px rgba(0,0,0,0.08),
+                0 20px 60px rgba(0,0,0,0.06);
+        }
+
+        .case-study:hover::before {
+            opacity: 1;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #FFF9F5 0%, #FFF 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(217, 119, 87, 0.12);
+        }
+
+        .card-highlight {
+            background: linear-gradient(135deg, #FFF4E6 0%, #FFE8CC 100%);
+            border-color: var(--accent);
+        }
+
+        .card-success {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: var(--success);
+        }
+
+        .card-info {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-color: var(--info);
+        }
+
+        .card-warning {
+            background: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 100%);
+            border-color: var(--warning);
+        }
+
+        /* 引用块 */
+        blockquote {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 35px;
+            margin: 35px 0;
+            border-radius: 16px;
+            font-size: clamp(1em, 2.2vw, 1.15em);
+            font-weight: 500;
+            line-height: 1.8;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(217, 119, 87, 0.25);
+        }
+
+        blockquote::before {
+            content: '"';
+            font-family: 'Noto Serif SC', serif;
+            font-size: 4em;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.2;
+            line-height: 1;
+        }
+
+        /* 提示框 */
+        .tip-box {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tip-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .tip-box h4 {
+            color: var(--primary);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.1em, 2.5vw, 1.4em);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg,
+                rgba(217, 119, 87, 0.05) 0%,
+                rgba(244, 162, 97, 0.05) 100%);
+            border-left: 5px solid var(--primary);
+            padding: 30px 35px;
+            margin: 30px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .method-list {
+            background: linear-gradient(135deg, #FAF7F5 0%, #F5F0EC 100%);
+            padding: 25px 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+        }
+
+        .method-list li::marker {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .golden-quote {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            color: white;
+            padding: 35px 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            font-size: clamp(1em, 2.2vw, 1.1em);
+            line-height: 1.9;
+            box-shadow: 0 15px 50px rgba(244, 162, 97, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .golden-quote::after {
+            content: '✦';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3em;
+            opacity: 0.15;
+        }
+
+        .golden-quote p {
+            color: white;
+            margin: 15px 0;
+        }
+
+        .golden-quote strong {
+            color: white;
+            font-weight: 700;
+        }
+
+        /* 列表样式 */
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 15px 0;
+            color: var(--text-medium);
+            line-height: 1.8;
+        }
+
+        li::marker {
+            color: var(--primary);
+        }
+
+        /* 表格 */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 40px 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            display: block;
+            overflow-x: auto;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: clamp(0.9em, 2vw, 1em);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-medium);
+            font-size: clamp(0.85em, 1.8vw, 0.95em);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(135deg,
+                rgba(217, 119, 87, 0.03) 0%,
+                rgba(244, 162, 97, 0.03) 100%);
+        }
+
+        strong {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        code {
+            background: var(--bg-cream);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9em;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-top: 80px;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.8);
+            margin: 15px 0;
+            font-size: clamp(0.9em, 2vw, 1em);
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(217, 119, 87, 0.35);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(217, 119, 87, 0.45);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 0 15px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .header-meta {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .floating-nav {
+                display: none;
+            }
+
+            section {
+                padding: 50px 0;
+            }
+
+            .section-number {
+                font-size: 2.5rem;
+                margin-bottom: -10px;
+            }
+
+            h2 {
+                font-size: 1.6em;
+                margin-bottom: 30px;
+            }
+
+            h3 {
+                font-size: 1.3em;
+                margin: 30px 0 15px 0;
+            }
+
+            .case-study {
+                padding: 20px;
+                margin: 30px 0;
+                border-radius: 16px;
+            }
+
+            .card {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            .tip-box,
+            .highlight-box {
+                padding: 20px;
+                margin: 25px 0;
+            }
+
+            blockquote {
+                padding: 25px 20px;
+                margin: 25px 0;
+                font-size: 1em;
+            }
+
+            blockquote::before {
+                font-size: 3em;
+                top: -5px;
+                left: 15px;
+            }
+
+            .golden-quote {
+                padding: 25px 20px;
+                margin: 30px 0;
+            }
+
+            .method-list {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 12px 15px;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .scroll-indicator {
+                bottom: 30px;
+                font-size: 0.85em;
+            }
+
+            ul, ol {
+                padding-left: 20px;
+            }
+
+            li {
+                margin: 12px 0;
+            }
+        }
+
+        /* 小屏幕手机适配 */
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header-meta-item {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            section {
+                padding: 40px 0;
+            }
+
+            .section-number {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+            }
+
+            h4 {
+                font-size: 1.05em;
+            }
+
+            p {
+                font-size: 0.9em;
+            }
+
+            .case-study {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            blockquote {
+                padding: 20px 15px;
+                font-size: 0.95em;
+            }
+
+            .golden-quote {
+                padding: 20px 15px;
+            }
+
+            footer {
+                padding: 40px 15px;
+            }
+        }
+
+        /* 加载动画 */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .loading {
+            animation: shimmer 2s infinite;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(217, 119, 87, 0.1),
+                transparent);
+            background-size: 1000px 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="bg-decorations">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+    </div>
+
+    <!-- 浮动导航 -->
+    <nav class="floating-nav">
+        <div class="nav-dot" data-label="核心才干组合" data-section="section-1"></div>
+        <div class="nav-dot" data-label="案主洞察" data-section="section-2"></div>
+        <div class="nav-dot" data-label="内耗破解" data-section="section-3"></div>
+        <div class="nav-dot" data-label="职业发展" data-section="section-4"></div>
+        <div class="nav-dot" data-label="亲密关系" data-section="section-5"></div>
+        <div class="nav-dot" data-label="金句理念" data-section="section-6"></div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Hero Header -->
+        <header>
+            <div class="header-content">
+                <h1>优势才干图拆解精华总结</h1>
+                <div class="header-meta">
+                    <div class="header-meta-item">
+                        <span>📅</span>
+                        <span>2025年12月25日</span>
+                    </div>
+                    <div class="header-meta-item">
+                        <span>⏱️</span>
+                        <span>时长：4小时</span>
+                    </div>
+                    <div class="header-meta-item">
+                        <span>👥</span>
+                        <span>墨啊、白茶、千亦、临静、Flora等</span>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                ↓ 向下滚动探索
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- Section 1 -->
+            <section id="section-1">
+                <div class="section-number">01</div>
+                <h2>核心才干组合解析</h2>
+
+                <div class="case-study">
+                    <h3>1. 内耗三件套：和谐+体谅+适应</h3>
+
+                    <h4>表现特征</h4>
+                    <ul>
+                        <li>过度替别人考虑，生怕破坏关系</li>
+                        <li>总是在想"我这样说/做会不会不好"</li>
+                        <li>容易自我攻击，反复纠结</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 破解方法</h4>
+                        <ul>
+                            <li><strong>学习心理学进行自我成长</strong>（杨娟教练的实践）</li>
+                            <li><strong>注意力转移：</strong>从"内耗三件套"转向"卷王三件套"</li>
+                            <li><strong>意识到：</strong>当下没内耗 = 还在舒适区，向外突破时才会内耗</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>2. 卷王三件套：成就+专注+完美</h3>
+
+                    <h4>表现特征</h4>
+                    <ul>
+                        <li>做事要求极高标准</li>
+                        <li>容易卷自己，停不下来</li>
+                        <li>不做到最好不罢休</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 发挥建议</h4>
+                        <ul>
+                            <li><strong>用"我是卷王"的自我暗示激发能量</strong></li>
+                            <li><strong>设定明确目标，</strong>让卷有方向</li>
+                            <li><strong>注意：</strong>完美才干会让人觉得"还没准备好"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>3. 关系建立板块（前十）</h3>
+
+                    <h4>核心特点</h4>
+                    <ul>
+                        <li>从关系中获得能量</li>
+                        <li>对自己的评价低于别人的评价</li>
+                        <li>做得多，说得少（沟通、取悦靠后时）</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 突破关键</h4>
+                        <ul>
+                            <li><strong>先从熟悉的人开始成交</strong></li>
+                            <li><strong>学会表达自己的付出和价值</strong></li>
+                            <li><strong>接受"别人如何对你，就是你教的"</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>4. 执行力板块（前十）</h3>
+
+                    <h4>核心特点</h4>
+                    <ul>
+                        <li>需要明确的步骤、方向、方法论</li>
+                        <li>"人机感"重：输入指令就能执行</li>
+                        <li>闷头干活，不太会沟通</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 配合建议</h4>
+                        <ul>
+                            <li><strong>需要有人在程序里"下指令"</strong></li>
+                            <li><strong>倒逼着干最有效：</strong>"今天必须完成"</li>
+                            <li><strong>适合做流量、运营等执行端工作</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="section-2">
+                <div class="section-number">02</div>
+                <h2>四位案主的关键洞察</h2>
+
+                <article class="case-study">
+                    <h3>案主一：杨娟教练</h3>
+
+                    <div class="card">
+                        <h4>才干特征</h4>
+                        <p>关系建立（体谅2、和谐7、适应10）+ 执行力 + 学习1</p>
+                    </div>
+
+                    <h4>核心问题</h4>
+                    <ul>
+                        <li>有内耗三件套但无内耗？因为通过学习心理学修炼了16年</li>
+                        <li>想卷又想躺，如何平衡？</li>
+                    </ul>
+
+                    <h4>关键洞察</h4>
+                    <div class="method-list">
+                        <ol>
+                            <li><strong>适应才干的发挥：</strong>"想卷就卷，想躺就躺，都很自洽" - 这就是适应才干的正向发挥</li>
+                            <li><strong>学习才干的负面：</strong>容易对不爱学习的人有意见（需要克制）</li>
+                            <li><strong>沟通21+取悦33：</strong>默默付出型，需要学会表达价值</li>
+                            <li><strong>理念31：</strong>创意少，但能接纳孩子的天马行空</li>
+                        </ol>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>成长建议</h4>
+                        <ul>
+                            <li>写公众号，用文字表达自己的独特价值</li>
+                            <li>融入孩子的天马行空思维，建立更深连接</li>
+                            <li>注意力放在"卷王三件套"上，而非内耗</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="case-study">
+                    <h3>案主二：沐森森教练</h3>
+
+                    <div class="card">
+                        <h4>才干特征</h4>
+                        <p>行动1、完美2、交往3、追求4 | 体谅13、包容32</p>
+                    </div>
+
+                    <h4>核心问题</h4>
+                    <ul>
+                        <li>行动太快，说话脱口而出，事后后悔</li>
+                        <li>婆媳关系中，老公的"传话筒"角色引发矛盾</li>
+                        <li>追求认可，但老公（战略思维+执行力）不主动表达</li>
+                    </ul>
+
+                    <h4>关键洞察</h4>
+                    <div class="method-list">
+                        <ol>
+                            <li><strong>行动第一的负面：</strong>话没想清楚就说出来，需要"逃离现场"冷静</li>
+                            <li><strong>完美+交往：</strong>对别人（尤其老公）要求高，希望达到自己标准</li>
+                            <li><strong>影响力的压迫感：</strong>"我在干活，你在玩"会让对方逃避</li>
+                            <li><strong>体谅过度解读：</strong>老公沉默 = 不在乎我？其实只是不知道怎么表达</li>
+                        </ol>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>实用技巧</h4>
+                        <ul>
+                            <li><strong>对待老公：</strong>在他的程序里"输入口令"："生气时给我一个拥抱"</li>
+                            <li><strong>避免冲突：</strong>情绪上头时立即离开现场</li>
+                            <li><strong>成交原则：</strong>主动索要夸夸，不要期待对方猜</li>
+                            <li><strong>写觉察日记：</strong>固化阴影面的解决方法</li>
+                        </ul>
+                    </div>
+
+                    <blockquote>
+                        老公就是个NPC人机，你不输入指令，他怎么给你反馈？
+                    </blockquote>
+                </article>
+
+                <article class="case-study">
+                    <h3>案主三：谢辉（西奎）教练</h3>
+
+                    <div class="card">
+                        <h4>才干特征</h4>
+                        <p>交往1、成就2、伯乐3、责任5、完美6 | 体谅11</p>
+                    </div>
+
+                    <h4>核心问题</h4>
+                    <ul>
+                        <li>有2万+培训经验，但不敢开口成交</li>
+                        <li>总觉得"还没准备好"</li>
+                        <li>害怕被拒绝，内心戏很足</li>
+                    </ul>
+
+                    <h4>关键洞察</h4>
+                    <div class="method-list">
+                        <ol>
+                            <li><strong>关系建立+完美的陷阱：</strong>对自己要求过高，总觉得"不够格"</li>
+                            <li><strong>信仰9+公平10：</strong>产品达不到自己标准就不敢提</li>
+                            <li><strong>沟通24+取悦31：</strong>做得多、说得少，默默付出型</li>
+                            <li><strong>伯乐才干的重新定义：</strong>"我成交你，是在拯救你的钱包"</li>
+                        </ol>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>突破路径</h4>
+
+                        <h4>1. 心理建设</h4>
+                        <ul>
+                            <li>100分教80分，80分教60分，你的能力足够</li>
+                            <li>"50分就可以教30分" - 不需要完美才开始</li>
+                        </ul>
+
+                        <h4>2. 行动方案</h4>
+                        <ul>
+                            <li>先从10个深度了解的人开始</li>
+                            <li>克制体谅：不要替客户考虑太多</li>
+                            <li>需要"强压迫感"的人推一把（参加商业行动营）</li>
+                        </ul>
+
+                        <h4>3. 成交铺垫</h4>
+                        <ul>
+                            <li>已做足够功夫，只需展示付款码</li>
+                            <li>客户拒绝 ≠ 永远拒绝，多触达几次</li>
+                        </ul>
+                    </div>
+
+                    <blockquote>
+                        最高的情绪价值，是给人信心、能量、希望和勇气
+                    </blockquote>
+                </article>
+
+                <article class="case-study">
+                    <h3>案主四：布林教练+波哥（伴侣）</h3>
+
+                    <div class="card">
+                        <h4>才干特征</h4>
+                        <p><strong>布林：</strong>和谐1、竞争2、伯乐4、统帅30 | 影响力第二板块</p>
+                        <p><strong>波哥：</strong>和谐1、执行力第一、交往4、适应9 | 信仰4、审慎3、分析5、完美10</p>
+                    </div>
+
+                    <h4>核心问题</h4>
+                    <ul>
+                        <li>波哥裸辞后做抖音淘客，因信仰冲突（觉得在骗人）而停滞</li>
+                        <li>布林想让他做优势教练，但不敢"强求"</li>
+                        <li>两人都战略思维靠后，不知道方向</li>
+                    </ul>
+
+                    <h4>关键洞察</h4>
+
+                    <div class="method-list">
+                        <h4>1. 波哥的困境</h4>
+                        <ul>
+                            <li><strong>评判三件套（审慎3+分析5+判断）：</strong>容易批判，看什么都是问题</li>
+                            <li><strong>信仰4+责任5：</strong>对项目价值要求高，达不到标准宁可不做</li>
+                            <li><strong>回顾15：</strong>容易陷入"过去的成就"对比，加深内耗</li>
+                            <li><strong>战略34：</strong>缺乏路径规划，看不到长期方向</li>
+                        </ul>
+
+                        <h4>2. 布林的影响</h4>
+                        <ul>
+                            <li><strong>影响力第二板块：</strong>压迫感强，"我干活你玩游戏我受不了"</li>
+                            <li><strong>公平10：</strong>"你不干我也不想干" - 但这是在限制自己</li>
+                            <li><strong>统帅30：</strong>不喜欢指挥，但执行力的人恰恰需要指令</li>
+                            <li><strong>伯乐+体谅+关联：</strong>全部发挥在波哥身上，想让他好</li>
+                        </ul>
+
+                        <h4>3. 关系模式</h4>
+                        <ul>
+                            <li>波哥适应9：布林不动，他也躺平；布林卷起来，他也会卷</li>
+                            <li>布林积极才干：总是夸波哥，所以关系很好</li>
+                            <li>执行力需要"下指令"，关系建立需要"被看见"</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>完美解决方案</h4>
+
+                        <h4>职业规划</h4>
+                        <ul>
+                            <li><strong>布林：</strong>学习优势教练，负责成交+交付（沟通靠前）</li>
+                            <li><strong>波哥：</strong>负责流量端口（执行力强、行动靠前、竞争7）</li>
+                            <li><strong>苏姐：</strong>提供产品设计和战略指导（补战略思维短板）</li>
+                            <li><strong>强强联合：</strong>方向+执行+成交 = 完美配合</li>
+                        </ul>
+
+                        <h4>行动步骤</h4>
+                        <ol>
+                            <li>布林先加入商业行动营，浸泡2个月拿到结果</li>
+                            <li>波哥看到希望后，卷王体质自动激活</li>
+                            <li>布林把学到的及时转化给波哥，共同成长</li>
+                            <li>两人用同一套逻辑（优势体系）沟通，减少矛盾</li>
+                        </ol>
+
+                        <h4>相处建议</h4>
+                        <ul>
+                            <li>布林要降低影响力压迫感，多看见波哥的付出</li>
+                            <li>给波哥"输入指令"："今天做XX流量，我转化XX"</li>
+                            <li>不要期待波哥主动表达，要主动索取反馈</li>
+                            <li>公平才干调整：分工明确，而非"你也要干"</li>
+                        </ul>
+                    </div>
+
+                    <div class="golden-quote">
+                        <p><strong>关键认知</strong></p>
+                        <p>"关系建立的人说不要，他是真的不要吗？"</p>
+                        <p>"他不是不爱你，他只是不知道怎么表达"</p>
+                        <p>"打工无法实现财富积累，创业需要正确方法+高认知导师"</p>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="section-3">
+                <div class="section-number">03</div>
+                <h2>常见内耗模式与破解方法</h2>
+
+                <div class="case-study">
+                    <h3>1. 关系建立的内耗来源</h3>
+
+                    <h4>内耗场景</h4>
+                    <ul>
+                        <li>开口成交前：会不会破坏关系？他会怎么看我？</li>
+                        <li>发消息2小时不回：是不是我说错话了？开始自我攻击</li>
+                        <li>看到对方表情：过度解读，"他是不是不高兴了？"</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 破解方法</h4>
+                        <ul>
+                            <li><strong>认知重构：</strong>内耗来自"想突破舒适区"，不是坏事</li>
+                            <li><strong>行动优先：</strong>发消息后不解释，稳住，对方会回复</li>
+                            <li><strong>强制输入：</strong>找人推你一把，倒逼行动</li>
+                            <li><strong>注意力转移：</strong>关注"我能提供什么价值"而非"我够不够格"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>2. 执行力的内耗来源</h3>
+
+                    <h4>内耗场景</h4>
+                    <ul>
+                        <li>没有明确方向时：不知道干什么，就躺平</li>
+                        <li>战略思维靠后：只看到问题，看不到解决路径</li>
+                        <li>信仰冲突：这事不符合价值观，做不下去</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 破解方法</h4>
+                        <ul>
+                            <li><strong>输入指令：</strong>给执行力的人具体步骤和deadline</li>
+                            <li><strong>找战略思维强的人：</strong>帮忙设计产品和方向</li>
+                            <li><strong>短期目标：</strong>今天必须完成XX，降低思考，提高行动</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>3. 影响力的内耗来源</h3>
+
+                    <h4>内耗场景</h4>
+                    <ul>
+                        <li>压迫感伤害关系：别人躲着我</li>
+                        <li>口是心非：明明想要，嘴上说"你别管我"</li>
+                        <li>脾气急：说完就后悔</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <h4>💡 破解方法</h4>
+                        <ul>
+                            <li><strong>以退为进：</strong>把对方架高，"你教教我"</li>
+                            <li><strong>影响力修炼：</strong>先做好自己，用结果影响人</li>
+                            <li><strong>降低期待：</strong>不要所有人都按你的标准来</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4 -->
+            <section id="section-4">
+                <div class="section-number">04</div>
+                <h2>职业发展与创业建议</h2>
+
+                <div class="case-study">
+                    <h3>关系建立 + 执行力 的创业路径</h3>
+
+                    <div class="card card-info">
+                        <h4>适合方向</h4>
+                        <ul>
+                            <li>优势教练、心理咨询、教育培训</li>
+                            <li>需要深度服务、长期陪伴的业务</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>突破关键</h4>
+                        <ol>
+                            <li><strong>前5个客户：</strong>从熟悉的人开始，建立信心</li>
+                            <li><strong>对练必做：</strong>不要觉得"没意义"，话术需要迭代</li>
+                            <li><strong>成交铺垫：</strong>执行力会做很多准备，最后只差"展示付款码"</li>
+                            <li><strong>克制完美：</strong>先完成，再完美；60分就可以交付</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>关系建立 + 影响力 的创业路径</h3>
+
+                    <div class="card card-info">
+                        <h4>适合方向</h4>
+                        <ul>
+                            <li>需要影响力和成交能力的业务</li>
+                            <li>个人IP、内容创业</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>突破关键</h4>
+                        <ol>
+                            <li><strong>降低压迫感：</strong>学会倾听，不要急于说服</li>
+                            <li><strong>用文字表达：</strong>沟通靠后时，写公众号/朋友圈</li>
+                            <li><strong>先动起来：</strong>影响力容易"想太大"，从小事开始</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>执行力 + 战略思维 的配合建议</h3>
+
+                    <div class="card card-success">
+                        <h4>伴侣/合伙人模式</h4>
+                        <ul>
+                            <li><strong>执行力负责：</strong>流量、运营、交付执行</li>
+                            <li><strong>战略思维负责：</strong>产品设计、方向规划</li>
+                            <li><strong>关系建立负责：</strong>成交、客户深度服务</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="section-5">
+                <div class="section-number">05</div>
+                <h2>亲密关系中的才干互补</h2>
+
+                <div class="case-study">
+                    <h3>关系建立 VS 执行力</h3>
+
+                    <div class="card card-warning">
+                        <h4>冲突点</h4>
+                        <ul>
+                            <li><strong>关系建立：</strong>你为什么不表达？我需要被看见！</li>
+                            <li><strong>执行力：</strong>我在做事啊，我不知道说什么</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 解决方案</h4>
+                        <ul>
+                            <li><strong>关系建立：</strong>主动索取反馈，不要期待对方猜</li>
+                            <li><strong>执行力：</strong>定期"输入指令"：夸夸对方、定期汇报</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>关系建立 VS 关系建立</h3>
+
+                    <div class="card card-warning">
+                        <h4>特点</h4>
+                        <ul>
+                            <li>双方都体谅，容易各自内耗</li>
+                            <li>两个人都"你不动我也不动"</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 解决方案</h4>
+                        <ul>
+                            <li>至少一方要先突破，带动另一方</li>
+                            <li>加入社群，获得外部推动力</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>影响力 VS 执行力</h3>
+
+                    <div class="card card-warning">
+                        <h4>冲突点</h4>
+                        <ul>
+                            <li><strong>影响力：</strong>压迫感强，"你怎么不动？"</li>
+                            <li><strong>执行力：</strong>被压迫就逃避</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 解决方案</h4>
+                        <ul>
+                            <li>影响力要学会"下指令"而非"催促"</li>
+                            <li>"今天完成XX"比"你怎么还不做"有效100倍</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6 -->
+            <section id="section-6">
+                <div class="section-number">06</div>
+                <h2>金句与核心理念</h2>
+
+                <h3>关于才干发挥</h3>
+                <blockquote>别人如何对你，就是你教的 — 苏姐</blockquote>
+                <blockquote>我成交你，不是为了赚钱，是为了拯救你的钱包</blockquote>
+                <blockquote>100分教80分，80分教60分，60分教40分，40分教0分</blockquote>
+                <blockquote>50分就可以教30分，不要等到完美才开始</blockquote>
+
+                <h3>关于内耗与突破</h3>
+                <blockquote>注意力在哪里,结果就在哪里</blockquote>
+                <blockquote>内耗只会在向外扩大舒适圈时出现，当下舒适=没有内耗</blockquote>
+                <blockquote>关系建立最大的功课：不要委屈自己成全别人</blockquote>
+                <blockquote>人不能被改变，但人可以被影响</blockquote>
+
+                <h3>关于关系建立</h3>
+                <blockquote>关系建立的人，对自己的评价永远低于别人的评价</blockquote>
+                <blockquote>做得多、说得少，永远被看不见</blockquote>
+                <blockquote>关系建立说'不要'，真的是不要吗？</blockquote>
+
+                <h3>关于执行力</h3>
+                <blockquote>执行力就是NPC人机，你不输入指令，他怎么反馈？</blockquote>
+                <blockquote>执行力需要：明确方向+具体步骤+deadline</blockquote>
+                <blockquote>让执行力的人去思考方向，就是在折磨他</blockquote>
+
+                <h3>关于影响力</h3>
+                <blockquote>影响力的压迫感无时无刻存在，要学会收敛</blockquote>
+                <blockquote>影响力：明明想要，嘴上说'你别管我'</blockquote>
+                <blockquote>影响力要先做好自己，用结果影响别人</blockquote>
+
+                <h3>关于创业</h3>
+                <blockquote>打工是极其不稳定的商业模式</blockquote>
+                <blockquote>创业需要：正确方法+高认知导师+同频小伙伴</blockquote>
+                <blockquote>方向+执行力+成交能力 = 最小化内耗</blockquote>
+
+                <h3>实用工具与方法论</h3>
+
+                <div class="case-study">
+                    <h3>1. 觉察日记模板</h3>
+                    <div class="method-list">
+                        <p>每天记录：</p>
+                        <ul>
+                            <li>今天的内耗点是什么？</li>
+                            <li>这个内耗背后是哪个才干？</li>
+                            <li>我可以用什么方法化解？</li>
+                            <li>固化成行动模式</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>2. 成交前的心理建设（关系建立专用）</h3>
+                    <div class="method-list">
+                        <ul>
+                            <li>我有足够的能力提供价值（能力层）</li>
+                            <li>盖洛普工具穿透力90%+（工具层）</li>
+                            <li>我成交是在帮助对方（信念层）</li>
+                            <li>客户拒绝≠永远拒绝（认知层）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>3. 执行力的"输入指令"模板</h3>
+                    <div class="method-list">
+                        <ul>
+                            <li>"今天必须完成XX"（时间指令）</li>
+                            <li>"标准是XX"（质量指令）</li>
+                            <li>"遇到问题找我"（支持指令）</li>
+                            <li>"完成后奖励XX"（激励指令）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>4. 影响力的"降压"模板</h3>
+                    <div class="method-list">
+                        <ul>
+                            <li>说话前：这句话是表达还是压迫？</li>
+                            <li>冲突时：先离开现场，冷静后沟通</li>
+                            <li>日常：多夸少评，多问少指挥</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>总结：四小时拆图的核心价值</h3>
+
+                <div class="card card-highlight">
+                    <ol>
+                        <li><strong>看见自己的模式：</strong>不是性格问题，是才干的发挥方式</li>
+                        <li><strong>理解他人的逻辑：</strong>不是对方不配合，是才干组合不同</li>
+                        <li><strong>找到破局路径：</strong>针对性的方法，而非盲目努力</li>
+                        <li><strong>建立共同语言：</strong>夫妻/合伙人用同一套逻辑，减少内耗</li>
+                    </ol>
+                </div>
+
+                <div class="golden-quote">
+                    <p><strong>最关键的认知</strong></p>
+                    <p>人生逻辑 &gt; 商业逻辑</p>
+                    <p>看见自己，才能看见别人</p>
+                    <p>接纳才干，才能驾驭人生</p>
+                </div>
+
+                <h3>附录：才干速查表</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>才干</th>
+                            <th>核心特征</th>
+                            <th>正向发挥</th>
+                            <th>负向发挥</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>和谐</strong></td>
+                            <td>避免冲突</td>
+                            <td>创造舒适环境</td>
+                            <td>过度妥协</td>
+                        </tr>
+                        <tr>
+                            <td><strong>体谅</strong></td>
+                            <td>感知情绪</td>
+                            <td>善解人意</td>
+                            <td>过度解读</td>
+                        </tr>
+                        <tr>
+                            <td><strong>适应</strong></td>
+                            <td>随遇而安</td>
+                            <td>弹性灵活</td>
+                            <td>没有立场</td>
+                        </tr>
+                        <tr>
+                            <td><strong>交往</strong></td>
+                            <td>深度关系</td>
+                            <td>忠诚信任</td>
+                            <td>只在意小圈子</td>
+                        </tr>
+                        <tr>
+                            <td><strong>伯乐</strong></td>
+                            <td>看见潜力</td>
+                            <td>培养他人</td>
+                            <td>好为人师</td>
+                        </tr>
+                        <tr>
+                            <td><strong>行动</strong></td>
+                            <td>立即执行</td>
+                            <td>说干就干</td>
+                            <td>冲动草率</td>
+                        </tr>
+                        <tr>
+                            <td><strong>成就</strong></td>
+                            <td>持续产出</td>
+                            <td>效率极高</td>
+                            <td>停不下来</td>
+                        </tr>
+                        <tr>
+                            <td><strong>完美</strong></td>
+                            <td>追求卓越</td>
+                            <td>高质量交付</td>
+                            <td>永远不满意</td>
+                        </tr>
+                        <tr>
+                            <td><strong>专注</strong></td>
+                            <td>目标导向</td>
+                            <td>聚焦高效</td>
+                            <td>其他都看不见</td>
+                        </tr>
+                        <tr>
+                            <td><strong>竞争</strong></td>
+                            <td>对比参照</td>
+                            <td>快速上手</td>
+                            <td>嫉妒心重</td>
+                        </tr>
+                        <tr>
+                            <td><strong>追求</strong></td>
+                            <td>渴望认可</td>
+                            <td>积极主动</td>
+                            <td>讨好他人</td>
+                        </tr>
+                        <tr>
+                            <td><strong>信仰</strong></td>
+                            <td>价值驱动</td>
+                            <td>有原则</td>
+                            <td>过于理想化</td>
+                        </tr>
+                        <tr>
+                            <td><strong>战略</strong></td>
+                            <td>预见未来</td>
+                            <td>长远规划</td>
+                            <td>想太多不行动</td>
+                        </tr>
+                        <tr>
+                            <td><strong>分析</strong></td>
+                            <td>逻辑思考</td>
+                            <td>理性决策</td>
+                            <td>只看问题</td>
+                        </tr>
+                        <tr>
+                            <td><strong>审慎</strong></td>
+                            <td>风险管理</td>
+                            <td>避免失误</td>
+                            <td>过度谨慎</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <footer>
+            <p><strong>整理者</strong> Claude</p>
+            <p><strong>会议时长</strong> 4小时</p>
+            <p><strong>参与人数</strong> 4位案主 + 10+ 位教练</p>
+            <p><strong>核心价值</strong> 真实案例 + 深度洞察 + 实用方法</p>
+            <p style="margin-top: 30px; opacity: 0.7;">© 2025 优势动力 | 生成时间：2025年12月26日</p>
+        </footer>
+    </div>
+
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+
+    <script>
+        // 滚动动画观察器 - 降低门槛，更容易触发
+        const observerOptions = {
+            threshold: 0.1,  // 降低到10%可见即触发
+            rootMargin: '0px 0px -50px 0px'  // 减少底部边距
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // 页面加载时立即显示所有section
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('visible');
+            });
+        });
+
+        // 观察所有section（除了第一个，因为它默认可见）
+        document.querySelectorAll('section:not(:first-of-type)').forEach(section => {
+            observer.observe(section);
+        });
+
+        // 浮动导航
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = document.querySelectorAll('section');
+
+        // 导航点击
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const sectionId = dot.getAttribute('data-section');
+                const section = document.getElementById(sectionId);
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // 更新活动导航点
+        window.addEventListener('scroll', () => {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navDots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('data-section') === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 平滑滚动到锚点
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 卡片悬停效果增强
+        document.querySelectorAll('.case-study').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+    </script>
+</body>
+</html>

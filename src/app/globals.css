@@ -32,6 +32,11 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /* Global Styles */

@@ -57,6 +57,9 @@ export default function MethodologyContent() {
     category: '文章创作' as CreativePrompt['category']
   });
 
+  // 移动端视图切换：true=显示聊天界面，false=显示prompt列表
+  const [showChatOnMobile, setShowChatOnMobile] = useState(false);
+
   const customPrompts = allPrompts.filter((p) => p.id.startsWith('custom-'));
 
   // 从 localStorage 加载 prompts，合并预设和自定义
@@ -230,6 +233,9 @@ export default function MethodologyContent() {
       setMessages([]);
       setCurrentSessionId(null);
     }
+    
+    // 移动端：选择 prompt 后切换到聊天界面
+    setShowChatOnMobile(true);
   };
 
   // 开始新对话
@@ -239,6 +245,11 @@ export default function MethodologyContent() {
     setMessages([]);
     setPendingImages([]);
     setShowHistory(false);
+  };
+
+  // 返回 prompt 列表（移动端）
+  const backToPromptList = () => {
+    setShowChatOnMobile(false);
   };
 
   // 图片上传处理
@@ -592,7 +603,9 @@ export default function MethodologyContent() {
 
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
           {/* 左侧 - Prompt 模板列表 */}
-          <div className="w-full md:w-1/2 flex-1 min-h-0 border-b md:border-b-0 md:border-r border-stone-line overflow-y-auto p-4 md:p-6 no-scrollbar">
+          <div className={`w-full md:w-1/2 flex-1 min-h-0 border-b md:border-b-0 md:border-r border-stone-line overflow-y-auto p-4 md:p-6 no-scrollbar ${
+            showChatOnMobile ? 'hidden md:block' : 'block'
+          }`}>
             <header className="mb-6 md:mb-8">
               <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-2 block">
                 Creative Toolkit
@@ -738,38 +751,50 @@ export default function MethodologyContent() {
           </div>
 
           {/* 右侧 - 聊天区域 */}
-          <div className="w-full md:w-1/2 flex-1 flex flex-col bg-white min-h-0">
+          <div className={`w-full md:w-1/2 flex-1 flex flex-col bg-white min-h-0 ${
+            showChatOnMobile ? 'fixed inset-0 z-40 md:relative md:z-0' : 'hidden md:flex'
+          }`}>
             {selectedPrompt ? (
               <>
                 {/* 聊天头部 */}
-                <div className="p-4 border-b border-stone-line bg-cream/50">
+                <div className="p-3 md:p-4 border-b border-stone-line bg-cream/50">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{selectedPrompt.icon}</span>
-                      <div>
-                        <h2 className="font-semibold text-navy">{selectedPrompt.title}</h2>
-                        <p className="text-xs text-navy-light">{selectedPrompt.description}</p>
+                    <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+                      {/* 移动端返回按钮 */}
+                      <button
+                        onClick={backToPromptList}
+                        className="md:hidden p-2 -ml-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all"
+                        title="返回"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <span className="text-xl md:text-2xl">{selectedPrompt.icon}</span>
+                      <div className="min-w-0 flex-1">
+                        <h2 className="font-semibold text-navy text-sm md:text-base truncate">{selectedPrompt.title}</h2>
+                        <p className="text-xs text-navy-light truncate hidden sm:block">{selectedPrompt.description}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={startNewChat}
-                        className="p-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all"
+                        className="p-2 md:p-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all touch-manipulation"
                         title="新建对话"
                       >
-                        <MessageSquarePlus className="w-[18px] h-[18px]" />
+                        <MessageSquarePlus className="w-5 h-5 md:w-[18px] md:h-[18px]" />
                       </button>
                       {currentPromptSessions.length > 0 && (
                         <button
                           onClick={() => setShowHistory(!showHistory)}
-                          className={`relative p-2 rounded-lg transition-all ${
+                          className={`relative p-2 md:p-2 rounded-lg transition-all touch-manipulation ${
                             showHistory
                               ? 'text-terra bg-terra/10'
                               : 'text-navy-light hover:text-terra hover:bg-terra/10'
                           }`}
                           title="历史记录"
                         >
-                          <History className="w-[18px] h-[18px]" />
+                          <History className="w-5 h-5 md:w-[18px] md:h-[18px]" />
                           <span className="absolute -top-1 -right-1 min-w-[16px] h-4 flex items-center justify-center text-[10px] font-medium bg-terra text-white rounded-full px-1">
                             {currentPromptSessions.length}
                           </span>
@@ -777,18 +802,18 @@ export default function MethodologyContent() {
                       )}
                       <button
                         onClick={() => handleEditPrompt(selectedPrompt)}
-                        className="p-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all"
+                        className="p-2 md:p-2 text-navy-light hover:text-terra hover:bg-terra/10 rounded-lg transition-all touch-manipulation hidden sm:flex"
                         title="编辑 Prompt"
                       >
-                        <Edit3 className="w-[18px] h-[18px]" />
+                        <Edit3 className="w-5 h-5 md:w-[18px] md:h-[18px]" />
                       </button>
                       {messages.length > 0 && (
                         <button
                           onClick={clearChat}
-                          className="p-2 text-navy-light hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                          className="p-2 md:p-2 text-navy-light hover:text-red-500 hover:bg-red-50 rounded-lg transition-all touch-manipulation hidden sm:flex"
                           title="清空对话"
                         >
-                          <Trash2 className="w-[18px] h-[18px]" />
+                          <Trash2 className="w-5 h-5 md:w-[18px] md:h-[18px]" />
                         </button>
                       )}
                     </div>
@@ -797,7 +822,7 @@ export default function MethodologyContent() {
 
                 {/* 历史记录面板 */}
                 {showHistory && currentPromptSessions.length > 0 && (
-                  <div className="border-b border-stone-line bg-cream/30 p-3 max-h-[200px] overflow-y-auto">
+                  <div className="border-b border-stone-line bg-cream/30 p-3 max-h-[150px] md:max-h-[200px] overflow-y-auto">
                     <div className="text-xs text-navy-light mb-2 font-medium">历史对话</div>
                     <div className="space-y-1">
                       {currentPromptSessions.map((session) => (
@@ -918,8 +943,8 @@ export default function MethodologyContent() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* 输入区域 */}
-                <div className="p-4 border-t border-stone-line bg-cream/30">
+                {/* 输入区域 - 移动端固定在底部 */}
+                <div className="p-3 md:p-4 border-t border-stone-line bg-cream/30 shrink-0">
                   {/* 待发送图片预览 */}
                   {pendingImages.length > 0 && (
                     <div className="flex gap-2 mb-3 flex-wrap">
@@ -953,7 +978,7 @@ export default function MethodologyContent() {
                     {/* 图片上传按钮 */}
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="p-3 bg-white border border-stone-line hover:border-terra text-navy-light hover:text-terra rounded-xl transition-colors shrink-0"
+                      className="p-2.5 md:p-3 bg-white border border-stone-line hover:border-terra text-navy-light hover:text-terra rounded-xl transition-colors shrink-0 touch-manipulation"
                       title="上传图片"
                     >
                       <ImagePlus className="w-5 h-5" />
@@ -965,13 +990,13 @@ export default function MethodologyContent() {
                       onKeyDown={handleKeyDown}
                       onPaste={handlePaste}
                       placeholder="输入内容或粘贴图片..."
-                      className="flex-1 resize-none bg-white border border-stone-line rounded-xl p-3 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 min-h-[48px] max-h-[150px]"
+                      className="flex-1 resize-none bg-white border border-stone-line rounded-xl p-2.5 md:p-3 text-sm text-navy focus:outline-none focus:border-terra focus:ring-1 focus:ring-terra transition-all placeholder:text-navy-light/50 min-h-[44px] max-h-[120px] md:max-h-[150px]"
                       rows={1}
                     />
                     {isLoading ? (
                       <button
                         onClick={handleStop}
-                        className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors shrink-0"
+                        className="p-2.5 md:p-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors shrink-0 touch-manipulation"
                         title="停止生成"
                       >
                         <Square className="w-5 h-5 fill-current" />
@@ -980,7 +1005,7 @@ export default function MethodologyContent() {
                       <button
                         onClick={handleSend}
                         disabled={!inputValue.trim() && pendingImages.length === 0}
-                        className="p-3 bg-terra hover:bg-terra-dark disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors shrink-0"
+                        className="p-2.5 md:p-3 bg-terra hover:bg-terra-dark disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors shrink-0 touch-manipulation"
                       >
                         <Send className="w-5 h-5" />
                       </button>

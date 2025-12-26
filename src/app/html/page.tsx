@@ -21,7 +21,7 @@ export default async function Page() {
           <span className="text-terra font-semibold tracking-wider text-xs uppercase mb-2 block">
             Library
           </span>
-          <h1 className="font-serif text-2xl md:text-3xl text-navy font-bold mb-2">名人堂</h1>
+          <h1 className="font-serif text-2xl md:text-3xl text-navy font-bold mb-2">经典重放</h1>
         </header>
 
         {files.length === 0 ? (

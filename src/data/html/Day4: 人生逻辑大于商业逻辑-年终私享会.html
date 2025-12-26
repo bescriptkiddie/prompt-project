@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人生逻辑大于商业逻辑：年终私享会</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Claude-inspired Palette */
+        --color-primary: #cc785c;
+        --color-primary-dark: #d97757;
+        --color-bg: #f5f5f0;
+        --color-bg-alt: #eaeae5;
+        --color-text: #1f1f1f;
+        --color-text-light: #555555;
+        --color-card: #ffffff;
+        --color-border: #e5e5e5;
+
+        /* Typography */
+        --font-serif: "Lora", serif;
+        --font-sans: "Inter", sans-serif;
+
+        /* Spacing & Layout */
+        --spacing-unit: 8px;
+        --container-width: 1000px;
+        --radius: 16px;
+        --shadow-subtle: 0 4px 24px rgba(0, 0, 0, 0.03);
+        --shadow-hover: 0 8px 32px rgba(204, 120, 92, 0.12);
+
+        /* Transitions */
+        --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-sans);
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        color: var(--color-text);
+        line-height: 1.3;
+      }
+
+      p {
+        color: var(--color-text-light);
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .container {
+        max-width: var(--container-width);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      section {
+        padding: 100px 0;
+      }
+
+      /* Utility Classes */
+      .text-center {
+        text-align: center;
+      }
+      .text-primary {
+        color: var(--color-primary);
+      }
+      .mb-large {
+        margin-bottom: 64px;
+      }
+      .mb-medium {
+        margin-bottom: 32px;
+      }
+      .mb-small {
+        margin-bottom: 16px;
+      }
+
+      /* Animation Classes */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: var(--transition);
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .hero h2 {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--color-text-light);
+        margin-bottom: 2rem;
+        font-family: var(--font-sans);
+      }
+
+      .hero-quote {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        font-style: italic;
+        color: var(--color-primary);
+        max-width: 800px;
+        margin: 2rem auto;
+        line-height: 1.6;
+      }
+
+      /* Cards General */
+      .card {
+        background: var(--color-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow-subtle);
+        transition: var(--transition);
+        height: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.02);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      /* Part 1: Philosophy */
+      .philosophy-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .philosophy-card {
+        padding: 48px;
+      }
+
+      .philosophy-card h3 {
+        font-size: 1.8rem;
+        margin-bottom: 16px;
+        color: var(--color-primary);
+      }
+
+      .philosophy-icon {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+      }
+
+      /* Part 2: Five Practices */
+      .practices-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
+      .practice-card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .practice-number {
+        font-family: var(--font-serif);
+        font-size: 4rem;
+        color: rgba(204, 120, 92, 0.1);
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-weight: 700;
+      }
+
+      .practice-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        position: relative;
+        z-index: 1;
+        color: var(--color-primary);
+      }
+
+      .practice-card h4 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        color: var(--color-text);
+      }
+
+      /* Part 3: Twin Wings */
+      .twin-wings {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+
+      .wing-card {
+        padding: 48px;
+        text-align: center;
+      }
+
+      .wing-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(204, 120, 92, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        color: var(--color-primary);
+        font-size: 2rem;
+      }
+
+      /* Part 4: Quotes */
+      .quotes-container {
+        display: grid;
+        gap: 40px;
+      }
+
+      .quote-card {
+        border-left: 4px solid var(--color-primary);
+        padding-left: 32px;
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        color: var(--color-text);
+        font-style: italic;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      /* Part 5: Three Levels */
+      .levels-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .level-item {
+        background: var(--color-card);
+        padding: 40px;
+        border-radius: var(--radius);
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .level-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: rgba(204, 120, 92, 0.15);
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-family: var(--font-serif);
+      }
+
+      .level-item h3 {
+        font-size: 1.6rem;
+        margin-bottom: 16px;
+        color: var(--color-primary);
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Part 6: Talents Grid */
+      .talents-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .talent-card {
+        padding: 40px;
+      }
+
+      .talent-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 16px;
+      }
+
+      .talent-header span {
+        font-size: 2rem;
+      }
+
+      .talent-content {
+        display: grid;
+        gap: 16px;
+      }
+
+      .talent-section h4 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        color: var(--color-primary);
+      }
+
+      .talent-section p {
+        font-size: 0.95rem;
+        margin-bottom: 0;
+      }
+
+      /* Part 7: Decision Making */
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+
+      .decision-box {
+        padding: 48px;
+      }
+
+      .decision-box h3 {
+        font-size: 1.8rem;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .decision-list {
+        list-style: none;
+      }
+
+      .decision-list li {
+        margin-bottom: 16px;
+        padding-left: 24px;
+        position: relative;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .decision-list.thinking li::before {
+        content: "✓";
+        color: #4caf50;
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .decision-list.worrying li::before {
+        content: "✗";
+        color: #f44336;
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      /* Part 8: Guest Sharing */
+      .guest-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+
+      .guest-card {
+        padding: 48px;
+      }
+
+      .guest-header {
+        margin-bottom: 32px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 16px;
+      }
+
+      .guest-header h3 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+        color: var(--color-primary);
+      }
+
+      .guest-header p {
+        font-size: 0.95rem;
+        margin-bottom: 0;
+        color: var(--color-text-light);
+      }
+
+      .achievement {
+        background: rgba(204, 120, 92, 0.05);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        font-weight: 500;
+      }
+
+      .key-points {
+        list-style: none;
+      }
+
+      .key-points li {
+        margin-bottom: 16px;
+        padding-left: 24px;
+        position: relative;
+      }
+
+      .key-points li::before {
+        content: "→";
+        color: var(--color-primary);
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      /* Part 9: Q&A */
+      .qa-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .qa-item {
+        background: var(--color-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        margin-bottom: 32px;
+        border-left: 4px solid var(--color-primary);
+      }
+
+      .qa-question {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: var(--color-text);
+      }
+
+      .qa-answer {
+        color: var(--color-text-light);
+        line-height: 1.8;
+      }
+
+      .qa-answer strong {
+        color: var(--color-primary);
+      }
+
+      /* Three Realms */
+      .realms-container {
+        display: grid;
+        gap: 24px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .realm-item {
+        background: var(--color-card);
+        padding: 32px;
+        border-radius: var(--radius);
+        text-align: center;
+        position: relative;
+      }
+
+      .realm-item:not(:last-child)::after {
+        content: "↓";
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--color-primary);
+        font-size: 1.5rem;
+        z-index: 1;
+      }
+
+      .realm-label {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-bottom: 12px;
+        font-family: var(--font-serif);
+      }
+
+      /* Footer CTA */
+      .footer-cta {
+        background: var(--color-text);
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        border-radius: 24px 24px 0 0;
+      }
+
+      .footer-cta h2 {
+        color: white;
+        margin-bottom: 32px;
+      }
+
+      .promise-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+
+      .promise-item {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background-color: var(--color-primary);
+        color: white;
+        padding: 18px 48px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(204, 120, 92, 0.3);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+        .philosophy-grid,
+        .twin-wings,
+        .talents-grid,
+        .decision-grid,
+        .guest-cards {
+          grid-template-columns: 1fr;
+        }
+        section {
+          padding: 60px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="reveal">
+          <h1>人生逻辑大于商业逻辑</h1>
+          <h2>Day4 年终私享会</h2>
+          <p class="hero-quote">
+            "所有创业的挣扎,都源于人生逻辑没打通。<br />
+            商业问题的根源都是人生问题。"
+          </p>
+          <p style="max-width: 700px; margin: 2rem auto; font-size: 1.1rem">
+            众生皆苦,源于浑噩。<br />
+            我们修的是清醒地活着,并带着这份清醒,扎实地赚钱。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 1: Philosophy -->
+    <section id="philosophy">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>创业的本质:生命修行</h2>
+          <p>稻盛和夫的哲学启示</p>
+        </div>
+
+        <div class="philosophy-grid">
+          <div class="card philosophy-card reveal">
+            <div class="philosophy-icon">🌱</div>
+            <h3>修行而非赚钱</h3>
+            <p>
+              "人活着,是为了提升心性,磨炼灵魂,带着比出生时更高层次的灵魂离开人世。"
+            </p>
+            <p>
+              创业不是为了赚钱,而是一场"提升心性,磨炼灵魂"的生命修行。物质财富生不带来死不带去,最终留下的是自我认知与对世界的贡献。
+            </p>
+          </div>
+
+          <div class="card philosophy-card reveal" style="transition-delay: 0.1s">
+            <div class="philosophy-icon">🎯</div>
+            <h3>创业的四种层次</h3>
+            <p style="margin-bottom: 0.5rem">
+              <strong>层次1:</strong> 主要为了增加收入,改善生活
+            </p>
+            <p style="margin-bottom: 0.5rem">
+              <strong>层次2:</strong> 渴望证明自己,获得成就感
+            </p>
+            <p style="margin-bottom: 0.5rem">
+              <strong>层次3:</strong> 通过一件事不断修炼自己,成为更好的人
+            </p>
+            <p style="margin-bottom: 0">
+              <strong>层次4:</strong> 想创造价值,帮助他人,获得精神满足
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 2: Five Practices -->
+    <section id="practices" style="background-color: var(--color-bg-alt)">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>人性的五大修行功课</h2>
+          <p>贪、惧、懒、怂、疑</p>
+        </div>
+
+        <div class="practices-grid">
+          <div class="card practice-card reveal">
+            <span class="practice-number">1</span>
+            <h3>戒贪</h3>
+            <h4>含义</h4>
+            <p>妄图获得智慧、品格、能力尚不匹配的东西</p>
+            <h4>表现</h4>
+            <p>想走捷径、一夜暴富、盲目投资导致血本无归</p>
+            <h4>心法</h4>
+            <p style="margin-bottom: 0; color: var(--color-primary); font-weight: 500">
+              "戒贪,就不会万劫不复"
+            </p>
+          </div>
+
+          <div class="card practice-card reveal">
+            <span class="practice-number">2</span>
+            <h3>与恐惧同行</h3>
+            <h4>含义</h4>
+            <p>追求100%确定性,被恐惧包裹</p>
+            <h4>心法</h4>
+            <p style="margin-bottom: 0; color: var(--color-primary); font-weight: 500">
+              "带着恐惧前进"<br />
+              人无法消除恐惧,但可以学习与它共存
+            </p>
+          </div>
+
+          <div class="card practice-card reveal">
+            <span class="practice-number">3</span>
+            <h3>克懒见真</h3>
+            <h4>含义</h4>
+            <p>人性好逸恶劳,幻想"躺赚"</p>
+            <h4>真相</h4>
+            <p>只有行动量足够大,概率才会浮现,规律才会显现</p>
+            <h4>心法</h4>
+            <p style="margin-bottom: 0; color: var(--color-primary); font-weight: 500">
+              "数量是看见概率和真相的唯一前提"
+            </p>
+          </div>
+
+          <div class="card practice-card reveal">
+            <span class="practice-number">4</span>
+            <h3>破怂勇接</h3>
+            <h4>含义</h4>
+            <p>机会来临时以"我没准备好"为由退缩</p>
+            <h4>心法</h4>
+            <p style="margin-bottom: 0; color: var(--color-primary); font-weight: 500">
+              先接下挑战,在过程中装出自信,迭代成熟<br />
+              (Fake it until you make it)
+            </p>
+          </div>
+
+          <div class="card practice-card reveal">
+            <span class="practice-number">5</span>
+            <h3>化疑生信</h3>
+            <h4>两种怀疑</h4>
+            <p style="margin-bottom: 0.5rem">
+              <strong>怀疑自己:</strong> "我这么普通,能行吗?"
+            </p>
+            <p>
+              <strong>怀疑他人:</strong> "全世界都想害我"
+            </p>
+            <h4>危害</h4>
+            <p style="margin-bottom: 0">
+              自我怀疑瘫痪行动,怀疑他人屏蔽外部智慧
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 3: Twin Wings -->
+    <section id="twin-wings">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>创业修行的双翼</h2>
+          <p>敬天爱人</p>
+        </div>
+
+        <div class="twin-wings">
+          <div class="card wing-card reveal">
+            <div class="wing-icon">⛰️</div>
+            <h3>敬天:尊重客观规律</h3>
+            <p>
+              商业有商业的规律<br />
+              优势有优势的科学<br />
+              不存侥幸,不走捷径
+            </p>
+          </div>
+
+          <div class="card wing-card reveal" style="transition-delay: 0.1s">
+            <div class="wing-icon">💝</div>
+            <h3>爱人:接纳如其所是</h3>
+            <p>
+              深刻的理解、尊重与接纳<br />
+              对自己,也对他人<br />
+              阅尽无数咨询案例后,生出"悲悯之心"
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center mb-large reveal" style="margin-top: 80px">
+          <h2>人生的三重境界</h2>
+        </div>
+
+        <div class="realms-container">
+          <div class="realm-item reveal">
+            <div class="realm-label">境界一</div>
+            <p style="margin-bottom: 0">
+              <strong>出世之心 + 出世之事</strong><br />
+              远离红尘,修行自身
+            </p>
+          </div>
+
+          <div class="realm-item reveal">
+            <div class="realm-label">境界二</div>
+            <p style="margin-bottom: 0">
+              <strong>入世之心 + 入世之事</strong><br />
+              深陷红尘,为生计奔波
+            </p>
+          </div>
+
+          <div class="realm-item reveal">
+            <div class="realm-label">境界三 (最高)</div>
+            <p style="margin-bottom: 0">
+              <strong>出世之心 + 入世之事</strong><br />
+              带着通透的觉知,投身于红尘事业<br />
+              <em style="color: var(--color-primary)">
+                "先教大家'仓廪实'(商业闭环),<br />而后'知礼节'(生命通透)自然会来"
+              </em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4: Quotes -->
+    <section id="insights" style="background-color: white">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>生命智慧的终极感悟</h2>
+        </div>
+
+        <div class="quotes-container">
+          <div class="quote-card reveal">
+            "感恩呼吸,敬畏生命。人生只有3万天,每天正常呼吸,四肢健全,已经足够感恩。活着本身就是最大的意义与筹码。"
+          </div>
+          <div class="quote-card reveal">
+            "金钱是手段,不是目的。目的是陪伴家人、体验成长、实现理想。金钱是结果,不是原因,品德、优势、能力才是因。"
+          </div>
+          <div class="quote-card reveal">
+            "不要带着朋友上路,要在路上遇见朋友。真正能鼎力相助的伙伴,会在你向上的路上与你相遇。"
+          </div>
+          <div class="quote-card reveal">
+            "清晰带来成功,觉察带来改变。看不清事情全貌和规律,力量就会用错地方。"
+          </div>
+          <div class="quote-card reveal">
+            "利他不是选择,是'非如此不可'的必然。事事利己会变得孤家寡人,以利他为出发点会变得更勇敢、更值得信赖。"
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 5: Three Levels -->
+    <section id="levels" style="background-color: var(--color-bg-alt)">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>创业的三层修炼</h2>
+        </div>
+
+        <div class="levels-container">
+          <div class="level-item reveal">
+            <span class="level-number">第一层</span>
+            <h3>从"打工思维"到"老板思维"</h3>
+            <p>
+              打工赚的是"老板的本事钱",创业赚的是"每一分自负盈亏的本事钱"。
+            </p>
+            <p style="margin-bottom: 0">
+              需要极强的自我驱动与系统支撑。
+            </p>
+          </div>
+
+          <div class="level-item reveal">
+            <span class="level-number">第二层</span>
+            <h3>从"虚假成长"到"扎实赚钱"</h3>
+            <p>
+              警惕"自嗨式学习",真正的成长以"持续笃定地赚钱"为结果的验证。
+            </p>
+            <p>
+              <strong>关键在于:</strong><br />
+              • 做事的密度:用足够多的行动让概率浮现<br />
+              • 复盘的精准度:理性区分主客观因素
+            </p>
+          </div>
+
+          <div class="level-item reveal">
+            <span class="level-number">第三层</span>
+            <h3>见自己、见众生、见天地</h3>
+            <p>
+              <strong>见自己:</strong>
+              在无限自由与挑战中,看清自己的优势、边界、喜怒哀乐
+            </p>
+            <p>
+              <strong>见众生:</strong> 众生皆苦各有功课,好人占绝大多数,优势互补抱团取暖
+            </p>
+            <p style="margin-bottom: 0">
+              <strong>见天地(规律):</strong>
+              告别"幼儿园小孩思维",理解并顺应客观规律
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 6: Talents -->
+    <section id="talents">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>四大才干的"充能"与"耗能"地图</h2>
+          <p>认识自己的能量来源与消耗</p>
+        </div>
+
+        <div class="talents-grid">
+          <div class="card talent-card reveal">
+            <div class="talent-header">
+              <span>💡</span>
+              <h3>战略思维</h3>
+            </div>
+            <div class="talent-content">
+              <div class="talent-section">
+                <h4>充能来源</h4>
+                <p>独立思考、独处时空</p>
+              </div>
+              <div class="talent-section">
+                <h4>耗能场景</h4>
+                <p>频繁社交、多任务切换</p>
+              </div>
+              <div class="talent-section">
+                <h4>修行方向</h4>
+                <p style="color: var(--color-primary); font-weight: 500">
+                  修落地!多干活,少空想
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card talent-card reveal">
+            <div class="talent-header">
+              <span>🤝</span>
+              <h3>关系建立</h3>
+            </div>
+            <div class="talent-content">
+              <div class="talent-section">
+                <h4>充能来源</h4>
+                <p>与温暖伙伴共同前进</p>
+              </div>
+              <div class="talent-section">
+                <h4>耗能场景</h4>
+                <p>充满竞争、关系紧张的氛围</p>
+              </div>
+              <div class="talent-section">
+                <h4>修行方向</h4>
+                <p style="color: var(--color-primary); font-weight: 500">
+                  修自我认同!停止猜测"他是否喜欢我"
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card talent-card reveal">
+            <div class="talent-header">
+              <span>⚡</span>
+              <h3>执行力</h3>
+            </div>
+            <div class="talent-content">
+              <div class="talent-section">
+                <h4>充能来源</h4>
+                <p>按清晰流程规则做事</p>
+              </div>
+              <div class="talent-section">
+                <h4>耗能场景</h4>
+                <p>处理复杂人际关系或烧脑事物</p>
+              </div>
+              <div class="talent-section">
+                <h4>修行方向</h4>
+                <p style="color: var(--color-primary); font-weight: 500">
+                  修方向感!找到可靠的领路人
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card talent-card reveal">
+            <div class="talent-header">
+              <span>🎤</span>
+              <h3>影响力</h3>
+            </div>
+            <div class="talent-content">
+              <div class="talent-section">
+                <h4>充能来源</h4>
+                <p>散发光芒,影响他人,输出观点</p>
+              </div>
+              <div class="talent-section">
+                <h4>耗能场景</h4>
+                <p>做琐碎、流程化的杂事</p>
+              </div>
+              <div class="talent-section">
+                <h4>修行方向</h4>
+                <p style="color: var(--color-primary); font-weight: 500">
+                  修谦卑!防止未成事先自大
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 7: Decision Making -->
+    <section id="decision" style="background-color: white">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>决策判断力:终极能力</h2>
+          <p style="color: var(--color-primary); font-weight: 500; font-size: 1.2rem">
+            "不决策,是最差的决策。你但凡做一个决定,都比不做决定要好。"
+          </p>
+        </div>
+
+        <div class="decision-grid">
+          <div class="card decision-box reveal">
+            <h3 style="color: #4caf50">真思考</h3>
+            <p style="text-align: center; margin-bottom: 32px; color: var(--color-text-light)">
+              理性的探照灯
+            </p>
+            <ul class="decision-list thinking">
+              <li>我的真实目的和目标是什么?</li>
+              <li>我做决策的判断标准是什么?</li>
+              <li>最差的结果是什么?</li>
+              <li>我是否可以承受?</li>
+              <li>如果最差情况出现,是真的无法接受,还是有办法解决?</li>
+              <li>我还需要什么信息让选择更明智?</li>
+              <li>我必须在什么时间内做出决定?</li>
+            </ul>
+          </div>
+
+          <div class="card decision-box reveal" style="transition-delay: 0.1s">
+            <h3 style="color: #f44336">假忧虑</h3>
+            <p style="text-align: center; margin-bottom: 32px; color: var(--color-text-light)">
+              恐惧的投影
+            </p>
+            <ul class="decision-list worrying">
+              <li>万一搞砸了怎么办?</li>
+              <li>万一别人看我笑话怎么办?</li>
+              <li>万一实现不了怎么办?</li>
+              <li>万一投入了时间金钱没结果怎么办?</li>
+              <li>万一过段时间我后悔了怎么办?</li>
+              <li>万一有更好的出现怎么办?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="text-center reveal" style="margin-top: 60px">
+          <p style="font-size: 1.2rem; color: var(--color-primary); font-weight: 500">
+            高手决策的正确路径
+          </p>
+          <p style="font-size: 1.1rem">
+            先提升"决策智慧" → 再确定你需要什么"信息"<br />
+            <em style="color: var(--color-text-light)">
+              "决定决策质量好坏的,不是信息量,是决策智慧。"
+            </em>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 8: Guest Sharing -->
+    <section id="guests" style="background-color: var(--color-bg-alt)">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>嘉宾分享精华</h2>
+          <p>真实案例,实战经验</p>
+        </div>
+
+        <div class="guest-cards">
+          <div class="card guest-card reveal">
+            <div class="guest-header">
+              <h3>员子老师</h3>
+              <p>全职优势教练</p>
+            </div>
+
+            <div class="achievement">
+              36岁被裁,一号员工出局 → 3年转型累计营收250万
+            </div>
+
+            <ul class="key-points">
+              <li>
+                <strong>听话照做:</strong>
+                前期不要想太多,在系统中持续落地
+              </li>
+              <li>
+                <strong>把自己活成最佳案例:</strong>
+                先拯救自己,再拯救别人
+              </li>
+              <li>
+                <strong>持续出摊,让反馈"飞一会儿":</strong>
+                连续38个月发圈,累计约5500条。播种和收获永远相隔两季
+              </li>
+              <li>
+                <strong>用"战略+完美"才干省力:</strong>
+                不是苦干,是聪明的勤奋
+              </li>
+            </ul>
+
+            <p style="margin-top: 24px; color: var(--color-primary); font-weight: 500">
+              突破轨迹:<br />
+              第一个月1500元 → 第二个月翻10倍 → 第三个月成为销冠 → 今年9月单月营收破10万
+            </p>
+          </div>
+
+          <div class="card guest-card reveal" style="transition-delay: 0.1s">
+            <div class="guest-header">
+              <h3>梁靠谱老师</h3>
+              <p>大师姐</p>
+            </div>
+
+            <div class="achievement">
+              主业三甲医院管理 + 副业6年4万+付费学员 = 年营收8位数
+            </div>
+
+            <ul class="key-points">
+              <li>
+                <strong>"Yes, And"沟通心法:</strong>
+                从本能"否定"转变为"全然接纳和肯定对方,再引导"。"嫌货才是买货人,你的质疑正说明你潜意识里想靠近我"。成交额提升2-3倍
+              </li>
+              <li>
+                <strong>快速切换,灵活借势:</strong>
+                用最小代价置换最大资源
+              </li>
+              <li>
+                <strong>所有事都是"为自己而干":</strong>
+                永远向内归因
+              </li>
+              <li>
+                <strong>善用杠杆:</strong>
+                自媒体杠杆、人力杠杆、学员杠杆
+              </li>
+              <li>
+                <strong>管理期待:</strong>
+                "生米恩,斗米仇"。承诺1做到234,比承诺123456只做到1234更好
+              </li>
+            </ul>
+
+            <p style="margin-top: 24px; color: var(--color-primary); font-weight: 500">
+              "真正的大秘密无需隐藏,因为它听起来太简单,简单到人们不相信、不愿做。"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 9: Q&A -->
+    <section id="qa">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>苏姐终极答疑精华</h2>
+        </div>
+
+        <div class="qa-container">
+          <div class="qa-item reveal">
+            <div class="qa-question">Q1: 技能太多却无法变现?</div>
+            <div class="qa-answer">
+              <strong>错误思路:</strong>
+              "我会A、B、C、D技能,如何把它们打包卖高价?"<br /><br />
+              <strong>正确思路:</strong>
+              "市场需要什么?我的哪些技能能为这个需求服务?"<br /><br />
+              你学的很多技能,在产品中根本用不上。很多人是从"我有什么"出发想产品。但市场要什么,你靠自己很难整明白。
+            </div>
+          </div>
+
+          <div class="qa-item reveal">
+            <div class="qa-question">
+              Q2: HR高管花几十万学习却无法变现?
+            </div>
+            <div class="qa-answer">
+              <strong>问题根源:</strong><br />
+              • 商业模型选错<br />
+              • "战略思维"才干过度发挥,想得多、干得少<br />
+              • 无法脱下"孔乙己的长衫",完成从"企业人"到"创业者"的思维转换<br /><br />
+              <strong>核心认知:</strong>
+              商业结果是系统性提升的结果,不是解决哪一个单点问题就能实现的。始终在解决问题,始终在路上,不要有"一劳永逸"的幻想。
+            </div>
+          </div>
+
+          <div class="qa-item reveal">
+            <div class="qa-question">
+              Q3: 季节性赛道(如高考志愿填报)如何突破?
+            </div>
+            <div class="qa-answer">
+              <strong>核心问题:</strong><br />
+              • 赛道本质是季节性生意,难以成为事业基本盘<br />
+              • 思维模式习惯性找借口<br />
+              • 资源错配:你的圈子不是你的客户<br />
+              • 拓客性价比低<br /><br />
+              <strong>明路:</strong><br />
+              1. 调整产品定位,服务现有资源能触达的人群<br />
+              2. 付费进入目标圈子,链接精准客户<br />
+              3.
+              重塑商业模型:重新定义产品定位、设计高客单价产品、构建线上可复制交付路径
+            </div>
+          </div>
+
+          <div class="qa-item reveal">
+            <div class="qa-question">Q4: 想做家庭教育却卡在"定位"?</div>
+            <div class="qa-answer">
+              <strong>核心问题:</strong><br />
+              • 混淆了知识和技能(实战案例不到10个)<br />
+              • 幻想"本地市场",缺失"线上思维"<br /><br />
+              <strong>苏姐一针见血:</strong><br />
+              "你不是缺方向,是缺把知识变成技能的实战系统。"
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Quotes Summary -->
+    <section id="summary" style="background-color: white">
+      <div class="container">
+        <div class="text-center mb-large reveal">
+          <h2>核心金句摘录</h2>
+        </div>
+
+        <div class="quotes-container">
+          <div class="quote-card reveal">
+            "人生逻辑大于商业逻辑"
+          </div>
+          <div class="quote-card reveal">
+            "众生皆苦,源于浑噩。我们修的是清醒地活着,并带着这份清醒,扎实地赚钱"
+          </div>
+          <div class="quote-card reveal">
+            "清晰带来成功,觉察带来改变"
+          </div>
+          <div class="quote-card reveal">
+            "不定目标,就会成为为别人目标服务的工具"
+          </div>
+          <div class="quote-card reveal">
+            "难受就难受着干。Fake it until you make it"
+          </div>
+          <div class="quote-card reveal">
+            "不要带着朋友上路,要在路上遇见朋友"
+          </div>
+          <div class="quote-card reveal">
+            "用你的天赋,与世界联手"
+          </div>
+          <div class="quote-card reveal">
+            "所有的借口,在'足够想要'面前都不堪一击"
+          </div>
+          <div class="quote-card reveal">
+            "成败皆反馈。失败只是告诉你此路不通,它和成功一样有价值"
+          </div>
+          <div class="quote-card reveal">
+            "人的觉醒,1%靠自我醒悟,99%靠社会毒打"
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <footer class="footer-cta">
+      <div class="container">
+        <div class="reveal">
+          <h2>行动哲学</h2>
+          <div class="promise-list">
+            <div class="promise-item">1. 不要拖!改变永远不怕晚,只怕不起步</div>
+            <div class="promise-item">
+              2. 错了马上改!敢于试错、知错立改,才是强者的通行证
+            </div>
+            <div class="promise-item">
+              3.
+              回归真我:用你的天赋,与世界联手。完成与之匹配的人生任务,找到与世界联手最酣畅淋漓的状态
+            </div>
+          </div>
+          <a href="#" class="btn-primary">开始你的生命修行之旅</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Intersection Observer for scroll animations
+      document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.1,
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        const revealElements = document.querySelectorAll(".reveal");
+        revealElements.forEach((el) => observer.observe(el));
+      });
+    </script>
+  </body>
+</html>

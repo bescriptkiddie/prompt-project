@@ -6,17 +6,17 @@ import { usePathname } from 'next/navigation'
 
 // 内部页面导航配置 - 全部使用独立路由
 export const internalPages = [
-  { name: '精选集', path: '/' },
+  { name: '精选集', path: '/featured' },
   { name: '创作方法论', path: '/methodology' },
   { name: '教练提效', path: '/coach-routes' },
-  { name: '名人堂', path: '/html' },
+  { name: '经典重放', path: '/html' },
   { name: 'MD排版', path: '/mdtohtml' },
   { name: '关于我们', path: '/about' }
 ]
 
 // 外部链接配置
 export const externalLinks = [
-  { name: 'Twitter热榜', url: 'https://twitterhot.vercel.app/' },
+  { name: 'Youmind', url: 'https://youmind.com/invite/DXOA3G' },
   {
     name: 'Youmind Prompts',
     url: 'https://youmind.com/nano-banana-pro-prompts'
@@ -32,10 +32,10 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-40 bg-cream/95 backdrop-blur-sm border-b border-stone-line px-4 md:px-8 h-16 md:h-20 flex items-center justify-between shrink-0">
+      <nav className="sticky top-0 z-40 bg-cream/95 backdrop-blur-sm border-b border-stone-line px-4 md:px-8 h-14 md:h-20 flex items-center justify-between shrink-0">
         {/* Logo */}
         <Link
-          href="/"
+          href="/featured"
           className="flex items-center gap-3"
         >
           <div className="w-8 h-8 bg-terra rounded-sm flex items-center justify-center text-cream relative overflow-hidden shrink-0">
