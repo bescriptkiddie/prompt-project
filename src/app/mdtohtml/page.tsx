@@ -3,6 +3,37 @@
 import { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/layout/Navbar';
 
+// 排版样式定义
+const layoutStyles = {
+  classic: {
+    name: '经典居中',
+    icon: '◈',
+    description: '标题居中，装饰符号',
+  },
+  modern: {
+    name: '现代简约',
+    icon: '▭',
+    description: '左对齐，干净线条',
+  },
+  magazine: {
+    name: '杂志风格',
+    icon: '◐',
+    description: '大标题，首字下沉',
+  },
+  elegant: {
+    name: '文艺清新',
+    icon: '❋',
+    description: '圆角，柔和边框',
+  },
+  business: {
+    name: '商务正式',
+    icon: '▣',
+    description: '方正，粗边框',
+  },
+};
+
+type LayoutStyleKey = keyof typeof layoutStyles;
+
 // 主题配色定义
 const themes = {
   coral: {
@@ -120,29 +151,98 @@ export default function MdToHtmlPage() {
   const [html, setHtml] = useState('');
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>('coral');
+  const [currentLayout, setCurrentLayout] = useState<LayoutStyleKey>('classic');
   const [showThemePanel, setShowThemePanel] = useState(false);
+  const [showLayoutPanel, setShowLayoutPanel] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const theme = themes[currentTheme];
+  const layout = layoutStyles[currentLayout];
 
   useEffect(() => {
     const loadMarked = async () => {
       const { Marked } = await import('marked');
       const marked = new Marked();
 
-      const renderer = {
-        heading(this: any, token: any): string {
-          const text = this.parser.parseInline(token.tokens);
-          if (token.depth === 2) {
-            return `<h2 style="display: flex; align-items: center; justify-content: center;"><span style="color: ${theme.accent}; margin: 0 10px; font-size: 12px;">✦</span>${text}<span style="color: ${theme.accent}; margin: 0 10px; font-size: 12px;">✦</span></h2>`;
-          }
-          return `<h${token.depth}>${text}</h${token.depth}>`;
-        },
+      const getHeadingRenderer = () => {
+        switch (currentLayout) {
+          case 'classic':
+            return function(this: any, token: any): string {
+              const text = this.parser.parseInline(token.tokens);
+              if (token.depth === 2) {
+                return `<h2 style="display: flex; align-items: center; justify-content: center;"><span style="color: ${theme.accent}; margin: 0 10px; font-size: 12px;">✦</span>${text}<span style="color: ${theme.accent}; margin: 0 10px; font-size: 12px;">✦</span></h2>`;
+              }
+              return `<h${token.depth}>${text}</h${token.depth}>`;
+            };
+          case 'modern':
+            return function(this: any, token: any): string {
+              const text = this.parser.parseInline(token.tokens);
+              return `<h${token.depth}>${text}</h${token.depth}>`;
+            };
+          case 'magazine':
+            return function(this: any, token: any): string {
+              const text = this.parser.parseInline(token.tokens);
+              if (token.depth === 1) {
+                return `<h1 class="magazine-title">${text}</h1>`;
+              }
+              if (token.depth === 2) {
+                return `<h2 class="magazine-subtitle">${text}</h2>`;
+              }
+              return `<h${token.depth}>${text}</h${token.depth}>`;
+            };
+          case 'elegant':
+            return function(this: any, token: any): string {
+              const text = this.parser.parseInline(token.tokens);
+              if (token.depth === 2) {
+                return `<h2><span class="elegant-decorator">❧</span> ${text}</h2>`;
+              }
+              return `<h${token.depth}>${text}</h${token.depth}>`;
+            };
+          case 'business':
+            return function(this: any, token: any): string {
+              const text = this.parser.parseInline(token.tokens);
+              if (token.depth === 2) {
+                return `<h2 class="business-heading">${text}</h2>`;
+              }
+              return `<h${token.depth}>${text}</h${token.depth}>`;
+            };
+          default:
+            return function(this: any, token: any): string {
+              const text = this.parser.parseInline(token.tokens);
+              return `<h${token.depth}>${text}</h${token.depth}>`;
+            };
+        }
+      };
+
+      const getParagraphRenderer = () => {
+        if (currentLayout === 'magazine') {
+          let isFirstParagraph = true;
+          return function(this: any, token: any): string {
+            const text = this.parser.parseInline(token.tokens);
+            if (isFirstParagraph && text.length > 0) {
+              isFirstParagraph = false;
+              const firstChar = text.charAt(0);
+              const rest = text.slice(1);
+              return `<p><span class="drop-cap">${firstChar}</span>${rest}</p>`;
+            }
+            return `<p>${text}</p>`;
+          };
+        }
+        return undefined;
+      };
+
+      const renderer: any = {
+        heading: getHeadingRenderer(),
         listitem(this: any, token: any): string {
           const content = this.parser.parse(token.tokens, !!token.loose);
           return `<li><span style="color: #3f3f3f;">${content}</span></li>`;
         }
       };
+
+      const paragraphRenderer = getParagraphRenderer();
+      if (paragraphRenderer) {
+        renderer.paragraph = paragraphRenderer;
+      }
 
       marked.use({
         breaks: true,
@@ -153,7 +253,7 @@ export default function MdToHtmlPage() {
       setHtml(marked.parse(markdown) as string);
     };
     loadMarked();
-  }, [markdown, currentTheme]);
+  }, [markdown, currentTheme, currentLayout]);
 
   const handleCopy = async () => {
     try {
@@ -205,6 +305,64 @@ export default function MdToHtmlPage() {
           Markdown 转微信公众号排版
         </div>
         <div className="flex gap-2 items-center">
+          {/* 排版样式选择器 */}
+          <div className="relative">
+            <button
+              onClick={() => setShowLayoutPanel(!showLayoutPanel)}
+              className="px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 border border-stone-line hover:bg-cream"
+            >
+              <span className="text-base">{layout.icon}</span>
+              <span className="hidden sm:inline">{layout.name}</span>
+              <svg 
+                className={`w-4 h-4 transition-transform ${showLayoutPanel ? 'rotate-180' : ''}`}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {showLayoutPanel && (
+              <>
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setShowLayoutPanel(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 p-3 rounded-lg shadow-xl z-50 min-w-[240px] bg-white border border-stone-line">
+                  <div className="text-xs text-navy-light mb-2 px-1">选择排版样式</div>
+                  <div className="flex flex-col gap-1">
+                    {(Object.keys(layoutStyles) as LayoutStyleKey[]).map((key) => {
+                      const isSelected = currentLayout === key;
+                      const styleInfo = layoutStyles[key];
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            setCurrentLayout(key);
+                            setShowLayoutPanel(false);
+                          }}
+                          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all hover:bg-cream text-left"
+                          style={{ 
+                            outline: isSelected ? `2px solid ${theme.primary}` : 'none',
+                            outlineOffset: '-2px',
+                            backgroundColor: isSelected ? `${theme.primary}1A` : 'transparent'
+                          }}
+                        >
+                          <span className="text-lg w-6 text-center">{styleInfo.icon}</span>
+                          <div>
+                            <div className="font-medium">{styleInfo.name}</div>
+                            <div className="text-xs text-navy-light">{styleInfo.description}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
           {/* 主题选择器 */}
           <div className="relative">
             <button
@@ -323,7 +481,7 @@ export default function MdToHtmlPage() {
         已复制到剪贴板，请到微信编辑器粘贴
       </div>
 
-      <style key={currentTheme} dangerouslySetInnerHTML={{ __html: `
+      <style key={`${currentTheme}-${currentLayout}`} dangerouslySetInnerHTML={{ __html: `
         .preview-content {
           font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
           color: #3f3f3f;
@@ -332,6 +490,7 @@ export default function MdToHtmlPage() {
           text-align: justify;
         }
 
+        ${currentLayout === 'classic' ? `
         .preview-content h1 {
           font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
           font-size: 24px;
@@ -342,7 +501,6 @@ export default function MdToHtmlPage() {
           padding-bottom: 15px;
           border-bottom: 1px solid ${theme.primary};
         }
-
         .preview-content h2 {
           font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
           font-size: 18px;
@@ -353,7 +511,6 @@ export default function MdToHtmlPage() {
           align-items: center;
           justify-content: center;
         }
-
         .preview-content h3 {
           font-size: 16px;
           font-weight: 700;
@@ -363,12 +520,6 @@ export default function MdToHtmlPage() {
           border-left: 4px solid ${theme.primary};
           background: ${theme.h3Bg};
         }
-
-        .preview-content p {
-          margin-bottom: 20px;
-          letter-spacing: 0.05em;
-        }
-
         .preview-content blockquote {
           margin: 25px 0;
           padding: 20px;
@@ -379,6 +530,257 @@ export default function MdToHtmlPage() {
           font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
           font-style: italic;
           border-radius: 4px;
+        }
+        .preview-content hr {
+          border: 0;
+          height: 1px;
+          background-image: linear-gradient(to right, rgba(0,0,0,0), ${theme.primary}BF, rgba(0,0,0,0));
+          margin: 40px 0;
+        }
+        ` : ''}
+
+        ${currentLayout === 'modern' ? `
+        .preview-content h1 {
+          font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
+          font-size: 28px;
+          font-weight: 800;
+          color: ${theme.secondary};
+          text-align: left;
+          margin: 40px 0 25px 0;
+          padding-bottom: 12px;
+          border-bottom: 3px solid ${theme.primary};
+        }
+        .preview-content h2 {
+          font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: ${theme.primary};
+          margin: 30px 0 15px 0;
+          text-align: left;
+          padding-left: 0;
+        }
+        .preview-content h3 {
+          font-size: 16px;
+          font-weight: 600;
+          color: ${theme.secondary};
+          margin: 20px 0 12px 0;
+          padding: 0;
+          border: none;
+          background: none;
+        }
+        .preview-content blockquote {
+          margin: 20px 0;
+          padding: 15px 20px;
+          background-color: ${theme.blockquoteBg};
+          border-left: 4px solid ${theme.primary};
+          border-top: none;
+          color: #555;
+          font-style: normal;
+          border-radius: 0 4px 4px 0;
+        }
+        .preview-content hr {
+          border: 0;
+          height: 2px;
+          background: ${theme.primary};
+          margin: 35px 0;
+        }
+        ` : ''}
+
+        ${currentLayout === 'magazine' ? `
+        .preview-content h1,
+        .preview-content h1.magazine-title {
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-size: 32px;
+          font-weight: 900;
+          color: ${theme.secondary};
+          text-align: center;
+          margin: 50px 0 15px 0;
+          padding: 0;
+          border: none;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+        .preview-content h2,
+        .preview-content h2.magazine-subtitle {
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-size: 14px;
+          font-weight: 400;
+          color: ${theme.primary};
+          margin: 0 0 40px 0;
+          text-align: center;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          border-bottom: 1px solid ${theme.accent};
+          padding-bottom: 20px;
+        }
+        .preview-content h3 {
+          font-size: 18px;
+          font-weight: 700;
+          color: ${theme.secondary};
+          margin: 30px 0 15px 0;
+          padding: 0;
+          border: none;
+          background: none;
+          text-align: center;
+        }
+        .preview-content .drop-cap {
+          float: left;
+          font-size: 4em;
+          line-height: 0.8;
+          padding-right: 10px;
+          padding-top: 5px;
+          color: ${theme.primary};
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-weight: 700;
+        }
+        .preview-content blockquote {
+          margin: 30px 40px;
+          padding: 0;
+          background: none;
+          border: none;
+          color: ${theme.primary};
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-style: italic;
+          font-size: 18px;
+          text-align: center;
+          position: relative;
+        }
+        .preview-content blockquote::before {
+          content: '"';
+          font-size: 4em;
+          color: ${theme.accent};
+          position: absolute;
+          left: -30px;
+          top: -20px;
+          font-family: Georgia, serif;
+        }
+        .preview-content hr {
+          border: 0;
+          height: 0;
+          margin: 40px auto;
+          width: 100px;
+          border-bottom: 1px solid ${theme.primary};
+        }
+        ` : ''}
+
+        ${currentLayout === 'elegant' ? `
+        .preview-content h1 {
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-size: 26px;
+          font-weight: 600;
+          color: ${theme.secondary};
+          text-align: center;
+          margin: 40px 0 30px 0;
+          padding: 15px 30px;
+          border: 1px solid ${theme.accent};
+          border-radius: 30px;
+          display: inline-block;
+          width: auto;
+          left: 50%;
+          position: relative;
+          transform: translateX(-50%);
+        }
+        .preview-content h2 {
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-size: 18px;
+          font-weight: 600;
+          color: ${theme.primary};
+          margin: 35px 0 20px 0;
+          text-align: left;
+        }
+        .preview-content h2 .elegant-decorator {
+          color: ${theme.accent};
+          margin-right: 8px;
+        }
+        .preview-content h3 {
+          font-size: 16px;
+          font-weight: 600;
+          color: ${theme.secondary};
+          margin: 25px 0 15px 0;
+          padding: 8px 15px;
+          background: ${theme.blockquoteBg};
+          border-radius: 20px;
+          display: inline-block;
+        }
+        .preview-content blockquote {
+          margin: 25px 0;
+          padding: 20px 25px;
+          background-color: ${theme.blockquoteBg};
+          border: 1px dashed ${theme.accent};
+          border-radius: 15px;
+          color: #666;
+          font-family: var(--font-noto-serif-sc), 'Noto Serif SC', serif;
+          font-style: italic;
+        }
+        .preview-content hr {
+          border: 0;
+          height: 0;
+          margin: 40px auto;
+          width: 60%;
+          border-bottom: 1px dashed ${theme.accent};
+        }
+        .preview-content img {
+          border-radius: 15px !important;
+        }
+        ` : ''}
+
+        ${currentLayout === 'business' ? `
+        .preview-content h1 {
+          font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
+          font-size: 26px;
+          font-weight: 800;
+          color: #fff;
+          text-align: left;
+          margin: 40px 0 30px 0;
+          padding: 15px 20px;
+          background: ${theme.primary};
+          border: none;
+        }
+        .preview-content h2,
+        .preview-content h2.business-heading {
+          font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: ${theme.secondary};
+          margin: 30px 0 15px 0;
+          padding: 10px 15px;
+          background: ${theme.blockquoteBg};
+          border-left: 5px solid ${theme.primary};
+          text-align: left;
+        }
+        .preview-content h3 {
+          font-size: 16px;
+          font-weight: 700;
+          color: ${theme.primary};
+          margin: 25px 0 15px 0;
+          padding: 0;
+          border: none;
+          background: none;
+        }
+        .preview-content blockquote {
+          margin: 25px 0;
+          padding: 20px;
+          background-color: ${theme.blockquoteBg};
+          border: 2px solid ${theme.primary};
+          border-radius: 0;
+          color: ${theme.secondary};
+          font-style: normal;
+        }
+        .preview-content hr {
+          border: 0;
+          height: 3px;
+          background: ${theme.primary};
+          margin: 40px 0;
+        }
+        .preview-content img {
+          border-radius: 0 !important;
+          border: 2px solid ${theme.accent};
+        }
+        ` : ''}
+
+        .preview-content p {
+          margin-bottom: 20px;
+          letter-spacing: 0.05em;
         }
 
         .preview-content ul,
@@ -444,18 +846,6 @@ export default function MdToHtmlPage() {
         .preview-content strong {
           color: ${theme.secondary};
           font-weight: 700;
-        }
-
-        .preview-content hr {
-          border: 0;
-          height: 1px;
-          background-image: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 0),
-            ${theme.primary}BF,
-            rgba(0, 0, 0, 0)
-          );
-          margin: 40px 0;
         }
 
         .preview-content em {
